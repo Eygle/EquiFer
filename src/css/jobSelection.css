@@ -1,0 +1,31 @@
+#jobSelection {
+	width: 100%;
+	height: 100%;
+}
+
+.select {
+	display: inline-block;
+	width: 50%;
+	height: 100%;
+	cursor: pointer;
+	text-align: center;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size: 228px 208px;
+}
+
+#farriery {
+	background-image: url('../images/horseShoe.png');
+}
+
+#pension {
+	background-image: url('../images/pension.png');
+}
+
+#jobLabel {
+	float: right;
+	margin-right: 20px;
+	line-height: 67px;
+	font-size: 1.5em;
+	font-family: arial;
+}

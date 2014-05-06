@@ -1,0 +1,38 @@
+.button {
+	background-size: 32px 32px;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	width: 40px;
+	height: 32px;
+	display: inline-block;
+	cursor: pointer;
+	margin-top: 4px;
+}
+
+.separator {
+	display: inline-block;
+	width: 1px;
+	background-color: #babbbd;
+	height: 32px;
+	margin: 4px 5px 0 5px;
+}
+
+#settings {
+	background-image: url('../images/settings.png');
+}
+
+#addButton {
+	background-image: url('../images/add.png');
+}
+
+#editButton {
+	background-image: url('../images/edit.png');
+}
+
+#removeButton {
+	background-image: url('../images/delete.png');
+}
+
+#returnButton {
+	background-image: url('../images/return.png');
+}
