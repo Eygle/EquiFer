@@ -8,7 +8,7 @@
 	</target>
 
 	<target name="clean" description="Cleanup build artifacts" depends="init.properties">
-		<delete dir="${dist.dir}" />
+		<!-- <delete dir="${dist.dir}" /> -->
 	</target>
 
 	<target name="prepare" depends="clean">
@@ -20,6 +20,7 @@
 			<fileset dir="${basedir}/src">
 				<include name="**/**" />
 				<include name="*.*" />
+				<exclude name="**/*.sqlite" />
 			</fileset>
 		</copy>
 	</target>
