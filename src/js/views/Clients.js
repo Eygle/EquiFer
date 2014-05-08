@@ -10,11 +10,10 @@ var ClientsView = function() {
 
 	this.htmlPage 			= "clients.html";
 	this.tabLabel			= "clients";
-	this.api				= "api/clientsApi.php";
 
 	this.init = function() {
 		$('#listView').show();
-		$.getJSON(this.api, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
+		$.getJSON(Config.clientsApi, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
 			titles = [
 				{label:"name",			title:"Nom",			dataType:"string"},
 				{label:"animals",		title:"Animaux",		dataType:"string"},
@@ -48,7 +47,6 @@ var ClientDetails = function(id) {
 
 	this.htmlPage 			= "clients.html";
 	this.tabLabel			= "clients";
-	this.api				= "api/clientsApi.php";
 
 	this.id					= id;
 	this.data				= null;
@@ -57,7 +55,7 @@ var ClientDetails = function(id) {
 
 	this.init = function() {
 		$('#detailView').show();
-		$.getJSON('api/clientsApi.php', {action:"getClient", id:this.id}, function(data) {
+		$.getJSON(Config.clientsApi, {action:"getInfos", id:this.id}, function(data) {
 			_this.data = data;
 			$('#detailView #name').text(_this.data.name);
 			$("#detailView #address").text(_this.data.address);
@@ -66,6 +64,54 @@ var ClientDetails = function(id) {
 			$("#detailView #phoneFixe").text(_this.data.phoneFixe);
 			$("#detailView #phoneMobile").text(_this.data.phoneMobile);
 			$('#detailView #mail').text(_this.data.mail);
+
+			// Animal part
+			titles = [
+				{label:"name",		title:"Nom",			dataType:"string"},
+				{label:"type",		title:"Type",			dataType:"string"},
+				{label:"race",		title:"Race",			dataType:"string"},
+				{label:"age",		title:"Âge",			dataType:"string"}
+
+			];
+			new SortableList("clientHorsesList", titles, _this.data.animalsList, function(id) {
+				ManageView.push(new AnimalDetails(id));
+			}, function(x, y, id) {
+				var background = $('<div>').attr('id', "rightClickBack").click(function() {
+					$(this).remove();
+					document.oncontextmenu = function() {return true;};
+				});
+				var popup = $('<div>').attr('id', 'rightClickPopup').css({left: x, top: y});
+				var button = $('<div>').attr({class:'rightClickButton', id: id}).text("Retirer de la liste").click(function() {
+					document.oncontextmenu = function() {return true;};
+					$('#rightClickBack').remove();
+					$.post(Config.clientsApi, {
+						action: 'deleteLinkWithAnimal',
+						clientId:_this.id,
+						animalId:this.id
+					}, function() {
+						ManageView.display();
+					});
+				});
+				$('body').append(background.append(popup.append(button)));
+			});
+
+			// Search animals to add
+			$("#detailView #searchHorse").autocomplete({
+				source : Config.animalsApi + "?action=search&job=" + Config.job.toUpperCase(),
+				select : function(event, ui) {
+					$.post(Config.clientsApi, {
+						action:"linkAnimal",
+						clientId:_this.id,
+						animalId:ui.item.id
+					}, function() {
+						ManageView.display();
+					});
+					return false;
+				}
+			}).data("ui-autocomplete")._renderItem = function(ul, item) {
+				return $("<li>").data("ui-item.autocomplete", item).append(
+					'<a>' + item.name + '</a>').appendTo(ul);
+			};
 		});
 	};
 
@@ -73,7 +119,7 @@ var ClientDetails = function(id) {
 		if (button == "edit")
 			ManageView.push(new ClientFormView(_this.data));
 		else if (button == "remove" && confirm('Voulez vous vraiment supprimer "' + _this.data.name + '" ?')) {
-			$.post(_this.api, {action:"delete", id:_this.data.id}, function() {
+			$.post(Config.clientsApi, {action:"delete", id:_this.data.id}, function() {
 				ManageView.pop();
 			});
 		}
@@ -92,7 +138,6 @@ var ClientFormView = function(data) {
 
 	this.htmlPage 			= "clients.html";
 	this.tabLabel			= "clients";
-	this.api				= "api/clientsApi.php";
 
 	var _this				= this;
 
@@ -116,25 +161,25 @@ var ClientFormView = function(data) {
 		$('#formView #lastName').val(this.data.lastName);
 		$("#formView #address").val(this.data.address);
 		$("#formView #zipcode").val(this.data.zipcode).autocomplete({
-			source : "api/citiesApi.php",
+			source : Config.citiesApi,
 			select : function(event, ui) {
 				$("#formView #zipcode").val(ui.item.zipcode);
 				$("#formView #city").val(ui.item.city);
 				return false;
 			}
-		}).data("autocomplete")._renderItem = function(ul, item) {
-			return $("<li>").data("item.autocomplete", item).append(
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
+			return $("<li>").data("ui-item.autocomplete", item).append(
 				'<a>' + item.city + ' (' + item.zipcode + ')</a>').appendTo(ul);
 		};
 		$("#formView #city").val(this.data.city).autocomplete({
-			source : "api/citiesApi.php",
+			source : Config.citiesApi,
 			select : function(event, ui) {
 				$("#formView #zipcode").val(ui.item.zipcode);
 				$("#formView #city").val(ui.item.city);
 				return false;
 			}
-		}).data("autocomplete")._renderItem = function(ul, item) {
-			return $("<li>").data("item.autocomplete", item).append(
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
+			return $("<li>").data("ui-item.autocomplete", item).append(
 				'<a>' + item.city + ' (' + item.zipcode + ')</a>').appendTo(ul);
 		};
 		$("#formView #phoneFixe").val(this.data.phoneFixe);
@@ -148,7 +193,7 @@ var ClientFormView = function(data) {
 		if (button != "save") return;
 
 		var params = {
-				action:		_this.editMode ? "edit" : "add", 
+				action:			_this.editMode ? "edit" : "add", 
 				firstName:		$('#formView #firstName').val(),
 				lastName:		$('#formView #lastName').val(),
 				address:		$('#formView #address').val(),
@@ -158,14 +203,14 @@ var ClientFormView = function(data) {
 				phoneMobile:	$('#formView #phoneMobile').val(),
 				mail:			$('#formView #mail').val(),
 				puce:			$('#formView #puce').val(),
-				inFarriery:	$('#formView #inFarriery').is(':checked'),
-				inPension:	$('#formView #inPension').is(':checked'),
+				inFarriery:		$('#formView #inFarriery').is(':checked'),
+				inPension:		$('#formView #inPension').is(':checked'),
 		};
 
 		if (!this.checkForm(params)) return;
 
 		if (_this.editMode) params.id = _this.data.id;
-		$.post(_this.api, params, function(data) {
+		$.post(Config.clientsApi, params, function(data) {
 			ManageView.pop();
 			if (!_this.editMode)
 				ManageView.push(new ClientsDetails(data.id));

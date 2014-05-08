@@ -13,7 +13,7 @@ try {
 				Utils::checkGetArgs('job');
 				echo json_encode($db->getList($_GET['job']));
 				break;
-			case "getClient":
+			case "getInfos":
 				Utils::checkGetArgs('id');
 				echo json_encode($db->getInfo($_GET['id']));
 				break;
@@ -41,6 +41,14 @@ try {
 			case "delete":
 				Utils::checkPostArgs('id');
 				$db->delete($_POST['id']);
+				break;
+			case "linkAnimal":
+				Utils::checkPostArgs(array('clientId', 'animalId'));
+				$db->addLinkToHorse($_POST['clientId'], $_POST['animalId']);
+				break;
+			case 'deleteLinkWithAnimal':
+				Utils::checkPostArgs(array('clientId', 'animalId'));
+				$db->deleteLinkToHorse($_POST['clientId'], $_POST['animalId']);
 				break;
 		}
 	}

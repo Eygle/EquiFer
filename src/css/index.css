@@ -38,6 +38,11 @@ body {
 	cursor: pointer;
 }
 
+.tab:hover {
+	background-color: #1c97ea;
+	color: white;
+}
+
 #tabs .selected {
 	background-color: #067ad1;
 	color: white;

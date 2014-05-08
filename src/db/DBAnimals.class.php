@@ -2,11 +2,10 @@
 
 class DBAnimals extends SQLite3 {
 
-	private $frenchMonth;
+	public static $frenchMonths = array(null, "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre");
 
 	public function __construct() {
 		$this->open(dirname(__FILE__).'/database.sqlite');
-		$this->frenchMonth = array(null, "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre");
 	}
 
 	public function getList($job) {
@@ -18,7 +17,7 @@ class DBAnimals extends SQLite3 {
 		$res = $stmt->execute();
 		$ret = array();
 		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-			$ret[] = $this->formatInfos($row);
+			$ret[] = self::format($row);
 		}
 		return $ret;
 	}
@@ -27,7 +26,24 @@ class DBAnimals extends SQLite3 {
 		$stmt = $this->prepare('SELECT * FROM horses WHERE id = :id');
 		$stmt->bindValue(':id', $id);
 		$res = $stmt->execute();
-		return $this->formatInfos($res->fetchArray(SQLITE3_ASSOC));
+		return $this->format($res->fetchArray(SQLITE3_ASSOC));
+	}
+
+	public function search($job, $term) {
+		$stmt = $this->prepare('SELECT h.*
+			FROM link_job_horses AS ljh
+			LEFT JOIN horses AS h ON ljh.horseId = h.id
+			WHERE job = :job
+			AND h.name LIKE :term
+			LIMIT 15;');
+		$stmt->bindValue(':job', $job);
+		$stmt->bindValue(':term', $term.'%');
+		$res = $stmt->execute();
+		$ret = array();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$ret[] = $this->format($row);
+		}
+		return $ret;
 	}
 
 	private function getJobsLinks($id) {
@@ -44,7 +60,27 @@ class DBAnimals extends SQLite3 {
 		return $ret;
 	}
 
-	private function formatInfos($horse) {
+	private function getOwnersNames($id) {
+		$stmt = $this->prepare('SELECT c.firstName, c.lastName
+			FROM link_clients_horses AS lch
+			LEFT JOIN clients AS c ON lch.clientId = c.id
+			WHERE lch.horseId = :id');
+		$stmt->bindValue("id", $id);
+		$res = $stmt->execute();
+		$names = array();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$names[] = $row['firstName']." ".$row['lastName'];
+		}
+		return implode(', ', $names);
+	}
+
+	public function format($horse) {
+		$horse = self::formatInfos($horse);
+		$horse['owners'] = $this->getOwnersNames($horse['id']);
+		return array_merge($horse, $this->getJobsLinks($horse['id']));
+	}
+
+	public static function formatInfos($horse) {
 		$birth = explode('-', $horse['birthdate']);
 		$age = time() - mktime(0,0,0,intval($birth[1]), 1, intval($birth[0]));
 		if ($age < 31536000) // Less than a year
@@ -55,9 +91,8 @@ class DBAnimals extends SQLite3 {
 		}
 		$horse['age'] = $age;
 		$horse['birthdate'] = $birth[1]."/".$birth[0];
-		$horse['humanBirthdate'] = $this->frenchMonth[intval($birth[1])]." ".$birth[0];
+		$horse['humanBirthdate'] = self::$frenchMonths[intval($birth[1])]." ".$birth[0];
 		$horse['isAlive'] = $horse['isAlive'] == "true";
-		$horse = array_merge($horse, $this->getJobsLinks($horse['id']));
 		return $horse;
 	}
 

@@ -1,0 +1,39 @@
+#addHorse {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+
+#rightClickBack {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 999;
+}
+
+#rightClickPopup {
+	position: absolute;
+	background-color: white;
+	border: 1px solid #ddd;
+	z-index: 1000;
+	border-radius: 5px;
+	padding: 3px;
+}
+
+.rightClickButton {
+	width: 100%;
+	padding: 5px;
+	padding-left: 30px;
+	cursor: pointer;
+	box-sizing: border-box;
+	background-image: url('../images/delete-crux.png');
+	background-repeat: no-repeat;
+	background-position: 3px 50%;
+	background-size: 20px;
+}
+
+.rightClickButton:hover {
+	background-color: #eee;
+}

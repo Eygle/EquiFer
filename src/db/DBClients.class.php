@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__).'/DBAnimals.class.php';
+
 class DBClients extends SQLite3 {
 
 	public function __construct() {
@@ -44,17 +46,19 @@ class DBClients extends SQLite3 {
 	private function formatInfos($client) {
 		$client['name'] = $client['firstName']." ".$client['lastName'];
 		// Get horses
-		$horses = array();
-		$stmt = $this->prepare('SELECT h.name
+		$stmt = $this->prepare('SELECT h.*
 			FROM link_clients_horses AS lch
 			LEFT JOIN horses AS h ON lch.horseId = h.id
 			WHERE lch.clientId = :id');
 		$stmt->bindValue("id", $client['id']);
 		$res = $stmt->execute();
+		$horsesNames = array();
+		$horses = array();
 		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-			$horses[] = $row['name'];
+			$horses[] = DBAnimals::formatInfos($row);
+			$horsesNames[] = $row['name'];
 		}
-		$client['animals'] = implode(' ', $horses);
+		$client['animals'] = implode(', ', $horsesNames);
 		$client['animalsList'] = $horses;
 		$client = array_merge($client, $this->getJobsLinks($client['id']));
 		return $client;
@@ -112,6 +116,21 @@ class DBClients extends SQLite3 {
 	private function deleteLinksToHorses($id) {
 		$stmt = $this->prepare('DELETE FROM link_clients_horses WHERE clientId = :clientId;');
 		$stmt->bindValue(':clientId', $id);
+		$stmt->execute();
+	}
+
+	public function addLinkToHorse($clientId, $horseId) {
+		$this->deleteLinkToHorse($clientId, $horseId);
+		$stmt = $this->prepare('INSERT INTO link_clients_horses(clientId, horseId) VALUES(:clientId, :horseId);');
+		$stmt->bindValue('clientId', $clientId);
+		$stmt->bindValue('horseId', $horseId);
+		$stmt->execute();
+	}
+
+	public function deleteLinkToHorse($clientId, $horseId) {
+		$stmt = $this->prepare('DELETE FROM link_clients_horses WHERE clientId = :clientId AND horseId = :horseId;');
+		$stmt->bindValue('clientId', $clientId);
+		$stmt->bindValue('horseId', $horseId);
 		$stmt->execute();
 	}
 

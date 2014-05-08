@@ -12,6 +12,8 @@
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
 	background-size: 228px 208px;
+	position: relative;
+	vertical-align: top;
 }
 
 #farriery {
@@ -28,4 +30,12 @@
 	line-height: 67px;
 	font-size: 1.5em;
 	font-family: arial;
+}
+
+.job-selection-text {
+	width:	100%;
+	text-align: center;
+	font-size: 1.5em;
+	position: absolute;
+	top: calc(50% + 1.5em + 114px);
 }

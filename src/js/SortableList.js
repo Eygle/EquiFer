@@ -1,9 +1,10 @@
-var SortableList = function(tableId, titles, list, callback) {
+var SortableList = function(tableId, titles, list, clickCallback, rightClickCallback) {
 	this.list = null;
 	this.titles = null;
 	this.lastLabel = null;
 	this.lastLabelOrder = "ASC";
-	this.callback = callback;
+	this.clickCallback = clickCallback;
+	this.rightClickCallback = rightClickCallback;
 
 	var _this = this;
 
@@ -48,8 +49,18 @@ var SortableList = function(tableId, titles, list, callback) {
 				$tr.append($('<td>').text(this.list[i][this.titles[j].label]));
 			}
 			$tr.click(function() {
-				_this.callback(this.id);
+				_this.clickCallback(this.id);
 			});
+			if (_this.rightClickCallback) {
+				$tr.mousedown(function(e){
+					if( e.button == 2 ) {
+						document.oncontextmenu = function() {return false;};
+						_this.rightClickCallback(e.pageX, e.pageY, this.id);
+						return false;
+					}
+					return true;
+				});
+			}
 			$tbody.append($tr);
 		}
 		$table.append($tbody);

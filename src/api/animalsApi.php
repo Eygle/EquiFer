@@ -13,9 +13,13 @@ try {
 				Utils::checkGetArgs('job');
 				echo json_encode($db->getList($_GET['job']));
 				break;
-			case "getAnimal":
+			case "getInfos":
 				Utils::checkGetArgs('id');
 				echo json_encode($db->getInfo($_GET['id']));
+				break;
+			case "search":
+				Utils::checkGetArgs(array('job', 'term'));
+				echo json_encode($db->search($_GET['job'], $_GET['term']));
 				break;
 		}
 	} else {

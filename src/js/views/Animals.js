@@ -10,14 +10,13 @@ var AnimalsView = function() {
 
 	this.htmlPage 			= "animals.html";
 	this.tabLabel			= "animals";
-	this.api				= "api/animalsApi.php";
 
 	this.init = function() {
 		$('#listView').show();
-		$.getJSON(this.api, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
+		$.getJSON(Config.animalsApi, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
 			titles = [
 				{label:"name",		title:"Nom",			dataType:"string"},
-				{label:"owner",		title:"Propriétaire",	dataType:"string"},
+				{label:"owners",	title:"Propriétaires",	dataType:"string"},
 				{label:"type",		title:"Type",			dataType:"string"},
 				{label:"race",		title:"Race",			dataType:"string"},
 				{label:"age",		title:"Âge",			dataType:"string"},
@@ -50,7 +49,6 @@ var AnimalDetails = function(id) {
 
 	this.htmlPage 			= "animals.html";
 	this.tabLabel			= "animals";
-	this.api				= "api/animalsApi.php";
 
 	this.id					= id;
 	this.data				= null;
@@ -59,7 +57,7 @@ var AnimalDetails = function(id) {
 
 	this.init = function() {
 		$('#detailView').show();
-		$.getJSON(this.api, {action:"getAnimal", id:this.id}, function(data) {
+		$.getJSON(Config.animalsApi, {action:"getInfos", id:this.id}, function(data) {
 			_this.data = data;
 			$('#detailView #name').text(_this.data.name);
 			$("#detailView #type").text(_this.data.type);
@@ -83,7 +81,7 @@ var AnimalDetails = function(id) {
 		if (button == "edit")
 			ManageView.push(new AnimalFormView(_this.data));
 		else if (button == "remove" && confirm('Voulez vous vraiment supprimer "' + _this.data.name + '" ?')) {
-			$.post(_this.api, {action:"delete", id:_this.data.id}, function() {
+			$.post(Config.animalsApi, {action:"delete", id:_this.data.id}, function() {
 				ManageView.pop();
 			});
 		}
@@ -102,7 +100,6 @@ var AnimalFormView = function(data) {
 
 	this.htmlPage 			= "animals.html";
 	this.tabLabel			= "animals";
-	this.api				= "api/animalsApi.php";
 
 	var _this				= this;
 
@@ -169,7 +166,7 @@ var AnimalFormView = function(data) {
 		if (params.size) params.size = parseInt(params.size);
 
 		if (_this.editMode) params.id = _this.data.id;
-		$.post(_this.api, params, function(data) {
+		$.post(Config.animalsApi, params, function(data) {
 			ManageView.pop();
 			if (!_this.editMode) {
 				ManageView.push(new AnimalDetails(data.id));
@@ -198,7 +195,6 @@ var AnimalFormView = function(data) {
 	};
 
 	this.checkBirthdate = function(date) {
-		console.log(date);
 		regex = new RegExp(/[0-9]{2}\/[0-9]{4}/);
 		if (!regex.test(date))
 			return false;
