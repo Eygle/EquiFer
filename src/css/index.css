@@ -59,6 +59,8 @@ body {
 	border: 1px solid #ccc;
 	display: inline-block;
 	vertical-align: top;
+	overflow-y: auto;
+	position: relative;
 }
 
 .line {
@@ -68,6 +70,8 @@ body {
 	width: calc(100% - 10px);
 	height: calc(50% - 10px);
 	border: 1px solid #ccc;
+	overflow-y: auto;
+	position: relative;
 }
 
 .col {
@@ -79,6 +83,8 @@ body {
 	border: 1px solid #ccc;
 	display: inline-block;
 	vertical-align: top;
+	overflow-y: auto;
+	position: relative;
 }
 
 .fullBox {
@@ -88,6 +94,8 @@ body {
 	width: calc(100% - 10px);
 	height: calc(100% - 10px);
 	border: 1px solid #ccc;
+	overflow-y: auto;
+	position: relative;
 }
 
 .two-cols {
@@ -124,6 +132,8 @@ h2 {
 	text-align: center;
 	font-weight: normal;
 	font-size: 1.3em;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
 }
 
 table {
@@ -132,57 +142,48 @@ table {
 	border-collapse: collapse;
 }
 
+tr {
+	cursor: pointer;
+}
+
+tr:hover td {
+	background-image: linear-gradient(white, #f8f8fa);
+}
+
 th {
 	cursor: pointer;
 	background-image: linear-gradient(white, #f8f8fa);
-	/*border-top: 1px solid #ecf3f9;*/
-	/*border-bottom: 1px solid #d5d5d7;*/
-	/*-webkit-border-image: -webkit-gradient(linear, left top, left bottom, from(#00abeb), to(#fff), color-stop(0.5, #fff), color-stop(0.5, #66cc00)) 21 30 30 21 repeat repeat;*/
-
-	
-/*	-webkit-border-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e9f0f6), to(#ccd0cf) 1 100%;
-    -webkit-border-image: -webkit-linear-gradient(#e9f0f6, #ccd0cf) 1 100%;
-    -o-border-image: -o-linear-gradient(#e9f0f6, #ccd0cf) 1 100%;
-    -moz-border-image: -moz-linear-gradient(#e9f0f6, #ccd0cf) 1 100%; */
-    /*border-image: linear-gradient(#e9f0f6, #ccd0cf);*/
-
-   /* border-top: 1px solid #f4f4f4;
-	border-bottom: 1px solid #ccd0cf;*/
-
 	border-bottom: 1px solid #ccd0cf;
-	
+	border-right: 1px solid #d5dfe8;
 	font-weight: normal;
-}
-
-th:before {
-	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e7eef4), to(#ccd0c));
-	background-image: -webkit-linear-gradient(#e7eef4, #ccd0c);
-	background-image:
-	    -moz-linear-gradient(#e7eef4, #ccd0cf),
-	    -moz-linear-gradient(#e7eef4, #ccd0cf);
-	background-image:
-	    -o-linear-gradient(#e7eef4, #ccd0cf),
-	    -o-linear-gradient(#e7eef4, #ccd0cf);
-	background-image: 
-	    linear-gradient(#e7eef4, #ccd0cf),
-	    linear-gradient(#e7eef4, #ccd0cf);
-	-moz-background-size: 1px 100%;
-	background-size: 1px 100%;
-	background-position: 0 0, 100% 0;
-	background-repeat: no-repeat;
-	content: "";
-	position: absolute;
-	left: -1px;	
 }
 
 td {
 	background-color: white;
-	text-align: left;
+	text-align: center;
 	color: #4e5871;
+	border-right: 1px solid #d5dfe8;
+	padding-left: 5px;
+}
+
+td:first-child {
+	text-align: left;
 }
 
 .fillParent {
 	width: 100%;
-	height: calc(100% - 2.96em - 20px);
+	height: calc(100% - 1.7em - 14px);
 	box-sizing: border-box;
+}
+
+.top-right-icon {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+
+.bottom-right-icon {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
 }

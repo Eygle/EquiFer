@@ -1,44 +1,61 @@
-var SortableList = function(tableId, titles, list) {
+var SortableList = function(tableId, titles, list, callback) {
 	this.list = null;
 	this.titles = null;
 	this.lastLabel = null;
 	this.lastLabelOrder = "ASC";
+	this.callback = callback;
 
 	var _this = this;
 
 	this.init = function(tableId, titles, list) {
 		this.list = list;
 		this.titles = titles;
+		this.tableId = tableId;
 		this.display();
-		$('#' + tableId + " th").click(function() {
-			_this.sort($(this).attr('label'), $(this).attr('dataType'));
-		});
 	};
 
 	this.sort = function(label, type) {
-		if (this.lastLabel == label)
+		if (this.lastLabel == label) 
 			this.lastLabelOrder = this.lastLabelOrder == "ASC" ? "DESC" : "ASC";
 		else
 			this.lastLabelOrder = "ASC";
 		this.lastLabel = label;
-
+		console.log(type);
+		console.log(label);
 		switch (type) {
 			case "string":
-			default:
-				this.list.sort(sortBy(label, this.lastLabelOrder == "DESC", function(a) {return a.toUpperCase()}));
+				this.list.sort(sortBy(label, this.lastLabelOrder == "ASC", function(a) {return a ? a.toUpperCase() : ""}));
 				break;
 			case "int":
-				this.list.sort(sortBy(label, this.lastLabelOrder == "DESC", parseInt));
+				this.list.sort(sortBy(label, this.lastLabelOrder == "ASC", parseInt));
 				break;
 		}
+		$("#" + this.tableId).html("");
+		this.display();
 	};
 
 	this.display = function() {
 		var $tr = $('<tr>');
+		var $table = $("#" + this.tableId);
 		for (var i in this.titles) {
 			$tr.append($('<th>').attr({label:this.titles[i].label, "data-type":this.titles[i].dataType}).text(this.titles[i].title));
 		}
-		$("#" + tableId).append($tr);
+		$table.append($('<thead>').append($tr));
+		$tbody = $('<tbody>');
+		for (var i in this.list) {
+			var $tr = $('<tr>').attr('id', this.list[i].id);
+			for (var j in this.titles) {
+				$tr.append($('<td>').text(this.list[i][this.titles[j].label]));
+			}
+			$tr.click(function() {
+				_this.callback(this.id);
+			});
+			$tbody.append($tr);
+		}
+		$table.append($tbody);
+		$('#' + tableId + " th").click(function() {
+			_this.sort($(this).attr('label'), $(this).attr('data-type'));
+		});
 	};
 
 	this.init(tableId, titles, list);

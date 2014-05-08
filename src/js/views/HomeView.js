@@ -1,6 +1,7 @@
 var HomeView = function() {
 	// Buttons management
 	this.showReturnButton	= false;
+	this.showSaveButton		= false;
 	this.showAddButton		= false;
 	this.showEditButton		= false;
 	this.showRemoveButton	= false;
