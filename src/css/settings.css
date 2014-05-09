@@ -1,0 +1,56 @@
+#panel-settings {
+	width: 100%;
+	height: 100%;
+	z-index: 10000;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: rgba(0,0,0, 0.7);
+}
+
+.shadow {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	opacity: 0.6;
+	z-index: 10000;
+}
+
+.set-content {
+	background-color: white;
+	border: 1px solid #ddd;
+	width: 50%;
+	height: 80%;
+	position: absolute;
+	padding: 5px;
+}
+
+.set-menu, .set-data {
+	display: inline-block;
+	vertical-align: top;
+	box-sizing: border-box;
+}
+
+.set-menu {
+	width: 20%;
+	color: #999;
+	cursor: pointer;
+	padding-left: 10px;
+	padding-top: 20px;
+}
+
+.set-menu-item {
+	padding: 10px 0 10px 0;
+}
+
+.set-menu .select {
+	color: rgb(70, 78, 90);
+	cursor: default;	
+}
+
+.set-data {
+	width: 80%;
+}

@@ -1,0 +1,33 @@
+table {
+	width: 100%;
+	border: 1px solid #d5dfe8;
+	border-collapse: collapse;
+}
+
+tr {
+	cursor: pointer;
+}
+
+tr:hover td {
+	background-image: linear-gradient(white, #f8f8fa);
+}
+
+th {
+	cursor: pointer;
+	background-image: linear-gradient(white, #f8f8fa);
+	border-bottom: 1px solid #ccd0cf;
+	border-right: 1px solid #d5dfe8;
+	font-weight: normal;
+}
+
+td {
+	background-color: white;
+	text-align: center;
+	color: #4e5871;
+	border-right: 1px solid #d5dfe8;
+	padding-left: 5px;
+}
+
+td:first-child {
+	text-align: left;
+}
