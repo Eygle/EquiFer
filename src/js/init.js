@@ -49,7 +49,7 @@ $(document).ready(function() {
 		initProgram();
 	});
 
-	$('#switchJob').click(function() {
+	$('#switchJob, #jobLabel').click(function() {
 		switchJob();
 	});
 });

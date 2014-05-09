@@ -62,6 +62,12 @@ var FR = function() {
 	this.SETTINGS_USER_REQUIRE_COMPANY		= "Le nom de l'entreprise est nécessaire";
 
 	// Autocompletes values
+	this.PERF_AUTOCOMPLETE_UNITY		= [
+		"Boîte",
+		"Tonne",
+		"Unité",
+	];
+
 	this.ANIMALS_AUTOCOMPLETE_TYPE		= [
 		"Cheval de trait",
 		"Cheval de selle",

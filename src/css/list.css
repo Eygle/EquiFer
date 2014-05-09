@@ -9,11 +9,10 @@ tbody tr {
 }
 
 tbody tr:hover td {
-	background-image: linear-gradient(#f1fbff, #fccf0ff);
+	background-image: linear-gradient(#f1fbff, #ccf0ff);
 }
 
 th {
-	cursor: pointer;
 	background-image: linear-gradient(white, #f8f8fa);
 	border-bottom: 1px solid #ccd0cf;
 	border-right: 1px solid #d5dfe8;
@@ -21,7 +20,7 @@ th {
 }
 
 th:hover {
-	background-image: linear-gradient(#f1fbff, #fccf0ff);
+	background-image: linear-gradient(#f1fbff, #ccf0ff);
 }
 
 td {

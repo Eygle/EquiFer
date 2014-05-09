@@ -30,7 +30,7 @@ try {
 				break;
 			case "edit":
 				Utils::checkPostArgs(array('id', 'name', 'price', 'tva', 'unit', 'defaultQuantity', 'inFarriery', 'inPension'));
-					$db->edit($_POST['id'], $_POST['name'],	$_POST['price'], $_POST['tva'], $_POST['unit'], $_POST['defaultQuantity']);
+				$db->edit($_POST['id'], $_POST['name'],	$_POST['price'], $_POST['tva'], $_POST['unit'], $_POST['defaultQuantity']);
 				if ($_POST['inFarriery'] == "true") $db->linkToJob("FARRIERY", $_POST['id']);
 				if ($_POST['inPension'] == "true") $db->linkToJob("PENSION", $_POST['id']);
 				echo json_encode(null);

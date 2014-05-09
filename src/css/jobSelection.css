@@ -30,6 +30,7 @@
 	line-height: 67px;
 	font-size: 1.5em;
 	font-family: arial;
+	cursor: pointer;
 }
 
 .job-selection-text {

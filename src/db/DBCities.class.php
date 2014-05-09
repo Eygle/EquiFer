@@ -12,7 +12,8 @@ class DBCities extends SQLite3 {
 		$stmt = $this->prepare('SELECT ville_nom, ville_code_postal
 			FROM villes_france
 			WHERE ville_nom LIKE :term OR ville_code_postal LIKE :term
-			LIMIT 15;');
+			ORDER BY ville_nom ASC
+			LIMIT 25;');
 		$stmt->bindValue(':term', $term."%");
 		$res = $stmt->execute();
 		$ret = array();

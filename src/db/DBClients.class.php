@@ -104,8 +104,8 @@ class DBClients extends SQLite3 {
 		$stmt = $this->prepare('DELETE FROM clients WHERE id = :id');
 		$stmt->bindValue('id', $id);
 		$stmt->execute();
-		$this->deleteLinksToJob($id);
-		$this->deleteLinksToHorses($id);
+		//$this->deleteLinksToJob($id);
+		//$this->deleteLinksToHorses($id);
 	}
 
 	private function deleteLinksToJob($id) {

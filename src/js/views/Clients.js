@@ -20,7 +20,7 @@ var ClientsView = function() {
 				{label:"phoneMobile",	title:Strings.CLIENTS_LABEL_PHONE_MOBILE,	dataType:"int"},
 				{label:"phoneFixe",		title:Strings.CLIENTS_LABEL_PHONE_FIXE,		dataType:"int"},
 				{label:"address",		title:Strings.CLIENTS_LABEL_ADDRESS,		dataType:"string"},
-				{label:"zipcode",		title:Strings.CLIENTS_LABEL_NAME_ZIPCODE,	dataType:"int"},
+				{label:"zipcode",		title:Strings.CLIENTS_LABEL_ZIPCODE,		dataType:"int"},
 				{label:"city",			title:Strings.CLIENTS_LABEL_CITY,			dataType:"string"}
 			];
 			new SortableList("clientsList", titles, data, function(id) {

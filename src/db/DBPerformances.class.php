@@ -32,7 +32,7 @@ class DBPerformances extends SQLite3 {
 		if (!$data) return null;
 		$data['formattedTVA'] = str_replace(".", ",", round(floatval(str_replace(",", ".", $data['tva'])), 2) . " %");
 		$data['formattedPrice'] = str_replace(".", ",", round(floatval(str_replace(",", ".", $data['price'])), 2) . " €");
-		return $data;
+		return array_merge($data, $this->getJobsLinks($data['id']));
 	}
 
 	private function getJobsLinks($id) {
@@ -62,7 +62,7 @@ class DBPerformances extends SQLite3 {
 		return $this->lastInsertRowID();
 	}
 
-	public function edit($name, $price, $tva, $unit, $defaultQuantity) {
+	public function edit($id, $name, $price, $tva, $unit, $defaultQuantity) {
 		$stmt = $this->prepare("UPDATE performances
 			SET name = :name, price = :price, tva = :tva,
 			unit = :unit, defaultQuantity = :defaultQuantity

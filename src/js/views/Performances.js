@@ -15,10 +15,10 @@ var PerformancesView = function() {
 		$('#listView').show();
 		$.getJSON(Config.performancesApi, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
 			titles = [
-				{label:"name",				title:this.PERF_LABEL_NAME,		dataType:"string"},
-				{label:"formattedPrice",	title:this.PERF_LABEL_PRICE,	dataType:"float"},
-				{label:"formattedTVA",		title:this.PERF_LABEL_TVA,		dataType:"float"},
-				{label:"unit",				title:this.PERF_LABEL_UNIT,		dataType:"string"}
+				{label:"name",				title:Strings.PERF_LABEL_NAME,		dataType:"string"},
+				{label:"formattedPrice",	title:Strings.PERF_LABEL_PRICE,	dataType:"float"},
+				{label:"formattedTVA",		title:Strings.PERF_LABEL_TVA,		dataType:"float"},
+				{label:"unit",				title:Strings.PERF_LABEL_UNIT,		dataType:"string"}
 			];
 			new SortableList("performancesList", titles, data, function(id) {
 				ManageView.push(new PerformanceDetails(id));
@@ -55,8 +55,8 @@ var PerformanceDetails = function(id) {
 		$.getJSON(Config.performancesApi, {action:"getInfos", id:this.id}, function(data) {
 			_this.data = data;
 			$('#detailView #name').text(_this.data.name);
-			$("#detailView #price").text(_this.data.price);
-			$("#detailView #tva").text(_this.data.tva);
+			$("#detailView #price").text(_this.data.formattedPrice);
+			$("#detailView #tva").text(_this.data.formattedTVA);
 			$("#detailView #unit").text(_this.data.unit);
 			$("#detailView #defaultQuantity").text(_this.data.defaultQuantity);
 		});
@@ -103,7 +103,7 @@ var PerformanceFormView = function(data) {
 		$('#formView').show();
 		$('#formView #name').val(this.data.name);
 		$("#formView #price").val(this.data.price);
-		$('#formView #unit').val(this.data.unit);
+		$('#formView #unit').autocomplete({source: Strings.PERF_AUTOCOMPLETE_UNITY}).val(this.data.unit);
 		$('#formView #tva').val(this.data.tva);
 		$("#formView #defaultQuantity").val(this.data.defaultQuantity);
 		$('#formView #inFarriery').prop("checked", this.data.inFarriery);
@@ -128,14 +128,13 @@ var PerformanceFormView = function(data) {
 				inFarriery:			$('#formView #inFarriery').is(':checked'),
 				inPension:			$('#formView #inPension').is(':checked'),
 		};
-
 		if (!this.checkForm(params)) return;
 
 		if (_this.editMode) params.id = _this.data.id;
 		$.post(Config.performancesApi, params, function(data) {
 			ManageView.pop();
 			if (!_this.editMode)
-				ManageView.push(new performanceDetails(data.id));
+				ManageView.push(new PerformanceDetails(data.id));
 		}, "json");
 	};
 
