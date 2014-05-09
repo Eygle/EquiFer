@@ -1,11 +1,13 @@
 <?php
 
+require_once dirname(__FILE__).'/db-config.php';
+
 class DBAnimals extends SQLite3 {
 
 	public static $frenchMonths = array(null, "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre");
 
 	public function __construct() {
-		$this->open(dirname(__FILE__).'/database.sqlite');
+		$this->open(dirname(__FILE__).'/'.DB_NAME);
 	}
 
 	public function getList($job) {

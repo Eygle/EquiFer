@@ -1,11 +1,12 @@
 <?php
 
+require_once dirname(__FILE__).'/db-config.php';
 require_once dirname(__FILE__).'/DBAnimals.class.php';
 
 class DBClients extends SQLite3 {
 
 	public function __construct() {
-		$this->open(dirname(__FILE__).'/database.sqlite');
+		$this->open(dirname(__FILE__).'/'.DB_NAME);
 	}
 
 	public function getList($job) {
@@ -135,9 +136,9 @@ class DBClients extends SQLite3 {
 	}
 
 	public function linkToJob($job, $id) {
-		$stmt = $this->prepare('INSERT INTO link_job_clients(job, clientId) VALUES(:job, :clientId);');
+		$stmt = $this->prepare('INSERT INTO link_job_clients(job, clientId) VALUES(:job, :id);');
 		$stmt->bindValue(':job', $job);
-		$stmt->bindValue(':clientId', $id);
+		$stmt->bindValue(':id', $id);
 		$stmt->execute();
 	}
 }

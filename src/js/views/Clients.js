@@ -202,7 +202,6 @@ var ClientFormView = function(data) {
 				phoneFixe:		$('#formView #phoneFixe').val(),
 				phoneMobile:	$('#formView #phoneMobile').val(),
 				mail:			$('#formView #mail').val(),
-				puce:			$('#formView #puce').val(),
 				inFarriery:		$('#formView #inFarriery').is(':checked'),
 				inPension:		$('#formView #inPension').is(':checked'),
 		};
@@ -219,7 +218,7 @@ var ClientFormView = function(data) {
 
 	this.checkForm = function(data) {
 		if (!data.firstName || !data.lastName) {
-			alert("Les nom et prénom du client sont nécessaire");
+			alert("Les nom et prénom du client sont nécessaires");
 			return false;
 		} else if (!data.address) {
 			alert("L'addresse du client est nécessaire");

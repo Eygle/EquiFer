@@ -10,14 +10,14 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-	z-index: 999;
+	z-index: 99;
 }
 
 #rightClickPopup {
 	position: absolute;
 	background-color: white;
 	border: 1px solid #ddd;
-	z-index: 1000;
+	z-index: 100;
 	border-radius: 5px;
 	padding: 3px;
 }

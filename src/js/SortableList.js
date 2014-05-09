@@ -21,14 +21,15 @@ var SortableList = function(tableId, titles, list, clickCallback, rightClickCall
 		else
 			this.lastLabelOrder = "ASC";
 		this.lastLabel = label;
-		console.log(type);
-		console.log(label);
 		switch (type) {
 			case "string":
 				this.list.sort(sortBy(label, this.lastLabelOrder == "ASC", function(a) {return a ? a.toUpperCase() : ""}));
 				break;
 			case "int":
 				this.list.sort(sortBy(label, this.lastLabelOrder == "ASC", parseInt));
+				break;
+			case "float":
+				this.list.sort(sortBy(label, this.lastLabelOrder == "ASC", parseFloat));
 				break;
 		}
 		$("#" + this.tableId).html("");

@@ -1,6 +1,11 @@
 var Config = {
-	job:		null,
-	animalsApi:	"api/animalsApi.php",
-	clientsApi:	"api/clientsApi.php",
-	citiesApi:	"api/citiesApi.php", 
+	job:				null,
+	animalsApi:			"api/animalsApi.php",
+	clientsApi:			"api/clientsApi.php",
+	citiesApi:			"api/citiesApi.php",
+	performancesApi:	"api/performancesApi.php",
+	settingsApi:		"api/settingsApi.php", 
+
+	// Could be customize
+	TVA:			"19,6",
 };

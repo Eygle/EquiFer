@@ -94,6 +94,10 @@
 	box-sizing: border-box;
 }
 
+.one-col {
+	width: 100%;
+}
+
 .center {
 	text-align: center;
 }
