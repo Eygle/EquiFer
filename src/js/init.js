@@ -30,6 +30,7 @@ function initProgram() {
 	$("#corps").show();
 	new Tabs();
 	initShortcuts();
+	$('#settings').click(function() {new SettingsPanel();});
 	ManageView.init();
 	ManageView.push(new HomeView());
 }
