@@ -4,12 +4,12 @@ table {
 	border-collapse: collapse;
 }
 
-tr {
+tbody tr {
 	cursor: pointer;
 }
 
-tr:hover td {
-	background-image: linear-gradient(white, #f8f8fa);
+tbody tr:hover td {
+	background-image: linear-gradient(#f1fbff, #fccf0ff);
 }
 
 th {
@@ -18,6 +18,10 @@ th {
 	border-bottom: 1px solid #ccd0cf;
 	border-right: 1px solid #d5dfe8;
 	font-weight: normal;
+}
+
+th:hover {
+	background-image: linear-gradient(#f1fbff, #fccf0ff);
 }
 
 td {
