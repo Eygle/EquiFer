@@ -88,7 +88,6 @@ CREATE TABLE "owner_infos" (
 
 INSERT INTO owner_infos VALUES("Prénom", "Nom", "Adresse", 00000, "Ville", "0200000000", "0600000000", "mail@example.com", "SIRET", "Nom de l'entreprise");
 
-
 CREATE INDEX "horses_id" ON "horses" ("id");
 CREATE INDEX "clients_id" ON "clients" ("id");
 CREATE INDEX "performances_id" ON "performances" ("id");

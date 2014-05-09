@@ -15,10 +15,10 @@ var PerformancesView = function() {
 		$('#listView').show();
 		$.getJSON(Config.performancesApi, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
 			titles = [
-				{label:"name",				title:"Nom",	dataType:"string"},
-				{label:"formattedPrice",	title:"Prix",	dataType:"float"},
-				{label:"formattedTVA",		title:"TVA",	dataType:"float"},
-				{label:"unit",				title:"Unité",	dataType:"string"}
+				{label:"name",				title:this.PERF_LABEL_NAME,		dataType:"string"},
+				{label:"formattedPrice",	title:this.PERF_LABEL_PRICE,	dataType:"float"},
+				{label:"formattedTVA",		title:this.PERF_LABEL_TVA,		dataType:"float"},
+				{label:"unit",				title:this.PERF_LABEL_UNIT,		dataType:"string"}
 			];
 			new SortableList("performancesList", titles, data, function(id) {
 				ManageView.push(new PerformanceDetails(id));
@@ -141,19 +141,19 @@ var PerformanceFormView = function(data) {
 
 	this.checkForm = function(data) {
 		if (!data.name) {
-			alert(Strings.REQUIRE_PERF_NAME);
+			alert(Strings.PERF_REQUIRE_NAME);
 			return false;
 		} else if (!data.price) {
-			alert(Strings.REQUIRE_PERF_PRICE);
+			alert(Strings.PERF_REQUIRE_PRICE);
 			return false;
 		} else if (!data.tva) {
-			alert(Strings.REQUIRE_PERF_TVA);
+			alert(Strings.PERF_REQUIRE_TVA);
 			return false;
 		} else if (!data.unit) {
-			alert(Strings.REQUIRE_PERF_UNIT);
+			alert(Strings.PERF_REQUIRE_UNIT);
 			return false;
 		} else if (!data.inFarriery && !data.inPension) {
-			alert(Strings.REQUIRE_PERF_JOB);
+			alert(Strings.PERF_REQUIRE_JOB);
 			return false;
 		}
 		return true;

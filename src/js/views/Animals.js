@@ -15,14 +15,14 @@ var AnimalsView = function() {
 		$('#listView').show();
 		$.getJSON(Config.animalsApi, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
 			titles = [
-				{label:"name",		title:"Nom",			dataType:"string"},
-				{label:"owners",	title:"Propriétaires",	dataType:"string"},
-				{label:"type",		title:"Type",			dataType:"string"},
-				{label:"race",		title:"Race",			dataType:"string"},
-				{label:"age",		title:"Âge",			dataType:"string"},
-				{label:"size",		title:"Taille",			dataType:"int"},
-				{label:"colour",	title:"Robe",			dataType:"string"},
-				{label:"puce",		title:"N° de puce",		dataType:"string"},
+				{label:"name",		title:Strings.ANIMALS_LABEL_NAME,	dataType:"string"},
+				{label:"owners",	title:Strings.ANIMALS_LABEL_OWNERS,	dataType:"string"},
+				{label:"type",		title:Strings.ANIMALS_LABEL_TYPE,	dataType:"string"},
+				{label:"race",		title:Strings.ANIMALS_LABEL_RACE,	dataType:"string"},
+				{label:"age",		title:Strings.ANIMALS_LABEL_AGE,	dataType:"string"},
+				{label:"size",		title:Strings.ANIMALS_LABEL_SIZE,	dataType:"int"},
+				{label:"colour",	title:Strings.ANIMALS_LABEL_COLOUR,	dataType:"string"},
+				{label:"puce",		title:Strings.ANIMALS_LABEL_PUCE,	dataType:"string"},
 
 			];
 			new SortableList("animalsList", titles, data, function(id) {
@@ -80,7 +80,7 @@ var AnimalDetails = function(id) {
 	this.manageButtonClick = function(button) {
 		if (button == "edit")
 			ManageView.push(new AnimalFormView(_this.data));
-		else if (button == "remove" && confirm('Voulez vous vraiment supprimer "' + _this.data.name + '" ?')) {
+		else if (button == "remove" && confirm(Strings.CONFIRM_DELETE + ' "' + _this.data.name + '" ?')) {
 			$.post(Config.animalsApi, {action:"delete", id:_this.data.id}, function() {
 				ManageView.pop();
 			});
@@ -126,11 +126,11 @@ var AnimalFormView = function(data) {
 		this.applyDatePicker();
 		$('#formView #name').val(this.data.name);
 		$('#formView #gender [value=' + this.data.gender + ']').prop('selected', true);
-		$("#formView #type").autocomplete({source: this.typeAutocomplete()}).val(this.data.type);
-		$("#formView #race").autocomplete({source: this.raceAutocomplete()}).val(this.data.race);
-		$("#formView #colour").autocomplete({source: this.colourAutocomplete()}).val(this.data.colour);
-		$("#formView #headMark").autocomplete({source: this.headMarkAutocomplete()}).val(this.data.headMark);
-		$("#formView #footMark").autocomplete({source: this.footMarkAutocomplete()}).val(this.data.footMark);
+		$("#formView #type").autocomplete({source: Strings.ANIMALS_AUTOCOMPLETE_TYPE}).val(this.data.type);
+		$("#formView #race").autocomplete({source: Strings.ANIMALS_AUTOCOMPLETE_RACE}).val(this.data.race);
+		$("#formView #colour").autocomplete({source: Strings.ANIMALS_AUTOCOMPLETE_COLOUR}).val(this.data.colour);
+		$("#formView #headMark").autocomplete({source: Strings.ANIMALS_AUTOCOMPLETE_HEAD_MARK}).val(this.data.headMark);
+		$("#formView #footMark").autocomplete({source: Strings.ANIMALS_AUTOCOMPLETE_FOOT_MARK}).val(this.data.footMark);
 		$('#formView #size').val(this.data.size);
 		$('#formView #puce').val(this.data.puce);
 		$('#formView #birthdate').val(this.data.birthdate);
@@ -176,19 +176,19 @@ var AnimalFormView = function(data) {
 
 	this.checkForm = function(data) {
 		if (!data.name) {
-			alert("Le nom de l'animal est nécessaire");
+			alert(Strings.ANIMALS_REQUIRE_NAME);
 			return false;
 		} else if (!data.type) {
-			alert("Le type de l'animal est nécessaire");
+			alert(Strings.ANIMALS_REQUIRE_TYPE);
 			return false;
 		} else if (!data.race) {
-			alert("La race de l'animal est nécessaire");
+			alert(Strings.ANIMALS_REQUIRE_RACE);
 			return false;
 		} else if (!this.checkBirthdate(data.birthdate)) {
-			alert("La date de naissance de l'animal est vide ou mal formattée");
+			alert(Strings.ANIMALS_WRONG_DATE_FORMAT);
 			return false;
 		} else if (!data.inFarriery && !data.inPension) {
-			alert("L'animal doit au moins apartenir à l'une des catégories suivantes:\nMaréchalerie ou Pension");
+			alert(Strings.ANIMALS_REQUIRE_JOB);
 			return false;
 		}
 		return true;
@@ -241,159 +241,5 @@ var AnimalFormView = function(data) {
 	this.formatDate = function(date) {
 		date = date.split("/");
 		return date[1] + "-" + date[0] + "-01";
-	};
-
-	this.typeAutocomplete = function() {
-		return [
-			"Cheval de trait",
-			"Cheval de selle",
-			"Poney",
-			"Shetland",
-			"Mule / Bardot",
-			"Âne",
-			"Zèbre"
-		];
-	};
-
-	this.raceAutocomplete = function() {
-		return [
-			"Pur-sang Arabe",
-			"Pur-sang Anglais",
-			"Selle Français",
-			"Trotteur Français",
-			"AQPS",
-			"Anglo-Arabe",
-			"Lusitanien",
-			"Lipizzan",
-			"PRE",
-			"Trakehner",
-			"Barbe",
-			"Camargue",
-			"Mérens",
-			"Fjord",
-			"Henson",
-			"Islandais",
-			"Quaterhorse",
-			"Appaloosa",
-			"Paint horse",
-			"Connemara",
-			"New forest",
-			"Poney landais",
-			"Poney français de selle",
-			"Haflinger",
-			"Dartmoore",
-			"Pottok",
-			"Highland",
-			"Welsh",
-			"Shetland",
-			"Falabella",
-			"Le cheval miniature",
-			"Percheron",
-			"Ardennais",
-			"Boulonnais",
-			"Trait du Nord",
-			"Cob Normand",
-			"Comtois",
-			"Trait Breton",
-			"Poitevin Mulassier",
-			"Âne Normand",
-			"Âne de Provence",
-			"Âne des Pyrénées",
-			"Âne du Cotentin",
-			"Baudet du Poitou",
-			"Grand noir du Berry",
-			"Mule Poitevine",
-			"Mule des Pyrénées",
-			"Mule Seynarde",
-			"Mule Savoyarde",
-			"ONC"
-		];
-	};
-
-	this.colourAutocomplete = function() {
-		return [
-			"Noir",
-			"Noir pangaré",
-			"Noir grisonnant",
-			"Bai clair",
-			"Bai foncé",
-			"Bai brun",
-			"Bai cerise",
-			"Bai grisonnant",
-			"Isabelle clair",
-			"Isabelle foncé",
-			"Bai sourris",
-			"Alezan brûlé",
-			"Alezan foncé",
-			"Alezan cuivré",
-			"Alezan grisonnant",
-			"Café au lait",
-			"Palomino",
-			"Blanc",
-			"Crémello",
-			"Perlino",
-			"Gris",
-			"Gris vlair",
-			"Gris foncé",
-			"Gris truité",
-			"Gris mouchetté",
-			"Gris tourterelle",
-			"Chocolat",
-			"Rouan",
-			"Aubère",
-			"Louvet",
-			"Champagne",
-			"Pomelé",
-			"Floconné",
-			"Pie noir",
-			"Pie bai",
-			"Pie alezan",
-			"Pie gris",
-			"Pie palomino",
-			"Pie tobiano",
-			"Pie overo",
-			"Pie tovero",
-			"Tâcheté léopard",
-			"Tâcheté cape",
-			"Tâcheté marmoré",
-			"Tâcheté rayé",
-			"Tâcheté bringé"
-		];
-	};
-
-	this.headMarkAutocomplete = function() {
-		return [
-			 "Losange",
-			"Pelote",
-			"Etoile",
-			"Croissant",
-			"Fleur de lys",
-			"Poire renversée",
-			"Fer de lance",
-			"Coeur",
-			"Liste fine",
-			"Liste normale",
-			"Liste large",
-			"Liste interrompue",
-			"Liste courte",
-			"Liste déviée",
-			"Liste débordante",
-			"Liste belle face",
-			"Ladres"
-		];
-	};
-
-	this.footMarkAutocomplete = function() {
-		return [
-			"Trace de balzane",
-			"En courronne",
-			"Bracelet",
-			"Petite Balzane",
-			"Grande balzane",
-			"Balzane chaussette",
-			"Balzane haut-chaussée",
-			"Balzane herminée",
-			"Zébrures"
-		];
 	};
 };

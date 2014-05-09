@@ -15,13 +15,13 @@ var ClientsView = function() {
 		$('#listView').show();
 		$.getJSON(Config.clientsApi, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
 			titles = [
-				{label:"name",			title:"Nom",			dataType:"string"},
-				{label:"animals",		title:"Animaux",		dataType:"string"},
-				{label:"phoneMobile",	title:"Portable",		dataType:"int"},
-				{label:"phoneFixe",		title:"Fixe",			dataType:"int"},
-				{label:"address",		title:"Adresse",		dataType:"string"},
-				{label:"zipcode",		title:"Code Postal",	dataType:"int"},
-				{label:"city",			title:"Ville",			dataType:"string"}
+				{label:"name",			title:Strings.CLIENTS_LABEL_NAME,			dataType:"string"},
+				{label:"animals",		title:Strings.CLIENTS_LABEL_ANIMALS,		dataType:"string"},
+				{label:"phoneMobile",	title:Strings.CLIENTS_LABEL_PHONE_MOBILE,	dataType:"int"},
+				{label:"phoneFixe",		title:Strings.CLIENTS_LABEL_PHONE_FIXE,		dataType:"int"},
+				{label:"address",		title:Strings.CLIENTS_LABEL_ADDRESS,		dataType:"string"},
+				{label:"zipcode",		title:Strings.CLIENTS_LABEL_NAME_ZIPCODE,	dataType:"int"},
+				{label:"city",			title:Strings.CLIENTS_LABEL_CITY,			dataType:"string"}
 			];
 			new SortableList("clientsList", titles, data, function(id) {
 				ManageView.push(new ClientDetails(id));
@@ -118,7 +118,7 @@ var ClientDetails = function(id) {
 	this.manageButtonClick = function(button) {
 		if (button == "edit")
 			ManageView.push(new ClientFormView(_this.data));
-		else if (button == "remove" && confirm('Voulez vous vraiment supprimer "' + _this.data.name + '" ?')) {
+		else if (button == "remove" && confirm(Strings.CONFIRM_DELETE + ' "' + _this.data.name + '" ?')) {
 			$.post(Config.clientsApi, {action:"delete", id:_this.data.id}, function() {
 				ManageView.pop();
 			});
@@ -218,16 +218,16 @@ var ClientFormView = function(data) {
 
 	this.checkForm = function(data) {
 		if (!data.firstName || !data.lastName) {
-			alert("Les nom et prénom du client sont nécessaires");
+			alert(Strings.CLIENTS_REQUIRE_NAME);
 			return false;
 		} else if (!data.address) {
-			alert("L'addresse du client est nécessaire");
+			alert(Strings.CLIENTS_REQUIRE_ADDRESS);
 			return false;
 		} else if (!data.zipcode) {
-			alert("La code postal du client est nécessaire");
+			alert(Strings.CLIENTS_REQUIRE_ZIPCODE);
 			return false;
 		} else if (!data.inFarriery && !data.inPension) {
-			alert("Le client doit au moins apartenir à l'une des catégories suivantes:\nMaréchalerie ou Pension");
+			alert(Strings.CLIENTS_REQUIRE_JOB);
 			return false;
 		}
 		return true;

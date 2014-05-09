@@ -43,7 +43,6 @@
 	vertical-align: top;
 	overflow-y: auto;
 	position: relative;
-	white-space: pre-line;
 }
 
 .line {
@@ -106,4 +105,8 @@
 	display: none;
 	width: 100%;
 	height: 100%;
+}
+
+.line-breaks {
+	white-space: pre-line;
 }

@@ -50,7 +50,7 @@ var SettingsPanel = function() {
 
 			if (!_this.checkUserInfos(params)) return;
 			$.post(Config.settingsApi, params, function() {
-				_this.displayMessage(true, "Les informations ont bien étées enregistrées");
+				_this.displayMessage(true, Strings.MESSAGE_SAVE_SUCESS);
 			});
 		});
 
@@ -92,25 +92,25 @@ var SettingsPanel = function() {
 	this.checkUserInfos = function(data) {
 		var mailRegexp = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 		if (!data.firstName || !data.lastName) {
-			this.displayMessage(false, "Les nom et prénom sont nécessaires");
+			this.displayMessage(false, Strings.SETTINGS_USER_REQUIRE_NAME);
 			return false;
 		} else if (!data.address) {
-			this.displayMessage(false,"L'addresse est nécessaire");
+			this.displayMessage(false, Strings.SETTINGS_USER_REQUIRE_ADDRESS);
 			return false;
 		} else if (!data.zipcode) {
-			this.displayMessage(false,"La code postal est nécessaire");
+			this.displayMessage(false, Strings.SETTINGS_USER_REQUIRE_ZIPCODE);
 			return false;
 		} else if(!data.mail) {
-			this.displayMessage(false,"L'adresse mail est nécessaire");
+			this.displayMessage(false, Strings.SETTINGS_USER_REQUIRE_MAIL);
 			return false;
 		} else if (!mailRegexp.test(data.mail)) {
-			this.displayMessage(false,"L'adresse mail est mal formattée");
+			this.displayMessage(false, Strings.SETTINGS_USER_MAIL_WRONG_FORMAT);
 			return false;
 		} else if (!data.phoneFixe && !data.phoneMobile) {
-			this.displayMessage(false, "Il faut au moins un numéro de téléphone");
+			this.displayMessage(false, Strings.SETTINGS_USER_REQUIRE_PHONE);
 			return false;
 		} else if (!data.companyName) {
-			this.displayMessage(false,"Le nom de l'entreprise est nécessaire");
+			this.displayMessage(false, Strings.SETTINGS_USER_REQUIRE_COMPANY);
 			return false;
 		}
 		return true;
