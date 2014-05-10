@@ -48,13 +48,23 @@ try {
 				Utils::checkPostArgs('id');
 				$db->delete($_POST['id']);
 				break;
+			case "addPerformance":
+				Utils::checkPostArgs(array('animalId', 'performanceId', 'quantity'));
+				$db->addPerformance($_POST['animalId'], $_POST['performanceId'], $_POST['quantity']);
+				break;
+			case "editPerformance":
+				Utils::checkPostArgs(array('animalId', 'performanceId', 'quantity'));
+				$db->editPerformanceQuantity($_POST['animalId'], $_POST['performanceId'], $_POST['quantity']);
+				break;
+			case "deletePerformance":
+				Utils::checkPostArgs(array('animalId', 'performanceId'));
+				$db->deletePerformance($_POST['animalId'], $_POST['performanceId']);
+				break;
 		}
 	}
 }
 catch(Exception $e) {
 	echo json_encode(array("Error", $e->getMessage()));
 }
-
-$db->close();
 
 ?>

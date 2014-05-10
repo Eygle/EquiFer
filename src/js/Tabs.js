@@ -4,7 +4,8 @@ var Tabs = function() {
 		{id:"clients",		label:Strings.TAB_CLIENTS},
 		{id:"animals",		label:Strings.TAB_ANIMALS},
 		{id:"performances",	label:Strings.TAB_PERF},
-		{id:"stocks",		label:Strings.TAB_STOCKS},
+		{id:"bills",		label:Strings.TAB_BILLS},
+		//{id:"stocks",		label:Strings.TAB_STOCKS},
 	];
 
 	var _this = this;
@@ -32,6 +33,9 @@ var Tabs = function() {
 			case "performances":
 				ManageView.setAsRoot(new PerformancesView());
 			break;
+			case "bills":
+				ManageView.setAsRoot(new BillsView());
+				break;
 			case "stocks":
 				ManageView.setAsRoot(new StocksView());
 				break;

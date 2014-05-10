@@ -4,8 +4,12 @@ require_once dirname(__FILE__).'/db-config.php';
 
 class DBCities extends SQLite3 {
 
-	public function __construct() {
+	function __construct() {
 		$this->open(dirname(__FILE__).'/'.DB_CITIES);
+	}
+
+	function __destruct() {
+		$this->close();
 	}
 
 	public function autocomplete($term) {

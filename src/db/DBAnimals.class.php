@@ -6,8 +6,12 @@ class DBAnimals extends SQLite3 {
 
 	public static $frenchMonths = array(null, "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre");
 
-	public function __construct() {
+	function __construct() {
 		$this->open(dirname(__FILE__).'/'.DB_NAME);
+	}
+
+	function __destruct() {
+		$this->close();
 	}
 
 	public function getList($job) {
@@ -28,7 +32,23 @@ class DBAnimals extends SQLite3 {
 		$stmt = $this->prepare('SELECT * FROM horses WHERE id = :id');
 		$stmt->bindValue(':id', $id);
 		$res = $stmt->execute();
-		return $this->format($res->fetchArray(SQLITE3_ASSOC));
+		$ret = $this->format($res->fetchArray(SQLITE3_ASSOC));
+		$ret['performancesList'] = $this->getPerformancesList($ret['id']);
+		return $ret;
+	}
+
+	private function getPerformancesList($id) {
+		$stmt = $this->prepare('SELECT p.*, quantity
+			FROM link_horses_performances AS lhp
+			LEFT JOIN performances AS p ON lhp.performanceId = p.id
+			WHERE horseId = :id;');
+		$stmt->bindValue('id', $id);
+		$res = $stmt->execute();
+		$ret = array();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$ret[] = $row;
+		}
+		return $ret;
 	}
 
 	public function search($job, $term) {
@@ -154,16 +174,36 @@ class DBAnimals extends SQLite3 {
 		$stmt->execute();
 	}
 
-	private function deleteLinksToClients($id) {
-		$stmt = $this->prepare('DELETE FROM link_clients_horses WHERE horseId = :horseId;');
-		$stmt->bindValue(':horseId', $id);
-		$stmt->execute();
-	}
-
 	public function linkToJob($job, $id) {
 		$stmt = $this->prepare('INSERT INTO link_job_horses(job, horseId) VALUES(:job, :horseId);');
 		$stmt->bindValue(':job', $job);
 		$stmt->bindValue(':horseId', $id);
+		$stmt->execute();
+	}
+
+	public function addPerformance($horseId, $performanceId, $quantity) {
+		$stmt = $this->prepare('INSERT INTO link_horses_performances(horseId, performanceId, quantity)
+			VALUES(:horseId, :performanceId, :quantity);');
+		$stmt->bindValue(':horseId', $horseId);
+		$stmt->bindValue(':performanceId', $performanceId);
+		$stmt->bindValue(':quantity', $quantity);
+		$stmt->execute();
+	}
+
+	public function editPerformanceQuantity($horseId, $performanceId, $quantity) {
+		$stmt = $this->prepare('UPDATE link_horses_performances
+			SET quantity = :quantity
+			WHERE horseId = :horseId AND performanceId = :performanceId;');
+		$stmt->bindValue(':horseId', $horseId);
+		$stmt->bindValue(':performanceId', $performanceId);
+		$stmt->bindValue(':quantity', $quantity);
+		$stmt->execute();
+	}
+
+	public function deletePerformance($horseId, $performanceId) {
+		$stmt = $this->prepare('DELETE FROM link_horses_performances WHERE horseId = :horseId AND performanceId = :performanceId;');
+		$stmt->bindValue(':horseId', $horseId);
+		$stmt->bindValue(':performanceId', $performanceId);
 		$stmt->execute();
 	}
 }

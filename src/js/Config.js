@@ -1,5 +1,8 @@
 var Config = {
 	job:				null,
+
+	textareaFocused:	false,
+
 	animalsApi:			"api/animalsApi.php",
 	clientsApi:			"api/clientsApi.php",
 	citiesApi:			"api/citiesApi.php",

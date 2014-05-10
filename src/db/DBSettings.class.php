@@ -4,8 +4,12 @@ require_once dirname(__FILE__).'/db-config.php';
 
 class DBSettings extends SQLite3 {
 
-	public function __construct() {
+	function __construct() {
 		$this->open(dirname(__FILE__).'/'.DB_NAME);
+	}
+
+	function __destruct() {
+		$this->close();
 	}
 
 	public function getUser() {

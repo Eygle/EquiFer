@@ -4,8 +4,12 @@ require_once dirname(__FILE__).'/db-config.php';
 
 class DBPerformances extends SQLite3 {
 
-	public function __construct() {
+	function __construct() {
 		$this->open(dirname(__FILE__).'/'.DB_NAME);
+	}
+
+	function __destruct() {
+		$this->close();
 	}
 
 	public function getList($job) {
@@ -45,6 +49,23 @@ class DBPerformances extends SQLite3 {
 				$ret['inFarriery'] = true;
 			else if ($row['job'] == "PENSION")
 				$ret['inPension'] = true;
+		}
+		return $ret;
+	}
+
+	public function search($job, $term) {
+		$stmt = $this->prepare('SELECT p.*
+			FROM link_job_performances AS ljp
+			LEFT JOIN performances AS p ON ljp.performanceId = p.id
+			WHERE job = :job
+			AND p.name LIKE :term
+			LIMIT 15;');
+		$stmt->bindValue(':job', $job);
+		$stmt->bindValue(':term', $term.'%');
+		$res = $stmt->execute();
+		$ret = array();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$ret[] = $this->formatInfos($row);
 		}
 		return $ret;
 	}

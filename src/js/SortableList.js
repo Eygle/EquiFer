@@ -47,7 +47,7 @@ var SortableList = function(tableId, titles, list, clickCallback, rightClickCall
 		for (var i in this.list) {
 			var $tr = $('<tr>').attr('id', this.list[i].id);
 			for (var j in this.titles) {
-				$tr.append($('<td>').text(this.list[i][this.titles[j].label]));
+				$tr.append($('<td>').attr('label', this.titles[j].label).text(this.list[i][this.titles[j].label]));
 			}
 			$tr.click(function() {
 				_this.clickCallback(this.id);

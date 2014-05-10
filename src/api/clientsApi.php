@@ -46,7 +46,7 @@ try {
 				Utils::checkPostArgs(array('clientId', 'animalId'));
 				$db->addLinkToHorse($_POST['clientId'], $_POST['animalId']);
 				break;
-			case 'deleteLinkWithAnimal':
+			case 'unlinkAnimal':
 				Utils::checkPostArgs(array('clientId', 'animalId'));
 				$db->deleteLinkToHorse($_POST['clientId'], $_POST['animalId']);
 				break;
@@ -56,7 +56,5 @@ try {
 catch(Exception $e) {
 	echo json_encode(array("Error", $e->getMessage()));
 }
-
-$db->close();
 
 ?>

@@ -12,6 +12,8 @@ function initShortcuts() {
 			case 13:	// Enter
 				if ($('#addButton').is(':visible'))
 					$('#addButton').trigger('click');
+				else if (!Config.textareaFocused && $('#saveButton').is(':visible'))
+					$('#saveButton').trigger('click');
 			break;
 			case 27:	// Escape
 				if ($('#returnButton').is(':visible'))

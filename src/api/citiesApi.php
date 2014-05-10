@@ -8,6 +8,4 @@ if (isset($_GET['term'])) {
 	echo json_encode($db->autocomplete($_GET['term']));
 }
 
-$db->close();
-
 ?>

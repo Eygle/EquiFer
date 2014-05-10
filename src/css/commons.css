@@ -121,3 +121,9 @@
 .line-breaks {
 	white-space: pre-line;
 }
+
+.top-right {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}

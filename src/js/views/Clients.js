@@ -67,10 +67,10 @@ var ClientDetails = function(id) {
 
 			// Animal part
 			titles = [
-				{label:"name",		title:"Nom",			dataType:"string"},
-				{label:"type",		title:"Type",			dataType:"string"},
-				{label:"race",		title:"Race",			dataType:"string"},
-				{label:"age",		title:"Âge",			dataType:"string"}
+				{label:"name",		title:Strings.ANIMALS_LABEL_NAME,			dataType:"string"},
+				{label:"type",		title:Strings.ANIMALS_LABEL_TYPE,			dataType:"string"},
+				{label:"race",		title:Strings.ANIMALS_LABEL_RACE,			dataType:"string"},
+				{label:"age",		title:Strings.ANIMALS_LABEL_AGE,			dataType:"string"}
 
 			];
 			new SortableList("clientHorsesList", titles, _this.data.animalsList, function(id) {
@@ -81,11 +81,11 @@ var ClientDetails = function(id) {
 					document.oncontextmenu = function() {return true;};
 				});
 				var popup = $('<div>').attr('id', 'rightClickPopup').css({left: x, top: y});
-				var button = $('<div>').attr({class:'rightClickButton', id: id}).text("Retirer de la liste").click(function() {
+				var button = $('<div>').attr({class:'rightClickButton', id: id}).text(Strings.REMOVE_FROM_LIST).click(function() {
 					document.oncontextmenu = function() {return true;};
 					$('#rightClickBack').remove();
 					$.post(Config.clientsApi, {
-						action: 'deleteLinkWithAnimal',
+						action: 'unlinkAnimal',
 						clientId:_this.id,
 						animalId:this.id
 					}, function() {
@@ -100,9 +100,9 @@ var ClientDetails = function(id) {
 				source : Config.animalsApi + "?action=search&job=" + Config.job.toUpperCase(),
 				select : function(event, ui) {
 					$.post(Config.clientsApi, {
-						action:"linkAnimal",
-						clientId:_this.id,
-						animalId:ui.item.id
+						action:		"linkAnimal",
+						clientId:	_this.id,
+						animalId:	ui.item.id
 					}, function() {
 						ManageView.display();
 					});

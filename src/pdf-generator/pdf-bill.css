@@ -1,0 +1,108 @@
+* {
+	font-family: arial, Sans-serif;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+#header {
+	width: 100%;
+	text-align: center;
+}
+
+.mail {
+	color: #888;
+	text-decoration: underline;
+}
+
+.company {
+	font-size: 1.4em;
+	font-weight: bold;
+}
+
+.hidden {
+	width: 100%;
+}
+
+.hidden .first {
+	width: 60%;
+}
+
+.hidden .second {
+	padding-left: 40px;
+}
+
+.bill-label {
+	border: 1px solid #888;
+}
+
+.bill-label th {
+	background-color: #ddd;
+	font-size: 1.2em;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.bill-label td {
+	padding: 3px 10px 3px 10px;
+}
+
+.bill {
+	border: 1px solid #888;
+	width: 100%;
+	margin-top: 30px;
+}
+
+.bill th {
+	border-bottom: 1px solid #888;
+	background-color: #ddd;
+	font-weight: normal;
+}
+
+.bill td {
+	border-right: 1px solid #888;
+	padding: 3px 5px 3px 5px;
+}
+
+.bill .back-highlight, .bill .horseName {
+	background-color: #bbb;
+}
+
+.horseName {
+	border: 1px solid #888;
+	font-weight: bold;
+}
+
+.center {
+	text-align: center;
+}
+
+.right {
+	text-align: right;
+	padding-right: 5px;
+}
+
+.tripple td {
+	width: 33.33%;
+}
+
+.totals {
+	width: 100%;
+	margin-top: 30px;
+	border: 1px solid #888;
+}
+
+.totals td {
+	border-right: 1px solid #888;
+	padding: 3px 0 3px 5px;
+}
+
+.totals .highlight {
+	background-color: #aaa;
+	font-weight: bold;
+}
+
+.totals .gap {
+	height: 20px;
+}

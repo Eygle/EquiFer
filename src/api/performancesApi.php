@@ -17,6 +17,10 @@ try {
 				Utils::checkGetArgs('id');
 				echo json_encode($db->getInfo($_GET['id']));
 				break;
+			case "search":
+				Utils::checkGetArgs(array('job', 'term'));
+				echo json_encode($db->search($_GET['job'], $_GET['term']));
+				break;
 		}
 	} else {
 		Utils::checkPostArgs('action');
@@ -45,7 +49,5 @@ try {
 catch(Exception $e) {
 	echo json_encode(array("Error", $e->getMessage()));
 }
-
-$db->close();
 
 ?>

@@ -5,10 +5,14 @@ var FR = function() {
 	this.TAB_ANIMALS	= "Animaux";
 	this.TAB_PERF		= "Prestations";
 	this.TAB_STOCKS		= "Stocks";
+	this.TAB_BILLS		= "Factures";
 
 	// Commons
-	this.CONFIRM_DELETE			= "Voulez vous vraiment supprimer";
-	this.MESSAGE_SAVE_SUCESS	= "Les informations ont bien étées enregistrées";
+	this.CONFIRM_DELETE				= "Voulez vous vraiment supprimer";
+	this.MESSAGE_SAVE_SUCESS		= "Les informations ont bien étées enregistrées";
+	this.REMOVE_FROM_LIST			= "Retirer de la liste";
+	this.REMOVE						= "Supprimer";
+	this.MODIFY_QUANTITY			= "Modifier la quantité";
 
 	// Animals
 	this.ANIMALS_LABEL_NAME		= "Nom";
@@ -41,10 +45,11 @@ var FR = function() {
 	this.CLIENTS_REQUIRE_JOB		= "Le client doit au moins apartenir à l'une des catégories suivantes:\nMaréchalerie ou Pension";
 
 	// Performances
-	this.PERF_LABEL_NAME	= "Nom";
-	this.PERF_LABEL_PRICE	= "Prix";
-	this.PERF_LABEL_TVA		= "TVA";
-	this.PERF_LABEL_UNIT	= "Unité";
+	this.PERF_LABEL_NAME		= "Nom";
+	this.PERF_LABEL_PRICE		= "Prix";
+	this.PERF_LABEL_TVA			= "TVA";
+	this.PERF_LABEL_UNIT		= "Unité";
+	this.PERF_LABEL_QUANTITY	= "Quantité";
 
 	this.PERF_REQUIRE_NAME		= "Le nom de la prestation est nécessaire";
 	this.PERF_REQUIRE_PRICE		= "Le prix de la prestation est nécessaire";

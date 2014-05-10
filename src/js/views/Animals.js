@@ -74,6 +74,71 @@ var AnimalDetails = function(id) {
 			if (!_this.data.isAlive)
 				$('#detailView #icons').append($('<img src="images/dead.png" />'));
 			$('#detailView #icons').append($('<img src="images/' + _this.data.gender + '.png" />'));
+
+			// Performances part
+			titles = [
+				{label:"name",		title:Strings.PERF_LABEL_NAME,			dataType:"string"},
+				{label:"unit",		title:Strings.PERF_LABEL_PRICE,			dataType:"float"},
+				{label:"tva",		title:Strings.PERF_LABEL_TVA,			dataType:"float"},
+				{label:"unit",		title:Strings.PERF_LABEL_UNIT,			dataType:"string"},
+				{label:"quantity",	title:Strings.PERF_LABEL_QUANTITY,		dataType:"int"}
+
+			];
+			new SortableList("clientHorsesList", titles, _this.data.performancesList, function(id) {
+				ManageView.push(new PerformanceDetails(id));
+			}, function(x, y, id) {
+				var background = $('<div>').attr('id', "rightClickBack").click(function() {
+					$(this).remove();
+					document.oncontextmenu = function() {return true;};
+				});
+				var popup = $('<div>').attr('id', 'rightClickPopup').css({left: x, top: y});
+				var button1 = $('<div>').attr({class:'rightClickButton quantity-icon', id: id}).text(Strings.MODIFY_QUANTITY).click(function() {
+					document.oncontextmenu = function() {return true;};
+					$('#rightClickBack').remove();
+					var newQuantity = prompt(Strings.MODIFY_QUANTITY, $("#clientHorsesList #" + this.id + " [label=quantity]").text());
+					if (newQuantity) {
+						$.post(Config.animalsApi, {
+							action:			'editPerformance',
+							animalId:		_this.id,
+							performanceId:	this.id,
+							quantity:		newQuantity
+						}, function() {
+							ManageView.display();
+						});
+					}
+				});
+				var button2 = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE).click(function() {
+					document.oncontextmenu = function() {return true;};
+					$('#rightClickBack').remove();
+					$.post(Config.animalsApi, {
+						action:			'deletePerformance',
+						animalId:		_this.id,
+						performanceId:	this.id
+					}, function() {
+						ManageView.display();
+					});
+				});
+				$('body').append(background.append(popup.append(button1).append(button2)));
+			});
+
+			// Search performance to add
+			$("#detailView #searchPerformance").autocomplete({
+				source : Config.performancesApi + "?action=search&job=" + Config.job.toUpperCase(),
+				select : function(event, ui) {
+					$.post(Config.animalsApi, {
+						action:			"addPerformance",
+						animalId:		_this.id,
+						performanceId:	ui.item.id,
+						quantity:		1
+					}, function() {
+						ManageView.display();
+					});
+					return false;
+				}
+			}).data("ui-autocomplete")._renderItem = function(ul, item) {
+				return $("<li>").data("ui-item.autocomplete", item).append(
+					'<a>' + item.name + '</a>').appendTo(ul);
+			};
 		});
 	};
 
@@ -137,7 +202,7 @@ var AnimalFormView = function(data) {
 		$('#formView #isAlive').prop("checked", this.data.isAlive);
 		$('#formView #inFarriery').prop("checked", this.data.inFarriery);
 		$('#formView #inPension').prop("checked", this.data.inPension);
-		$('#formView #desc').val(this.data.desc);
+		$('#formView #desc').val(this.data.desc).focusin(function() {Config.textareaFocused = true;}).focusout(function() {Config.textareaFocused = false;});
 	};
 
 	this.manageButtonClick = function(button) {

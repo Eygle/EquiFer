@@ -28,6 +28,4 @@ catch(Exception $e) {
 	echo json_encode(array("Error", $e->getMessage()));
 }
 
-$db->close();
-
 ?>
