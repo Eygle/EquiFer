@@ -81,7 +81,7 @@ var ClientDetails = function(id) {
 					document.oncontextmenu = function() {return true;};
 				});
 				var popup = $('<div>').attr('id', 'rightClickPopup').css({left: x, top: y});
-				var button = $('<div>').attr({class:'rightClickButton', id: id}).text(Strings.REMOVE_FROM_LIST).click(function() {
+				var button = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE_FROM_LIST).click(function() {
 					document.oncontextmenu = function() {return true;};
 					$('#rightClickBack').remove();
 					$.post(Config.clientsApi, {

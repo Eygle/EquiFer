@@ -98,8 +98,8 @@ CREATE INDEX "link_horses_performances_horseId_performanceId" ON "link_horses_pe
 CREATE TABLE "bills" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   "date" date NOT NULL,
-  "total" int(11) NOT NULL,
-  "taxFree" int(11) NOT NULL,
+  "total" float NOT NULL,
+  "taxFree" float NOT NULL,
   "file" varchar(256) NOT NULL
 );
 CREATE INDEX "bills_id" ON "bills" ("id");

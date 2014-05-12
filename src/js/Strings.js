@@ -57,6 +57,13 @@ var FR = function() {
 	this.PERF_REQUIRE_UNIT		= "L'unité est nécessaire";
 	this.PERF_REQUIRE_JOB		= "La prestation doit au moins apartenir à l'une des catégories suivantes:\nMaréchalerie ou Pension";
 
+	// Bills
+	this.BILLS_LABEL_DATE		= "Date";
+	this.BILLS_LABEL_CLIENTS	= "Clients";
+	this.BILLS_LABEL_TAXFREE	= "Total HT";
+	this.BILLS_LABEL_TOTAL		= "Total TTC";
+	this.BILLS_LABEL_FILE		= "Fichier";
+
 	// Settings
 	this.SETTINGS_USER_REQUIRE_NAME			= "Les nom et prénom sont nécessaires";
 	this.SETTINGS_USER_REQUIRE_ADDRESS		= "L'addresse est nécessaire";

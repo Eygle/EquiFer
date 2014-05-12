@@ -7,6 +7,7 @@ var Config = {
 	clientsApi:			"api/clientsApi.php",
 	citiesApi:			"api/citiesApi.php",
 	performancesApi:	"api/performancesApi.php",
+	billsApi:			"api/billsApi.php",
 	settingsApi:		"api/settingsApi.php", 
 
 	// Could be customize

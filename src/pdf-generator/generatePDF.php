@@ -14,11 +14,11 @@ $mpdf = new mPDF('',	// mode - default ''
 	8,	// margin footer
 	'P');
 
-$mpdf->setHTMLHeader(file_get_contents('pdf_header.html'), 'EO');
+$mpdf->setHTMLHeader(file_get_contents('pdf_header_generated.html'), 'EO');
 $mpdf->SetHTMLFooter('<div style="width:100%;text-align:center;">Page {PAGENO} sur {nb}</div>', 'EO');
 
 // send the captured HTML from the output buffer to the mPDF class for processing
-$mpdf->WriteHTML(file_get_contents("pdf.html"));
+$mpdf->WriteHTML(file_get_contents("pdf_generated.html"));
 
 
 

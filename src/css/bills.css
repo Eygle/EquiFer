@@ -1,0 +1,12 @@
+embed {
+	width: 100%;
+	height: 100%;
+}
+
+#hiddenBillHeader {
+	display: none;
+}
+
+#hiddenBill {
+	display: none;
+}

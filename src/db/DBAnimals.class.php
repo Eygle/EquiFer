@@ -37,7 +37,7 @@ class DBAnimals extends SQLite3 {
 		return $ret;
 	}
 
-	private function getPerformancesList($id) {
+	public function getPerformancesList($id) {
 		$stmt = $this->prepare('SELECT p.*, quantity
 			FROM link_horses_performances AS lhp
 			LEFT JOIN performances AS p ON lhp.performanceId = p.id
