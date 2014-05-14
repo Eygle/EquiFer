@@ -77,11 +77,13 @@ var AnimalDetails = function(id) {
 
 			// Performances part
 			titles = [
-				{label:"name",		title:Strings.PERF_LABEL_NAME,			dataType:"string"},
-				{label:"unit",		title:Strings.PERF_LABEL_PRICE,			dataType:"float"},
-				{label:"tva",		title:Strings.PERF_LABEL_TVA,			dataType:"float"},
-				{label:"unit",		title:Strings.PERF_LABEL_UNIT,			dataType:"string"},
-				{label:"quantity",	title:Strings.PERF_LABEL_QUANTITY,		dataType:"int"}
+				{label:"formattedDate",	title:Strings.PERF_LABEL_DATE,			dataType:"string"},
+				{label:"name",			title:Strings.PERF_LABEL_NAME,			dataType:"string"},
+				{label:"priceHT",		title:Strings.PERF_LABEL_PRICE_HT,		dataType:"float"},
+				{label:"priceTTC",		title:Strings.PERF_LABEL_PRICE_TTC,		dataType:"float"},
+				{label:"tva",			title:Strings.PERF_LABEL_TVA,			dataType:"float"},
+				{label:"unit",			title:Strings.PERF_LABEL_UNIT,			dataType:"string"},
+				{label:"quantity",		title:Strings.PERF_LABEL_QUANTITY,		dataType:"int"}
 
 			];
 			new SortableList("clientHorsesList", titles, _this.data.performancesList, function(id) {
@@ -104,6 +106,7 @@ var AnimalDetails = function(id) {
 							quantity:		newQuantity
 						}, function() {
 							ManageView.display();
+							History.add("animals", "edit_perf", 0, _this.data.name,  $("#clientHorsesList #" + this.id + " [label=name]").text(), true, true);
 						});
 					}
 				});
@@ -116,6 +119,7 @@ var AnimalDetails = function(id) {
 						performanceId:	this.id
 					}, function() {
 						ManageView.display();
+						History.add("animals", "delete_perf", 0, _this.data.name,  $("#clientHorsesList #" + this.id + " [label=name]").text(), true, true);
 					});
 				});
 				$('body').append(background.append(popup.append(button1).append(button2)));
@@ -132,6 +136,7 @@ var AnimalDetails = function(id) {
 						quantity:		1
 					}, function() {
 						ManageView.display();
+						History.add("animals", "adde_perf", 0, _this.data.name,  ui.item.name, true, true);
 					});
 					return false;
 				}
@@ -148,6 +153,7 @@ var AnimalDetails = function(id) {
 		else if (button == "remove" && confirm(Strings.CONFIRM_DELETE + ' "' + _this.data.name + '" ?')) {
 			$.post(Config.animalsApi, {action:"delete", id:_this.data.id}, function() {
 				ManageView.pop();
+				History.add("animals", "remove", 0, _this.data.name, null, true, true);
 			});
 		}
 	};
@@ -232,10 +238,12 @@ var AnimalFormView = function(data) {
 
 		if (_this.editMode) params.id = _this.data.id;
 		$.post(Config.animalsApi, params, function(data) {
-			ManageView.pop();
-			if (!_this.editMode) {
-				ManageView.push(new AnimalDetails(data.id));
-			}
+			History.add("animals", params.action, 0,  params.name, null,  params.inFarriery,  params.inPension, function() {
+				ManageView.pop();
+				if (!_this.editMode) {
+					ManageView.push(new AnimalDetails(data.id));
+				}
+			});
 		}, "json");
 	};
 

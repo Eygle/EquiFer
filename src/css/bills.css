@@ -10,3 +10,17 @@ embed {
 #hiddenBill {
 	display: none;
 }
+
+.performance {
+	color: #999;
+	cursor: pointer;
+}
+
+.animal {
+	color: #999;
+	cursor: pointer;
+}
+
+.selected {
+	color: rgb(70, 78, 90);
+}

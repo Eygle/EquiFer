@@ -6,6 +6,10 @@ table {
 	border-collapse: collapse;
 }
 
+th {
+	text-align: center;
+}
+
 #header {
 	width: 100%;
 	text-align: center;
@@ -105,4 +109,8 @@ table {
 
 .totals .gap {
 	height: 20px;
+}
+
+.small {
+	width: 151px;
 }

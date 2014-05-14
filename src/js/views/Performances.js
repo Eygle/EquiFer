@@ -16,7 +16,8 @@ var PerformancesView = function() {
 		$.getJSON(Config.performancesApi, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
 			titles = [
 				{label:"name",				title:Strings.PERF_LABEL_NAME,		dataType:"string"},
-				{label:"formattedPrice",	title:Strings.PERF_LABEL_PRICE,	dataType:"float"},
+				{label:"formattedPriceTTC",	title:Strings.PERF_LABEL_PRICE_TTC,	dataType:"float"},
+				{label:"formattedPriceHT",	title:Strings.PERF_LABEL_PRICE_HT,	dataType:"float"},
 				{label:"formattedTVA",		title:Strings.PERF_LABEL_TVA,		dataType:"float"},
 				{label:"unit",				title:Strings.PERF_LABEL_UNIT,		dataType:"string"}
 			];
@@ -55,7 +56,8 @@ var PerformanceDetails = function(id) {
 		$.getJSON(Config.performancesApi, {action:"getInfos", id:this.id}, function(data) {
 			_this.data = data;
 			$('#detailView #name').text(_this.data.name);
-			$("#detailView #price").text(_this.data.formattedPrice);
+			$("#detailView #priceHT").text(_this.data.formattedPriceHT);
+			$("#detailView #priceTTC").text(_this.data.formattedPriceTTC);
 			$("#detailView #tva").text(_this.data.formattedTVA);
 			$("#detailView #unit").text(_this.data.unit);
 			$("#detailView #defaultQuantity").text(_this.data.defaultQuantity);
@@ -91,9 +93,10 @@ var PerformanceFormView = function(data) {
 	this.editMode			= data != undefined;
 	this.data				= data ? data : {
 								name:				null,
-								price:				null,
+								priceHT:			null,
+								priceTTC:			null,
 								tva:				null,
-								unit:			null,
+								unit:				null,
 								defaultQuantity:	null,
 								inFarriery:			Config.job == "farriery",
 								inPension:			Config.job == "pension"
@@ -102,7 +105,8 @@ var PerformanceFormView = function(data) {
 	this.init = function() {
 		$('#formView').show();
 		$('#formView #name').val(this.data.name);
-		$("#formView #price").val(this.data.price);
+		$("#formView #priceHT").val(this.data.priceHT);
+		$("#formView #priceTTC").val(this.data.priceTTC);
 		$('#formView #unit').autocomplete({source: Strings.PERF_AUTOCOMPLETE_UNITY}).val(this.data.unit);
 		$('#formView #tva').val(this.data.tva);
 		$("#formView #defaultQuantity").val(this.data.defaultQuantity);
@@ -113,6 +117,10 @@ var PerformanceFormView = function(data) {
 		if (!this.editMode) {
 			$('#formView #tva').val(Config.TVA);
 		}
+
+		$('#formView #priceHT').keyup(function() {_this.calculatePrices("ht");});
+		$('#formView #priceTTC').keyup(function() {_this.calculatePrices("ttc");});
+		$('#formView #tva').keyup(function() {_this.calculatePrices("tva");});
 	};
 
 	this.manageButtonClick = function(button) {
@@ -121,7 +129,8 @@ var PerformanceFormView = function(data) {
 		var params = {
 				action:				_this.editMode ? "edit" : "add", 
 				name:				$('#formView #name').val(),
-				price:				$('#formView #price').val().replace('.', ','),
+				priceHT:			$('#formView #priceHT').val().replace('.', ','),
+				priceTTC:			$('#formView #priceTTC').val().replace('.', ','),
 				tva:				$('#formView #tva').val().replace('.', ','),
 				unit:				$('#formView #unit').val(),
 				defaultQuantity:	$('#formView #defaultQuantity').val(),
@@ -138,11 +147,26 @@ var PerformanceFormView = function(data) {
 		}, "json");
 	};
 
+	this.calculatePrices = function(which) {
+		var tva = $('#formView #tva');
+		var ht = $('#formView #priceHT');
+		var ttc = $('#formView #priceTTC');
+		if (which == "ttc" && tva.val() && ttc.val()) {
+			var tvaVal = parseFloat(tva.val().replace(',', '.'));
+			var ttcVal = parseFloat(ttc.val().replace(',', '.'));
+			ht.val(Math.round((ttcVal / ((1000 + (tvaVal * 10)) / 1000)) * 100) / 100);
+		} else if ((which == "ht" || which == "tva") && tva.val() && ht.val()) {
+			var htVal = parseFloat(ht.val().replace(',', '.'));
+			var tvaVal = parseFloat(tva.val().replace(',', '.'));
+			ttc.val(Math.round((htVal * ((1000 + (tvaVal * 10)) / 1000)) * 100) / 100);
+		}
+	};
+
 	this.checkForm = function(data) {
 		if (!data.name) {
 			alert(Strings.PERF_REQUIRE_NAME);
 			return false;
-		} else if (!data.price) {
+		} else if (!data.priceHT || !data.priceTTC) {
 			alert(Strings.PERF_REQUIRE_PRICE);
 			return false;
 		} else if (!data.tva) {

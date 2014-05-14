@@ -1,3 +1,6 @@
+DROP TABLE "horses";
+DROP TABLE "link_job_horses";
+
 CREATE TABLE "horses" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   "name" varchar(256) NOT NULL,
@@ -26,6 +29,10 @@ CREATE INDEX "link_job_horses_job" ON "link_job_horses" ("job");
 
 
 
+
+DROP TABLE "clients";
+DROP TABLE "link_job_clients";
+DROP TABLE "link_clients_horses";
 
 CREATE TABLE "clients" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -62,10 +69,15 @@ CREATE INDEX "link_clients_horses_clientId_horseId" ON "link_clients_horses" ("c
 
 
 
+DROP TABLE "performances";
+DROP TABLE "link_job_performances";
+DROP TABLE "link_horses_performances";
+
 CREATE TABLE "performances" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   "name" varchar(256) NOT NULL,
-  "price" float NOT NULL,
+  "priceHT" float NOT NULL,
+  "priceTTC" float NOT NULL,
   "tva" float NOT NULL,
   "unit" varchar(64) NOT NULL,
   "defaultQuantity" int NOT NULL
@@ -83,6 +95,7 @@ CREATE INDEX "link_job_performances_job" ON "link_job_performances" ("job");
 
 CREATE TABLE "link_horses_performances" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  "date" date NOT NULL,
   "horseId" int(11) NOT NULL,
   "performanceId" int(11) NOT NULL,
   "quantity" int(11) NOT NULL
@@ -94,6 +107,10 @@ CREATE INDEX "link_horses_performances_horseId_performanceId" ON "link_horses_pe
 
 
 
+
+DROP TABLE "bills";
+DROP TABLE "link_job_bills";
+DROP TABLE "link_bills_clients";
 
 CREATE TABLE "bills" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -110,7 +127,7 @@ CREATE TABLE "link_job_bills" (
   "billId" int(11) NOT NULL  
 );
 CREATE INDEX "link_job_bills_id" ON "link_job_bills" ("id");
-CREATE INDEX "link_job_bills_clientId" ON "link_job_bills" ("billId");
+CREATE INDEX "link_job_bills_billId" ON "link_job_bills" ("billId");
 CREATE INDEX "link_job_bills_job" ON "link_job_bills" ("job");
 
 CREATE TABLE "link_bills_clients" (
@@ -125,6 +142,34 @@ CREATE INDEX "link_bills_clients_billId_clientId" ON "link_bills_clients" ("bill
 
 
 
+
+DROP TABLE "history";
+DROP TABLE "link_job_history";
+
+CREATE TABLE history(
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  "category" varchar(64) NOT NULL,
+  "action" varchar(64) NOT NULL,
+  "level" int(1) NOT NULL,
+  "object" varchar(256) NOT NULL,
+  "object2" varchar(256) NULL,
+  "date" date NOT NULL
+);
+CREATE INDEX "history_id" ON "history" ("id");
+
+CREATE TABLE "link_job_history" (
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  "job" varchar(8) NOT NULL,
+  "historyId" int(11) NOT NULL
+);
+CREATE INDEX "link_job_history_id" ON "link_job_history" ("id");
+CREATE INDEX "link_job_history_historyId" ON "link_job_history" ("historyId");
+CREATE INDEX "link_job_history_job" ON "link_job_history" ("job");
+
+
+
+
+DROP TABLE "owner_infos";
 
 CREATE TABLE "owner_infos" (
   "firstName" varchar(256) NOT NULL,

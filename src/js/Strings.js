@@ -45,14 +45,17 @@ var FR = function() {
 	this.CLIENTS_REQUIRE_JOB		= "Le client doit au moins apartenir à l'une des catégories suivantes:\nMaréchalerie ou Pension";
 
 	// Performances
+	this.PERF_LABEL_DATE		= "Date";
+	this.BILLS_LABEL_NUMBER		= "N° de facture";
 	this.PERF_LABEL_NAME		= "Nom";
-	this.PERF_LABEL_PRICE		= "Prix";
+	this.PERF_LABEL_PRICE_HT	= "Prix HT";
+	this.PERF_LABEL_PRICE_TTC	= "Prix TTC";
 	this.PERF_LABEL_TVA			= "TVA";
 	this.PERF_LABEL_UNIT		= "Unité";
 	this.PERF_LABEL_QUANTITY	= "Quantité";
 
 	this.PERF_REQUIRE_NAME		= "Le nom de la prestation est nécessaire";
-	this.PERF_REQUIRE_PRICE		= "Le prix de la prestation est nécessaire";
+	this.PERF_REQUIRE_PRICE		= "Les prix de la prestation (TTC et HT) sont nécessaire";
 	this.PERF_REQUIRE_TVA		= "La TVA de la prestation est nécessaire";
 	this.PERF_REQUIRE_UNIT		= "L'unité est nécessaire";
 	this.PERF_REQUIRE_JOB		= "La prestation doit au moins apartenir à l'une des catégories suivantes:\nMaréchalerie ou Pension";

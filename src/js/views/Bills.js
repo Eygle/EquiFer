@@ -16,6 +16,7 @@ var BillsView = function() {
 		$.getJSON(Config.billsApi, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
 			titles = [
 				{label:"date",		title:Strings.BILLS_LABEL_DATE,		dataType:"string"},
+				{label:"number",	title:Strings.BILLS_LABEL_NUMBER,	dataType:"string"},
 				{label:"clients",	title:Strings.BILLS_LABEL_CLIENTS,	dataType:"string"},
 				{label:"taxfree",	title:Strings.BILLS_LABEL_TAXFREE,	dataType:"float"},
 				{label:"total",		title:Strings.BILLS_LABEL_TOTAL,	dataType:"float"},
@@ -95,6 +96,17 @@ var BillFormView = function(id) {
 		}, function(data) {
 			_this.data = data;
 			$('#formView').show();
+
+			var $animalsList = $('#formView #animalsList');
+
+			for (var i in _this.data.client.animalsList) {
+				$animalsList.append($('<div>').attr({class: "animal", index: i})
+					.text(_this.data.client.animalsList[i].name)
+					.click(function() {
+						_this.manageAnimalClick($(this).attr('index'));
+					})
+				);
+			}
 		
 			$.getJSON(Config.settingsApi, {action: 'getUser'}, function(data) {
 				_this.data.infos = data;
@@ -103,13 +115,58 @@ var BillFormView = function(id) {
 		});
 	};
 
+	this.manageAnimalClick = function(animalIndex) {
+		var animal = _this.data.client.animalsList[animalIndex];
+		if (!animal.isSelected) {
+			$("#formView #animalsList [index=" + animalIndex + "]").addClass('selected');
+			animal.isSelected = true;
+			$performancesList = $('#formView #performancesList');
+			for (var i in animal.performancesList) {
+				$performancesList.append($('<div>')
+					.attr({
+						class:				"performance selected",
+						animalIndex:		animalIndex,
+						performanceIndex:	i
+					})
+					.click(function() {
+						_this.managePerformanceClick(animalIndex, $(this).attr('performanceIndex'));
+					})
+					.text(animal.performancesList[i].name)
+				);
+				animal.performancesList[i].isSelected = true;
+			}
+		} else {
+			$("#formView #animalsList [index=" + animalIndex + "]").removeClass('selected');
+			$('#formView #performancesList [animalIndex=' + animalIndex + ']').remove();
+			animal.isSelected = false;
+		}
+		console.log(this.data);
+		this.billPDFManager.generate(this.data);
+	};
+
+	this.managePerformanceClick = function(animalIndex, performanceIndex) {
+		var performance = _this.data.client.animalsList[animalIndex].performancesList[performanceIndex];
+		if (!performance.isSelected) {
+			$('#formView [animalIndex=' + animalIndex + ']').each(function() {
+				if ($(this).attr('performanceIndex') == performanceIndex)
+					$(this).addClass('selected');
+			});
+			performance.isSelected = true;
+		} else {
+			$('#formView [animalIndex=' + animalIndex + ']').each(function() {
+				if ($(this).attr('performanceIndex') == performanceIndex)
+					$(this).removeClass('selected');
+			});
+			performance.isSelected = false;
+		}
+		this.billPDFManager.generate(this.data);
+	};
+
 	this.manageButtonClick = function(button) {
 		if (button != "save") return;
 
 		var params = {
-				action:			"add",
-				inFarriery:		$('#formView #inFarriery').is(':checked'),
-				inPension:		$('#formView #inPension').is(':checked'),
+				action:	"add",
 		};
 
 		if (!this.checkForm(params)) return;

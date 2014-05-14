@@ -11,6 +11,8 @@ var BillPDFManager = function(data) {
 			infos.append($('<div>').text("N° Siret " + data.infos.siret));
 			infos.append($('<div>').html("Tél: " + data.infos.phoneFixe + " - Mobile: " + data.infos.phoneMobile + " - email: <span class=\"mail\">" + data.infos.mail + "</span>"));
 			$('#hiddenBill').load("pdf-generator/pdf.html", function() {
+				_this.fillClientInfos(data);
+				_this.generateTableHeader($('#hiddenBill .bill'));
 				_this.sendPDF();
 			});
 		});
@@ -18,15 +20,23 @@ var BillPDFManager = function(data) {
 
 	this.generate = function(data) {
 		$('#hiddenBill').load("pdf-generator/pdf.html", function() {
-			var $table = $('#hiddenBill #bill');
-			this.generateTableHeader($table);
+			_this.fillClientInfos(data);
 
-			for (var horse in data) {
-				$table.append("<tr>").attr({colspan:8, class:"horseName"}).text(data[horse].name);
-				for (var perf in data[horse].perfs) {
-					perf = data[horse].perfs[perf];
-					var date = $('<td>').attr({class: 'center'}).text(perf.date);
-					var desc = $('<td>').attr({class: 'back-highlight'}).text(perf.desc);
+			var $table = $('#hiddenBill .bill');
+			_this.generateTableHeader($table);
+
+			var totalHT		= 0;
+			var totalTTC	= 0;
+
+			for (var horse in data.client.animalsList) {
+				var horse = data.client.animalsList[horse];
+				if (!horse.isSelected) continue;
+				$table.append($("<tr>").append($('<td>').attr({colspan:7, class:"horseName"}).text(horse.name)));
+				for (var perf in horse.performancesList) {
+					perf = horse.performancesList[perf];
+					if (!perf.isSelected) continue;
+					var date = $('<td>').attr({class: 'center'}).text(perf.formattedDate);
+					var desc = $('<td>').attr({class: 'back-highlight'}).text(perf.name);
 					var unit = $('<td>').attr({class: 'center'}).text(perf.unit);
 					var quantity = $('<td>').attr({class: 'center back-highlight'}).text(perf.quantity);
 					var tva = $('<td>').attr({class: 'center'}).text(perf.tva);
@@ -34,29 +44,58 @@ var BillPDFManager = function(data) {
 					// 	var desc = $('<td>').attr({class: 'center'}).text(perf.date);
 					// if ()	// TODO SUPPL
 					// 	var desc = $('<td>').attr({class: 'center'}).text(perf.date);
-					var ht = $('<td>').attr({class: 'right'}).text(perf.ht);
-					$table.append($('<tr>').append(date, desc, unit, quantity, tva, ht));
+					var unitHT = $('<td>').attr({class: 'right'}).text(parseInt(perf.quantity) > 1 ? perf.priceHT : "");
+					var ht = $('<td>').attr({class: 'right'}).text(new String("" + perf.priceHT).replace(',', '.') * parseInt(perf.quantity));
+					totalHT += parseFloat(new String("" + perf.priceHT).replace(',', '.')) * parseInt(perf.quantity);
+					totalTTC += parseFloat(new String("" + perf.priceTTC).replace(',', '.')) * parseInt(perf.quantity);
+					$table.append($('<tr>').append(date, desc, unit, quantity, tva, unitHT, ht));
 				}
 			}
-			$('#totalHT').text(data.totalHT);
-			$('#totalTVA').text(data.totalTVA);
-			$('#totalTTC, #price').text(data.totalTTC);
+			$('#totalHT').text(Math.round(totalHT * 100) / 100 + " €");
+			$('#totalTVA').text(Math.round((totalTTC - totalHT) * 100) / 100 + " €");
+			$('#totalTTC, #price').text(Math.round(totalTTC * 100) / 100 + " €");
 			_this.sendPDF();
 		});
+	};
+
+	this.getFrenchMonth = function(month) {
+		var months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+		return months[month];
+	};
+
+	this.fillClientInfos = function(data) {
+		var date = new Date();
+		var billNbr = this.formatNumber(1, 5);
+		$('#hiddenBill #billRef').text("FC" + this.formatNumber(date.getDate(), 2) + this.formatNumber(date.getMonth() + 1, 2) + date.getFullYear().toString().substr(2,2) + billNbr);
+		$('#hiddenBill #date').text(date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear().toString().substr(2,2));
+		var maxDate = new Date(date.getFullYear(), date.getMonth() + 2, 0); // 30 days
+		$('#hiddenBill #dateEnd').text(maxDate.getDate() + '/' + (maxDate.getMonth() + 1) + '/' + maxDate.getFullYear().toString().substr(2,2));
+		$('#hiddenBill #dateEndFull').text(maxDate.getDate() + ' ' + this.getFrenchMonth(maxDate.getMonth()) + ' ' + maxDate.getFullYear());
+		$('#hiddenBill #clientName').text(data.client.firstName + ' ' + data.client.lastName);
+		$('#hiddenBill #clientAddress').text(data.client.address);
+		$('#hiddenBill #clientAdressEnd').text(data.client.zipcode + ' ' + data.client.city);
+	};
+
+	this.formatNumber = function(elem, digits) {
+		var elem = String(elem);
+		while (elem.length < digits)
+			elem = '0'+elem;
+		return elem;
 	};
 
 	this.generateTableHeader = function(table, data) {
 		var date = $('<th>').attr({class: 'center'}).text("Date");
 		var desc = $('<th>').attr({class: 'back-highlight'}).text("Désignation");
 		var unit = $('<th>').attr({class: 'center'}).text("Unité");
-		var quantity = $('<th>').attr({class: 'center back-highlight'}).text("Quantité");
-		var tva = $('<th>').attr({class: 'center'}).text("TVA");
+		var quantity = $('<th>').attr({class: 'center back-highlight'}).text("Qte");
+		var tva = $('<th>').attr({class: 'center'}).html("TVA<br />%");
 		// if (data.)	// TODO REMISE
 		// 	var desc = $('<th>').attr({class: 'center'}).text("Remise");
 		// if (data.)	// TODO SUPPL
 		// 	var desc = $('<th>').attr({class: 'center'}).text("Suppl.");
-		var ht = $('<th>').attr({class: 'right'}).text("Montant HT");
-		$table.append($('<tr>').append(date, desc, unit, quantity, tva, ht));
+		var unitHT = $('<th>').attr({class: 'center'}).html("Unit.<br />HT");
+		var ht = $('<th>').attr({class: 'cener'}).html("Montant<br />HT");
+		table.append($('<tr>').append(date, desc, unit, quantity, tva, unitHT, ht));
 	};
 
 	this.sendPDF = function() {

@@ -26,15 +26,15 @@ try {
 		Utils::checkPostArgs('action');
 		switch ($_POST['action']) {
 			case "add":
-				Utils::checkPostArgs(array('name', 'price', 'tva', 'unit', 'defaultQuantity', 'inFarriery', 'inPension'));
-				$id = $db->add($_POST['name'],	$_POST['price'], $_POST['tva'], $_POST['unit'], $_POST['defaultQuantity']);
+				Utils::checkPostArgs(array('name', 'priceHT', 'priceTTC', 'tva', 'unit', 'defaultQuantity', 'inFarriery', 'inPension'));
+				$id = $db->add($_POST['name'],	$_POST['priceHT'], $_POST['priceTTC'], $_POST['tva'], $_POST['unit'], $_POST['defaultQuantity']);
 				if ($_POST['inFarriery'] == "true") $db->linkToJob("FARRIERY", $id);
 				if ($_POST['inPension'] == "true") $db->linkToJob("PENSION", $id);
 				echo json_encode(array("id"=>$id));
 				break;
 			case "edit":
-				Utils::checkPostArgs(array('id', 'name', 'price', 'tva', 'unit', 'defaultQuantity', 'inFarriery', 'inPension'));
-				$db->edit($_POST['id'], $_POST['name'],	$_POST['price'], $_POST['tva'], $_POST['unit'], $_POST['defaultQuantity']);
+				Utils::checkPostArgs(array('id', 'name', 'priceHT', 'priceTTC', 'tva', 'unit', 'defaultQuantity', 'inFarriery', 'inPension'));
+				$db->edit($_POST['id'], $_POST['name'],	$_POST['priceHT'], $_POST['priceTTC'], $_POST['tva'], $_POST['unit'], $_POST['defaultQuantity']);
 				if ($_POST['inFarriery'] == "true") $db->linkToJob("FARRIERY", $_POST['id']);
 				if ($_POST['inPension'] == "true") $db->linkToJob("PENSION", $_POST['id']);
 				echo json_encode(null);

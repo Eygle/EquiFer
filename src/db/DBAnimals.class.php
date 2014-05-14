@@ -38,7 +38,7 @@ class DBAnimals extends SQLite3 {
 	}
 
 	public function getPerformancesList($id) {
-		$stmt = $this->prepare('SELECT p.*, quantity
+		$stmt = $this->prepare('SELECT p.*, quantity, date
 			FROM link_horses_performances AS lhp
 			LEFT JOIN performances AS p ON lhp.performanceId = p.id
 			WHERE horseId = :id;');
@@ -46,6 +46,7 @@ class DBAnimals extends SQLite3 {
 		$res = $stmt->execute();
 		$ret = array();
 		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$row['formattedDate'] = date('d/m/Y', $row['date']);
 			$ret[] = $row;
 		}
 		return $ret;
@@ -182,8 +183,9 @@ class DBAnimals extends SQLite3 {
 	}
 
 	public function addPerformance($horseId, $performanceId, $quantity) {
-		$stmt = $this->prepare('INSERT INTO link_horses_performances(horseId, performanceId, quantity)
-			VALUES(:horseId, :performanceId, :quantity);');
+		$stmt = $this->prepare('INSERT INTO link_horses_performances(date, horseId, performanceId, quantity)
+			VALUES(:date, :horseId, :performanceId, :quantity);');
+		$stmt->bindValue(':date', time());
 		$stmt->bindValue(':horseId', $horseId);
 		$stmt->bindValue(':performanceId', $performanceId);
 		$stmt->bindValue(':quantity', $quantity);

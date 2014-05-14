@@ -35,7 +35,8 @@ class DBPerformances extends SQLite3 {
 	private function formatInfos($data) {
 		if (!$data) return null;
 		$data['formattedTVA'] = str_replace(".", ",", round(floatval(str_replace(",", ".", $data['tva'])), 2) . " %");
-		$data['formattedPrice'] = str_replace(".", ",", round(floatval(str_replace(",", ".", $data['price'])), 2) . " €");
+		$data['formattedPriceHT'] = str_replace(".", ",", round(floatval(str_replace(",", ".", $data['priceHT'])), 2) . " €");
+		$data['formattedPriceTTC'] = str_replace(".", ",", round(floatval(str_replace(",", ".", $data['priceTTC'])), 2) . " €");
 		return array_merge($data, $this->getJobsLinks($data['id']));
 	}
 
@@ -70,11 +71,12 @@ class DBPerformances extends SQLite3 {
 		return $ret;
 	}
 
-	public function add($name, $price, $tva, $unit, $defaultQuantity) {
-		$stmt = $this->prepare("INSERT INTO performances(name, price, tva, unit, defaultQuantity)
-			VALUES(:name, :price, :tva, :unit, :defaultQuantity);");
+	public function add($name, $priceHT, $priceTTC, $tva, $unit, $defaultQuantity) {
+		$stmt = $this->prepare("INSERT INTO performances(name, priceHT, priceTTC, tva, unit, defaultQuantity)
+			VALUES(:name, :priceHT, :priceTTC, :tva, :unit, :defaultQuantity);");
 		$stmt->bindValue(':name', $name);
-		$stmt->bindValue(':price', $price);
+		$stmt->bindValue(':priceHT', $priceHT);
+		$stmt->bindValue(':priceTTC', $priceTTC);
 		$stmt->bindValue(':tva', $tva);
 		$stmt->bindValue(':unit', $unit);
 		$stmt->bindValue(':defaultQuantity', $defaultQuantity);
@@ -83,14 +85,15 @@ class DBPerformances extends SQLite3 {
 		return $this->lastInsertRowID();
 	}
 
-	public function edit($id, $name, $price, $tva, $unit, $defaultQuantity) {
+	public function edit($id, $name, $priceHT, $priceTTC, $tva, $unit, $defaultQuantity) {
 		$stmt = $this->prepare("UPDATE performances
-			SET name = :name, price = :price, tva = :tva,
+			SET name = :name, priceHT = :priceHT, priceTTC = :priceTTC, tva = :tva,
 			unit = :unit, defaultQuantity = :defaultQuantity
 			WHERE id = :id;");
 		$stmt->bindValue('id', $id);
 		$stmt->bindValue(':name', $name);
-		$stmt->bindValue(':price', $price);
+		$stmt->bindValue(':priceHT', $priceHT);
+		$stmt->bindValue(':priceTTC', $priceTTC);
 		$stmt->bindValue(':tva', $tva);
 		$stmt->bindValue(':unit', $unit);
 		$stmt->bindValue(':defaultQuantity', $defaultQuantity);
@@ -103,10 +106,17 @@ class DBPerformances extends SQLite3 {
 		$stmt->bindValue('id', $id);
 		$stmt->execute();
 		$this->deleteLinksToJob($id);
+		$this->deleteLinksToAnimals($id);
 	}
 
 	private function deleteLinksToJob($id) {
 		$stmt = $this->prepare('DELETE FROM link_job_performances WHERE performanceId = :id;');
+		$stmt->bindValue(':id', $id);
+		$stmt->execute();
+	}
+
+	private function deleteLinksToAnimals($id) {
+		$stmt = $this->prepare('DELETE FROM link_horses_performances WHERE performanceId = :id;');
 		$stmt->bindValue(':id', $id);
 		$stmt->execute();
 	}
