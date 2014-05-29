@@ -15,8 +15,9 @@ class DBHistory extends SQLite3 {
 	public function getList($job) {
 		$stmt = $this->prepare('SELECT h.*
 			FROM link_job_history AS ljh
-			LEFT JOIN history AS h ON ljh.hitoricId = h.id
-			WHERE job = :job;');
+			LEFT JOIN history AS h ON ljh.historyId = h.id
+			WHERE job = :job
+			ORDER BY id DESC;');
 		$stmt->bindValue(':job', $job);
 		$res = $stmt->execute();
 		$ret = array();
@@ -24,6 +25,11 @@ class DBHistory extends SQLite3 {
 			$ret[] = self::format($row);
 		}
 		return $ret;
+	}
+
+	private static function format($data) {
+		$data['date'] = date('d/m/Y', $data['date']);
+		return $data;
 	}
 
 	public function add($category, $action, $level, $object, $object2) {

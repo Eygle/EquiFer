@@ -2,6 +2,7 @@
 
 require_once dirname(__FILE__).'/db-config.php';
 require_once dirname(__FILE__).'/DBAnimals.class.php';
+require_once dirname(__FILE__).'/DBBills.class.php';
 
 class DBClients extends SQLite3 {
 
@@ -17,7 +18,8 @@ class DBClients extends SQLite3 {
 		$stmt = $this->prepare('SELECT c.*
 			FROM link_job_clients AS ljc
 			LEFT JOIN clients AS c ON ljc.clientId = c.id
-			WHERE job = :job;');
+			WHERE job = :job
+			ORDER BY c.id DESC;');
 		$stmt->bindValue(':job', $job);
 		$res = $stmt->execute();
 		$ret = array();
@@ -32,6 +34,35 @@ class DBClients extends SQLite3 {
 		$stmt->bindValue(':id', $id);
 		$res = $stmt->execute();
 		return $this->formatInfos($res->fetchArray(SQLITE3_ASSOC));
+	}
+
+	private function getHorsesForClient($clientId) {
+		$ret = array();
+		$stmt = $this->prepare('SELECT h.*
+			FROM link_clients_horses AS lch
+			LEFT JOIN horses AS h ON lch.horseId = h.id
+			WHERE lch.clientId = :id');
+		$stmt->bindValue("id", $clientId);
+		$res = $stmt->execute();
+		$horsesNames = array();
+		$horses = array();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$horses[] = DBAnimals::formatInfos($row);
+			$horsesNames[] = $row['name'];
+		}
+		$ret['animals'] = implode(', ', $horsesNames);
+		$ret['animalsList'] = $horses;
+		return $ret;
+	}
+
+	private function getBillsListForClient($clientId) {
+		$ret = array();
+		$stmt = $this->prepare('SELECT * FROM bills WHERE clientId = :id');
+		$stmt->bindValue(':id', $clientId);
+		$res = $stmt->execute();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC))
+			$ret[] = DBBills::format($row);
+		return array("billsList" => $ret);
 	}
 
 	private function getJobsLinks($id) {
@@ -50,21 +81,8 @@ class DBClients extends SQLite3 {
 
 	private function formatInfos($client) {
 		$client['name'] = $client['firstName']." ".$client['lastName'];
-		// Get horses
-		$stmt = $this->prepare('SELECT h.*
-			FROM link_clients_horses AS lch
-			LEFT JOIN horses AS h ON lch.horseId = h.id
-			WHERE lch.clientId = :id');
-		$stmt->bindValue("id", $client['id']);
-		$res = $stmt->execute();
-		$horsesNames = array();
-		$horses = array();
-		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-			$horses[] = DBAnimals::formatInfos($row);
-			$horsesNames[] = $row['name'];
-		}
-		$client['animals'] = implode(', ', $horsesNames);
-		$client['animalsList'] = $horses;
+		$client = array_merge($client, $this->getHorsesForClient($client['id']));
+		$client = array_merge($client, $this->getBillsListForClient($client['id']));
 		$client = array_merge($client, $this->getJobsLinks($client['id']));
 		return $client;
 	}

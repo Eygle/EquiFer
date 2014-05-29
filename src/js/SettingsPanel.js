@@ -36,8 +36,6 @@ var SettingsPanel = function() {
 		$('#settings-user button').click(function() {
 			var params = {
 				action: 		'editUser',
-				firstName:		$('#settings-user #firstName').val(),
-				lastName:		$('#settings-user #lastName').val(),
 				address:		$('#settings-user #address').val(),
 				zipcode:		$('#settings-user #zipcode').val(),
 				city:			$('#settings-user #city').val(),
@@ -50,14 +48,14 @@ var SettingsPanel = function() {
 
 			if (!_this.checkUserInfos(params)) return;
 			$.post(Config.settingsApi, params, function() {
-				_this.displayMessage(true, Strings.MESSAGE_SAVE_SUCESS);
+				History.add("settings", "edit_owner_infos", 0,  "", null,  true, true, function() {
+					_this.displayMessage(true, Strings.MESSAGE_SAVE_SUCESS);
+				});
 			});
 		});
 
 		$.getJSON(Config.settingsApi, {action: 'getUser'}, function(data) {
 			$('#settings-user').show();
-			$('#settings-user #firstName').val(data.firstName);
-			$('#settings-user #lastName').val(data.lastName);
 			$("#settings-user #address").val(data.address);
 			$("#settings-user #zipcode").val(data.zipcode).autocomplete({
 				source : Config.citiesApi,
@@ -91,10 +89,7 @@ var SettingsPanel = function() {
 
 	this.checkUserInfos = function(data) {
 		var mailRegexp = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-		if (!data.firstName || !data.lastName) {
-			this.displayMessage(false, Strings.SETTINGS_USER_REQUIRE_NAME);
-			return false;
-		} else if (!data.address) {
+		if (!data.address) {
 			this.displayMessage(false, Strings.SETTINGS_USER_REQUIRE_ADDRESS);
 			return false;
 		} else if (!data.zipcode) {

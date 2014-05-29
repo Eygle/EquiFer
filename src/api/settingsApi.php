@@ -17,8 +17,8 @@ try {
 		Utils::checkPostArgs('action');
 		switch ($_POST['action']) {
 			case "editUser":
-				Utils::checkPostArgs(array('firstName', 'lastName', 'address', 'zipcode', 'city', 'phoneFixe', 'phoneMobile', 'mail', 'companyName', 'siret'));
-				$id = $db->editUser($_POST['firstName'],	$_POST['lastName'], $_POST['address'], $_POST['zipcode'],
+				Utils::checkPostArgs(array('address', 'zipcode', 'city', 'phoneFixe', 'phoneMobile', 'mail', 'companyName', 'siret'));
+				$id = $db->editUser($_POST['address'], $_POST['zipcode'],
 					$_POST['city'], $_POST['phoneFixe'], $_POST['phoneMobile'],	$_POST['mail'], $_POST['companyName'], $_POST['siret']);
 				break;
 		}

@@ -18,7 +18,8 @@ class DBAnimals extends SQLite3 {
 		$stmt = $this->prepare('SELECT h.*
 			FROM link_job_horses AS ljh
 			LEFT JOIN horses AS h ON ljh.horseId = h.id
-			WHERE job = :job;');
+			WHERE job = :job
+			ORDER BY h.id DESC;');
 		$stmt->bindValue(':job', $job);
 		$res = $stmt->execute();
 		$ret = array();
@@ -41,7 +42,8 @@ class DBAnimals extends SQLite3 {
 		$stmt = $this->prepare('SELECT p.*, quantity, date
 			FROM link_horses_performances AS lhp
 			LEFT JOIN performances AS p ON lhp.performanceId = p.id
-			WHERE horseId = :id;');
+			WHERE horseId = :id
+			ORDER BY date DESC;');
 		$stmt->bindValue('id', $id);
 		$res = $stmt->execute();
 		$ret = array();
@@ -58,6 +60,7 @@ class DBAnimals extends SQLite3 {
 			LEFT JOIN horses AS h ON ljh.horseId = h.id
 			WHERE job = :job
 			AND h.name LIKE :term
+			ORDER BY h.name ASC
 			LIMIT 15;');
 		$stmt->bindValue(':job', $job);
 		$stmt->bindValue(':term', $term.'%');
@@ -171,6 +174,12 @@ class DBAnimals extends SQLite3 {
 
 	private function deleteLinksToJob($id) {
 		$stmt = $this->prepare('DELETE FROM link_job_horses WHERE horseId = :horseId;');
+		$stmt->bindValue(':horseId', $id);
+		$stmt->execute();
+	}
+
+	private function deleteLinksToClients($id) {
+		$stmt = $this->prepare('DELETE FROM link_clients_horses WHERE horseId = :horseId;');
 		$stmt->bindValue(':horseId', $id);
 		$stmt->execute();
 	}

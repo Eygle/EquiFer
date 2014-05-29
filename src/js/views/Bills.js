@@ -17,8 +17,8 @@ var BillsView = function() {
 			titles = [
 				{label:"date",		title:Strings.BILLS_LABEL_DATE,		dataType:"string"},
 				{label:"number",	title:Strings.BILLS_LABEL_NUMBER,	dataType:"string"},
-				{label:"clients",	title:Strings.BILLS_LABEL_CLIENTS,	dataType:"string"},
-				{label:"taxfree",	title:Strings.BILLS_LABEL_TAXFREE,	dataType:"float"},
+				{label:"client",	title:Strings.BILLS_LABEL_CLIENT,	dataType:"string"},
+				{label:"taxFree",	title:Strings.BILLS_LABEL_TAXFREE,	dataType:"float"},
 				{label:"total",		title:Strings.BILLS_LABEL_TOTAL,	dataType:"float"},
 				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string"}
 			];
@@ -106,6 +106,7 @@ var BillFormView = function(id) {
 						_this.manageAnimalClick($(this).attr('index'));
 					})
 				);
+				_this.data.client.animalsList[i].performancesSelected = 0;
 			}
 		
 			$.getJSON(Config.settingsApi, {action: 'getUser'}, function(data) {
@@ -117,31 +118,29 @@ var BillFormView = function(id) {
 
 	this.manageAnimalClick = function(animalIndex) {
 		var animal = _this.data.client.animalsList[animalIndex];
-		if (!animal.isSelected) {
-			$("#formView #animalsList [index=" + animalIndex + "]").addClass('selected');
-			animal.isSelected = true;
+		$animalDiv = $("#formView #animalsList [index=" + animalIndex + "]");
+		if (!$animalDiv.hasClass("selected")) {
+			$("#formView #animalsList div").removeClass('selected');
+			$animalDiv.addClass('selected');
 			$performancesList = $('#formView #performancesList');
+			$performancesList.html("");
 			for (var i in animal.performancesList) {
 				$performancesList.append($('<div>')
 					.attr({
-						class:				"performance selected",
+						class:				"performance" + (animal.performancesList[i].isSelected ? " selected" : ""),
 						animalIndex:		animalIndex,
 						performanceIndex:	i
 					})
 					.click(function() {
 						_this.managePerformanceClick(animalIndex, $(this).attr('performanceIndex'));
 					})
-					.text(animal.performancesList[i].name)
+					.text(animal.performancesList[i].formattedDate + " - " + animal.performancesList[i].name + " (x" + animal.performancesList[i].quantity + ")")
 				);
-				animal.performancesList[i].isSelected = true;
 			}
 		} else {
-			$("#formView #animalsList [index=" + animalIndex + "]").removeClass('selected');
+			$animalDiv.removeClass('selected');
 			$('#formView #performancesList [animalIndex=' + animalIndex + ']').remove();
-			animal.isSelected = false;
 		}
-		console.log(this.data);
-		this.billPDFManager.generate(this.data);
 	};
 
 	this.managePerformanceClick = function(animalIndex, performanceIndex) {
@@ -152,12 +151,14 @@ var BillFormView = function(id) {
 					$(this).addClass('selected');
 			});
 			performance.isSelected = true;
+			_this.data.client.animalsList[animalIndex].performancesSelected++;
 		} else {
 			$('#formView [animalIndex=' + animalIndex + ']').each(function() {
 				if ($(this).attr('performanceIndex') == performanceIndex)
 					$(this).removeClass('selected');
 			});
 			performance.isSelected = false;
+			_this.data.client.animalsList[animalIndex].performancesSelected--;
 		}
 		this.billPDFManager.generate(this.data);
 	};
@@ -166,16 +167,36 @@ var BillFormView = function(id) {
 		if (button != "save") return;
 
 		var params = {
-				action:	"add",
+				action:		"add",
+				clientId:	this.id,
+				totalTTC:	this.billPDFManager.totalTTC,
+				totalHT:	this.billPDFManager.totalHT,
+				file: 		this.billPDFManager.billId + ".pdf",
+				inPension: 	Config.job.toUpperCase() == "PENSION",
+				inFarriery:	Config.job.toUpperCase() == "FARRIERY",
 		};
 
-		if (!this.checkForm(params)) return;
-
-		if (_this.editMode) params.id = _this.data.id;
 		$.post(Config.billsApi, params, function(data) {
-			ManageView.pop();
-			if (!_this.editMode)
-				ManageView.push(new BillsDetails(data.id));
+			History.add("bills", params.action, 0,  _this.billPDFManager.billId, null,  params.inFarriery,  params.inPension, function() {
+				ManageView.replace(new BillsSaveView());
+			});
 		}, "json");
 	};
 };
+
+// Save View
+var BillsSaveView = function() {
+	// Buttons management
+	this.showReturnButton	= true;
+	this.showSaveButton		= false;
+	this.showAddButton		= false;
+	this.showEditButton		= false;
+	this.showRemoveButton	= false;
+
+	this.htmlPage 			= "bills.html";
+	this.tabLabel			= "bills";
+
+	this.init = function() {
+		$('#saveView').show();
+	};
+}

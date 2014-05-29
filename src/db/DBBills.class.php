@@ -15,10 +15,12 @@ class DBBills extends SQLite3 {
 	}
 
 	public function getList($job) {
-		$stmt = $this->prepare('SELECT c.*
-			FROM link_job_bills AS ljc
-			LEFT JOIN bills AS c ON ljc.billId = c.id
-			WHERE job = :job;');
+		$stmt = $this->prepare('SELECT b.*, c.firstName, c.lastName
+			FROM link_job_bills AS ljb
+			LEFT JOIN bills AS b ON ljb.billId = b.id
+			LEFT JOIN clients AS c ON b.clientId = c.id
+			WHERE job = :job
+			ORDER BY b.id DESC;');
 		$stmt->bindValue(':job', $job);
 		$res = $stmt->execute();
 		$ret = array();
@@ -30,7 +32,7 @@ class DBBills extends SQLite3 {
 
 	private function getJobsLinks($id) {
 		$stmt = $this->prepare('SELECT * FROM link_job_bills WHERE billId = :id');
-		$stmt->bindValue("id", $id);
+		$stmt->bindValue(":id", $id);
 		$res = $stmt->execute();
 		$ret = array("inPension" => false, "inFarriery" => false);
 		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
@@ -42,18 +44,29 @@ class DBBills extends SQLite3 {
 		return $ret;
 	}
 
+	public static function format($bill) {
+		$bill["number"] = explode(".", $bill['file'])[0];
+		$bill['date'] = date('d/m/Y', $bill['date']);
+		return $bill;
+	}
+
 	private function formatInfos($bill) {
+		$bill = self::format($bill);
+		$bill['client'] = $bill['firstName']." ".$bill['lastName'];
 		$bill = array_merge($bill, $this->getJobsLinks($bill['id']));
 		return $bill;
 	}
 
-	public function add($date, $total, $taxFree, $file) {
-		$stmt = $this->prepare("INSERT INTO bills(date, total, taxFree, file) VALUES(:date, :total, :taxFree, :file);");
-		$stmt->bindValue(':date', $date);
-		$stmt->bindValue(':total', $total);
-		$stmt->bindValue(':taxFree', $taxFree);
+	public function add($clientId, $totalTTC, $totalHT, $file) {
+		$stmt = $this->prepare("INSERT INTO bills(date, clientId, total, taxFree, file) VALUES(:date, :clientId, :total, :taxFree, :file);");
+		$stmt->bindValue(':date', time());
+		$stmt->bindValue(':clientId', $clientId);
+		$stmt->bindValue(':total', $totalTTC);
+		$stmt->bindValue(':taxFree', $totalHT);
 		$stmt->bindValue(':file', $file);
 		$stmt->execute();
+
+		$stmt = $this->exec("UPDATE commons_infos SET billNumber = billNumber + 1;");
 
 		return $this->lastInsertRowID();
 	}
@@ -88,6 +101,12 @@ class DBBills extends SQLite3 {
 		foreach ($res['client']['animalsList'] as $i => $v) {
 			$res['client']['animalsList'][$i]['performancesList'] = $animalsDB->getPerformancesList($v['id']);
 		}
+
+		$stmt = $this->prepare('SELECT billNumber FROM commons_infos;');
+		$billNumber = $stmt->execute();
+		$billNumber = $billNumber->fetchArray(SQLITE3_ASSOC);
+		$res['billNumber'] = $billNumber['billNumber'];
+
 		return $res;
 	}
 }

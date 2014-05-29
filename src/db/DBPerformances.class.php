@@ -15,7 +15,8 @@ class DBPerformances extends SQLite3 {
 	public function getList($job) {
 		$stmt = $this->prepare('SELECT p.* FROM link_job_performances AS ljp
 			LEFT JOIN performances AS p ON ljp.performanceId = p.id
-			WHERE job = :job;');
+			WHERE job = :job
+			ORDER BY p.id DESC;');
 		$stmt->bindValue(':job', $job);
 		$res = $stmt->execute();
 		$ret = array();

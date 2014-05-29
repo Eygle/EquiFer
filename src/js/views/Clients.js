@@ -25,6 +25,35 @@ var ClientsView = function() {
 			];
 			new SortableList("clientsList", titles, data, function(id) {
 				ManageView.push(new ClientDetails(id));
+			}, function(x, y, id) {
+				var background = $('<div>').attr('id', "rightClickBack").click(function() {
+					$(this).remove();
+					$("#" + id).removeClass('tr_selected');
+					document.oncontextmenu = function() {return true;};
+				});
+				var popup = $('<div>').attr('id', 'rightClickPopup').css({left: x, top: y});
+				var button1 = $('<div>').attr({class:'rightClickButton edit-icon', id: id}).text(Strings.EDIT).click(function() {
+					document.oncontextmenu = function() {return true;};
+					$('#rightClickBack').remove();
+					$.getJSON(Config.clientsApi, {action:"getInfos", id:this.id}, function(data) {
+						ManageView.push(new ClientFormView(data));
+					});
+				});
+				var button2 = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE).click(function() {
+					document.oncontextmenu = function() {return true;};
+					$('#rightClickBack').remove();
+					var name = $('#clientsList #' + this.id + " [label=name]").text();
+					if (confirm(Strings.CONFIRM_DELETE.replace('$1', name))) {
+						$.post(Config.clientsApi, {action:"delete", id:this.id}, function() {
+							History.add("clients", "delete", 0, name, null, true, true, function() {
+								ManageView.display();
+							});
+						});
+					} else {
+						$("#" + id).removeClass('tr_selected');
+					}
+				});
+				$('body').append(background.append(popup.append(button1).append(button2)));
 			});
 		});
 	};
@@ -78,18 +107,22 @@ var ClientDetails = function(id) {
 			}, function(x, y, id) {
 				var background = $('<div>').attr('id', "rightClickBack").click(function() {
 					$(this).remove();
+					$("#" + id).removeClass('tr_selected');
 					document.oncontextmenu = function() {return true;};
 				});
 				var popup = $('<div>').attr('id', 'rightClickPopup').css({left: x, top: y});
 				var button = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE_FROM_LIST).click(function() {
 					document.oncontextmenu = function() {return true;};
 					$('#rightClickBack').remove();
+					var horseId = this.id;
 					$.post(Config.clientsApi, {
 						action: 'unlinkAnimal',
 						clientId:_this.id,
-						animalId:this.id
+						animalId:horseId
 					}, function() {
-						ManageView.display();
+						History.add("clients", "delete_animal", 0, _this.data.name,  $("#clientHorsesList #" + horseId+ " [label=name]").text(), true, true, function() {
+							ManageView.display();
+						});
 					});
 				});
 				$('body').append(background.append(popup.append(button)));
@@ -104,7 +137,9 @@ var ClientDetails = function(id) {
 						clientId:	_this.id,
 						animalId:	ui.item.id
 					}, function() {
-						ManageView.display();
+						History.add("clients", "add_animal", 0, _this.data.name, ui.item.name, true, true, function() {
+							ManageView.display();
+						});
 					});
 					return false;
 				}
@@ -112,15 +147,29 @@ var ClientDetails = function(id) {
 				return $("<li>").data("ui-item.autocomplete", item).append(
 					'<a>' + item.name + '</a>').appendTo(ul);
 			};
+
+			// Bills part
+			titles = [
+				{label:"date",		title:Strings.BILLS_LABEL_DATE,		dataType:"string"},
+				{label:"number",	title:Strings.BILLS_LABEL_NUMBER,	dataType:"string"},
+				{label:"taxFree",	title:Strings.BILLS_LABEL_TAXFREE,	dataType:"float"},
+				{label:"total",		title:Strings.BILLS_LABEL_TOTAL,	dataType:"float"},
+				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string"}
+			];
+			new SortableList("billsList", titles, _this.data.billsList, function(id) {
+				
+			});
 		});
 	};
 
 	this.manageButtonClick = function(button) {
 		if (button == "edit")
 			ManageView.push(new ClientFormView(_this.data));
-		else if (button == "remove" && confirm(Strings.CONFIRM_DELETE + ' "' + _this.data.name + '" ?')) {
+		else if (button == "remove" && confirm(Strings.CONFIRM_DELETE.replace('$1', _this.data.name))) {
 			$.post(Config.clientsApi, {action:"delete", id:_this.data.id}, function() {
-				ManageView.pop();
+				History.add("clients", "delete", 0, _this.data.name,  null, true, true, function() {
+					ManageView.pop();
+				});
 			});
 		}
 	};
@@ -210,9 +259,12 @@ var ClientFormView = function(data) {
 
 		if (_this.editMode) params.id = _this.data.id;
 		$.post(Config.clientsApi, params, function(data) {
-			ManageView.pop();
-			if (!_this.editMode)
-				ManageView.push(new ClientsDetails(data.id));
+			History.add("clients", params.action, 0,  params.firstName + " " + params.lastName, null,  params.inFarriery,  params.inPension, function() {
+				if (!_this.editMode)
+					ManageView.replace(new ClientDetails(data.id));
+				else
+					ManageView.pop();
+			});
 		}, "json");
 	};
 

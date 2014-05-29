@@ -14,6 +14,10 @@ $mpdf = new mPDF('',	// mode - default ''
 	8,	// margin footer
 	'P');
 
+if (isset($_GET['title']) && !empty($_GET['title'])) {
+	$mpdf->setTitle($_GET['title']);
+}
+
 $mpdf->setHTMLHeader(file_get_contents('pdf_header_generated.html'), 'EO');
 $mpdf->SetHTMLFooter('<div style="width:100%;text-align:center;">Page {PAGENO} sur {nb}</div>', 'EO');
 

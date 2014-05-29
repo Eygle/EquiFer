@@ -18,13 +18,11 @@ class DBSettings extends SQLite3 {
 		return $res->fetchArray(SQLITE3_ASSOC);
 	}
 
-	public function editUser($firstName, $lastName, $address, $zipcode, $city, $phoneFixe, $phoneMobile, $mail, $company, $siret) {
+	public function editUser($address, $zipcode, $city, $phoneFixe, $phoneMobile, $mail, $company, $siret) {
 		$stmt = $this->prepare("UPDATE owner_infos
-			SET firstName = :firstName, lastName = :lastName, address = :address,
+			SET address = :address,
 			zipcode = :zipcode, city = :city, phoneFixe = :phoneFixe,
 			phoneMobile = :phoneMobile, mail = :mail, companyName = :companyName, siret = :siret;");
-		$stmt->bindValue(':firstName', $firstName);
-		$stmt->bindValue(':lastName', $lastName);
 		$stmt->bindValue(':address', $address);
 		$stmt->bindValue(':zipcode', $zipcode);
 		$stmt->bindValue(':city', $city);

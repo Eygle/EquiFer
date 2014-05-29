@@ -24,6 +24,11 @@ var ViewManager = function() {
 		this.display();
 	};
 
+	this.replace = function(view) {
+		this.stack.pop();
+		this.push(view);
+	}
+
 	this.display = function() {
 		this.current.showSaveButton ? $("#saveButton").show() : $("#saveButton").hide();
 		this.current.showAddButton ? $("#addButton").show() : $("#addButton").hide();

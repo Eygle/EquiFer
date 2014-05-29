@@ -1,6 +1,10 @@
 var BillPDFManager = function(data) {
 	this.htmlBill = null;
 
+	var totalHT;
+	var totalTTC;
+	var billId;
+
 	var _this = this;
 
 	this.init = function(data) {
@@ -25,12 +29,12 @@ var BillPDFManager = function(data) {
 			var $table = $('#hiddenBill .bill');
 			_this.generateTableHeader($table);
 
-			var totalHT		= 0;
-			var totalTTC	= 0;
+			_this.totalHT	= 0.0;
+			_this.totalTTC	= 0.0;
 
 			for (var horse in data.client.animalsList) {
 				var horse = data.client.animalsList[horse];
-				if (!horse.isSelected) continue;
+				if (horse.performancesSelected == 0) continue;
 				$table.append($("<tr>").append($('<td>').attr({colspan:7, class:"horseName"}).text(horse.name)));
 				for (var perf in horse.performancesList) {
 					perf = horse.performancesList[perf];
@@ -46,14 +50,19 @@ var BillPDFManager = function(data) {
 					// 	var desc = $('<td>').attr({class: 'center'}).text(perf.date);
 					var unitHT = $('<td>').attr({class: 'right'}).text(parseInt(perf.quantity) > 1 ? perf.priceHT : "");
 					var ht = $('<td>').attr({class: 'right'}).text(new String("" + perf.priceHT).replace(',', '.') * parseInt(perf.quantity));
-					totalHT += parseFloat(new String("" + perf.priceHT).replace(',', '.')) * parseInt(perf.quantity);
-					totalTTC += parseFloat(new String("" + perf.priceTTC).replace(',', '.')) * parseInt(perf.quantity);
+					_this.totalHT += parseFloat(new String("" + perf.priceHT).replace(',', '.')) * parseInt(perf.quantity);
+					_this.totalTTC += parseFloat(new String("" + perf.priceTTC).replace(',', '.')) * parseInt(perf.quantity);
 					$table.append($('<tr>').append(date, desc, unit, quantity, tva, unitHT, ht));
 				}
 			}
-			$('#totalHT').text(Math.round(totalHT * 100) / 100 + " €");
-			$('#totalTVA').text(Math.round((totalTTC - totalHT) * 100) / 100 + " €");
-			$('#totalTTC, #price').text(Math.round(totalTTC * 100) / 100 + " €");
+
+			_this.totalHT = Math.round(_this.totalHT * 100) / 100;
+			_this.totalTTC = Math.round(_this.totalTTC * 100) / 100;
+			var tva = Math.round((_this.totalTTC - _this.totalHT) * 100) / 100;
+
+			$('#totalHT').text(_this.totalHT + " €");
+			$('#totalTVA').text(tva + " €");
+			$('#totalTTC, #price').text(_this.totalTTC + " €");
 			_this.sendPDF();
 		});
 	};
@@ -65,8 +74,9 @@ var BillPDFManager = function(data) {
 
 	this.fillClientInfos = function(data) {
 		var date = new Date();
-		var billNbr = this.formatNumber(1, 5);
-		$('#hiddenBill #billRef').text("FC" + this.formatNumber(date.getDate(), 2) + this.formatNumber(date.getMonth() + 1, 2) + date.getFullYear().toString().substr(2,2) + billNbr);
+		var billNbr = this.formatNumber(data['billNumber'], 5);
+		this.billId = "FC" + this.formatNumber(date.getDate(), 2) + this.formatNumber(date.getMonth() + 1, 2) + date.getFullYear().toString().substr(2,2) + billNbr;
+		$('#hiddenBill #billRef').text(this.billId);
 		$('#hiddenBill #date').text(date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear().toString().substr(2,2));
 		var maxDate = new Date(date.getFullYear(), date.getMonth() + 2, 0); // 30 days
 		$('#hiddenBill #dateEnd').text(maxDate.getDate() + '/' + (maxDate.getMonth() + 1) + '/' + maxDate.getFullYear().toString().substr(2,2));
@@ -105,7 +115,7 @@ var BillPDFManager = function(data) {
 			content:	$('#hiddenBill').html()
 		}, function() {
 			// Display new PDF
-			$('#pdfViewer').html($('<embed>').attr({type:"application/pdf", src:"pdf-generator/generatePDF.php"}));
+			$('#pdfViewer').html($('<embed>').attr({type:"application/pdf", src:"pdf-generator/generatePDF.php?title=" + _this.billId}));
 		});
 	};
 

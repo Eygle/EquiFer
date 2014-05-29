@@ -22,8 +22,8 @@ try {
 		Utils::checkPostArgs('action');
 		switch ($_POST['action']) {
 			case "add":
-				Utils::checkPostArgs(array('date', 'total', 'taxFree', 'file', 'inFarriery', 'inPension'));
-				$id = $db->add($_POST['date'],	$_POST['total'], $_POST['taxFree'], $_POST['file']);
+				Utils::checkPostArgs(array('clientId', 'totalTTC', 'totalHT', 'file', 'inFarriery', 'inPension'));
+				$id = $db->add($_POST['clientId'], $_POST['totalTTC'], $_POST['totalHT'], $_POST['file']);
 				if ($_POST['inFarriery'] == "true") $db->linkToJob("FARRIERY", $id);
 				if ($_POST['inPension'] == "true") $db->linkToJob("PENSION", $id);
 				echo json_encode(array("id"=>$id));

@@ -23,6 +23,35 @@ var PerformancesView = function() {
 			];
 			new SortableList("performancesList", titles, data, function(id) {
 				ManageView.push(new PerformanceDetails(id));
+			}, function(x, y, id) {
+				var background = $('<div>').attr('id', "rightClickBack").click(function() {
+					$(this).remove();
+					$("#" + id).removeClass('tr_selected');
+					document.oncontextmenu = function() {return true;};
+				});
+				var popup = $('<div>').attr('id', 'rightClickPopup').css({left: x, top: y});
+				var button1 = $('<div>').attr({class:'rightClickButton edit-icon', id: id}).text(Strings.EDIT).click(function() {
+					document.oncontextmenu = function() {return true;};
+					$('#rightClickBack').remove();
+					$.getJSON(Config.performancesApi, {action:"getInfos", id:this.id}, function(data) {
+						ManageView.push(new PerformanceFormView(data));
+					});
+				});
+				var button2 = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE).click(function() {
+					document.oncontextmenu = function() {return true;};
+					$('#rightClickBack').remove();
+					var name = $('#performancesList #' + this.id + " [label=name]").text();
+					if (confirm(Strings.CONFIRM_DELETE.replace('$1', name))) {
+						$.post(Config.performancesApi, {action:"delete", id:this.id}, function() {
+							History.add("perfs", "delete", 0, name, null, true, true, function() {
+								ManageView.display();
+							});
+						});
+					} else {
+						$("#" + id).removeClass('tr_selected');
+					}
+				});
+				$('body').append(background.append(popup.append(button1).append(button2)));
 			});
 		});
 	};
@@ -67,9 +96,11 @@ var PerformanceDetails = function(id) {
 	this.manageButtonClick = function(button) {
 		if (button == "edit")
 			ManageView.push(new PerformanceFormView(_this.data));
-		else if (button == "remove" && confirm(Strings.CONFIRM_DELETE + ' "' + _this.data.name + '" ?')) {
+		else if (button == "remove" && confirm(Strings.CONFIRM_DELETE.replace('$1', _this.data.name))) {
 			$.post(Config.performancesApi, {action:"delete", id:_this.data.id}, function() {
-				ManageView.pop();
+				History.add("perfs", "delete", 0, _this.data.name, null, true, true, function() {
+					ManageView.pop();
+				});
 			});
 		}
 	};
@@ -141,9 +172,12 @@ var PerformanceFormView = function(data) {
 
 		if (_this.editMode) params.id = _this.data.id;
 		$.post(Config.performancesApi, params, function(data) {
-			ManageView.pop();
-			if (!_this.editMode)
-				ManageView.push(new PerformanceDetails(data.id));
+			History.add("perfs", params.action, 0,  params.name, null,  params.inFarriery,  params.inPension, function() {
+				if (!_this.editMode)
+					ManageView.replace(new PerformanceDetails(data.id));
+				else
+					ManageView.pop();
+			});
 		}, "json");
 	};
 

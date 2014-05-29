@@ -115,6 +115,7 @@ DROP TABLE "link_bills_clients";
 CREATE TABLE "bills" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   "date" date NOT NULL,
+  "clientId" int(11) NOT NULL,
   "total" float NOT NULL,
   "taxFree" float NOT NULL,
   "file" varchar(256) NOT NULL
@@ -172,8 +173,6 @@ CREATE INDEX "link_job_history_job" ON "link_job_history" ("job");
 DROP TABLE "owner_infos";
 
 CREATE TABLE "owner_infos" (
-  "firstName" varchar(256) NOT NULL,
-  "lastName" varchar(256) NOT NULL,
   "address" varchar(512) NOT NULL,
   "zipcode" int(11) NOT NULL,
   "city" varchar(256) NOT NULL,
@@ -183,4 +182,15 @@ CREATE TABLE "owner_infos" (
   "siret" varchar(256),
   "companyName" varchar(256) NOT NULL
 );
-INSERT INTO owner_infos VALUES("Prénom", "Nom", "Adresse", 00000, "Ville", "0200000000", "0600000000", "mail@example.com", "SIRET", "Nom de l'entreprise");
+INSERT INTO owner_infos VALUES("Adresse", 00000, "Ville", "0200000000", "0600000000", "mail@example.com", "SIRET", "Nom de l'entreprise");
+
+
+
+
+
+DROP TABLE "commons_infos";
+
+CREATE TABLE "commons_infos" (
+  "billNumber" int(11) NOT NULL
+);
+INSERT INTO commons_infos VALUES(1);

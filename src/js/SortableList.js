@@ -56,6 +56,7 @@ var SortableList = function(tableId, titles, list, clickCallback, rightClickCall
 				$tr.mousedown(function(e){
 					if( e.button == 2 ) {
 						document.oncontextmenu = function() {return false;};
+						$(this).addClass('tr_selected');
 						_this.rightClickCallback(e.pageX, e.pageY, this.id);
 						return false;
 					}

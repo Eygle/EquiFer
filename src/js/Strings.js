@@ -8,11 +8,32 @@ var FR = function() {
 	this.TAB_BILLS		= "Factures";
 
 	// Commons
-	this.CONFIRM_DELETE				= "Voulez vous vraiment supprimer";
+	this.CONFIRM_DELETE				= "Voulez vous vraiment supprimer $1 ?";
 	this.MESSAGE_SAVE_SUCESS		= "Les informations ont bien étées enregistrées";
 	this.REMOVE_FROM_LIST			= "Retirer de la liste";
 	this.REMOVE						= "Supprimer";
+	this.EDIT						= "Modifier";
 	this.MODIFY_QUANTITY			= "Modifier la quantité";
+	this.SETTINGS					= "Paramètres";
+
+	// Home
+	this.HISTORY_LABEL_DATE		= "Date";
+	this.HISTORY_LABEL_CATEGORY	= "Categorie";
+	this.HISTORY_LABEL_ACTION	= "Action";
+
+	this.HISTORY_SENTENCE_ADD				= "La fiche de $1 a été créée";
+	this.HISTORY_SENTENCE_BILL_ADD			= "La facture $1 a été générée";
+	this.HISTORY_SENTENCE_PERF_ADD			= "La prestation $1 a été créée";
+	this.HISTORY_SENTENCE_EDIT				= "La fiche de $1 a été modifiée";
+	this.HISTORY_SENTENCE_PERF_EDIT			= "La prestation $1 a été modifiée";
+	this.HISTORY_SENTENCE_SETTINGS_OWNER	= "Les informations de la sociétée ont été modifiées";
+	this.HISTORY_SENTENCE_DELETE			= "La fiche de $1 a été suprimée";
+	this.HISTORY_SENTENCE_PERF_DELETE		= "La prestation $1 a été suprimée";
+	this.HISTORY_SENTENCE_ADD_PERF			= "La prestation '$2' a été associée à $1";
+	this.HISTORY_SENTENCE_EDIT_PERF			= "La quantité de la prestation '$2' a été modifiée pour $1";
+	this.HISTORY_SENTENCE_DELETE_PERF		= "La prestation '$2' a été dissocié de $1";
+	this.HISTORY_SENTENCE_ADD_ANIMAL		= "$2 a été associé à $1";
+	this.HISTORY_SENTENCE_DELETE_ANIMAL		= "$2 a été dissocié de $1";
 
 	// Animals
 	this.ANIMALS_LABEL_NAME		= "Nom";
@@ -46,7 +67,6 @@ var FR = function() {
 
 	// Performances
 	this.PERF_LABEL_DATE		= "Date";
-	this.BILLS_LABEL_NUMBER		= "N° de facture";
 	this.PERF_LABEL_NAME		= "Nom";
 	this.PERF_LABEL_PRICE_HT	= "Prix HT";
 	this.PERF_LABEL_PRICE_TTC	= "Prix TTC";
@@ -61,8 +81,9 @@ var FR = function() {
 	this.PERF_REQUIRE_JOB		= "La prestation doit au moins apartenir à l'une des catégories suivantes:\nMaréchalerie ou Pension";
 
 	// Bills
+	this.BILLS_LABEL_NUMBER		= "N° de facture";
 	this.BILLS_LABEL_DATE		= "Date";
-	this.BILLS_LABEL_CLIENTS	= "Clients";
+	this.BILLS_LABEL_CLIENT		= "Client";
 	this.BILLS_LABEL_TAXFREE	= "Total HT";
 	this.BILLS_LABEL_TOTAL		= "Total TTC";
 	this.BILLS_LABEL_FILE		= "Fichier";

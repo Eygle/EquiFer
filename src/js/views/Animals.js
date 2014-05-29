@@ -27,6 +27,36 @@ var AnimalsView = function() {
 			];
 			new SortableList("animalsList", titles, data, function(id) {
 				ManageView.push(new AnimalDetails(id));
+			}, function(x, y, id) {
+				var background = $('<div>').attr('id', "rightClickBack").click(function() {
+					$(this).remove();
+					$("#" + id).removeClass('tr_selected');
+					document.oncontextmenu = function() {return true;};
+				});
+				var popup = $('<div>').attr('id', 'rightClickPopup').css({left: x, top: y});
+				var button1 = $('<div>').attr({class:'rightClickButton edit-icon', id: id}).text(Strings.EDIT).click(function() {
+					document.oncontextmenu = function() {return true;};
+					$('#rightClickBack').remove();
+					$("#" + id).removeClass('tr_selected');
+					$.getJSON(Config.animalsApi, {action:"getInfos", id:this.id}, function(data) {
+						ManageView.push(new AnimalFormView(data));
+					});
+				});
+				var button2 = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE).click(function() {
+					document.oncontextmenu = function() {return true;};
+					$('#rightClickBack').remove();
+					var name = $('#animalsList #' + this.id + " [label=name]").text();
+					if (confirm(Strings.CONFIRM_DELETE.replace('$1', name))) {
+						$.post(Config.animalsApi, {action:"delete", id:this.id}, function() {
+							History.add("animals", "delete", 0, name, null, true, true, function() {
+								ManageView.display();
+							});
+						});
+					} else {
+						$("#" + id).removeClass('tr_selected');
+					}
+				});
+				$('body').append(background.append(popup.append(button1).append(button2)));
 			});
 		});
 	};
@@ -91,6 +121,7 @@ var AnimalDetails = function(id) {
 			}, function(x, y, id) {
 				var background = $('<div>').attr('id', "rightClickBack").click(function() {
 					$(this).remove();
+					$("#" + id).removeClass('tr_selected');
 					document.oncontextmenu = function() {return true;};
 				});
 				var popup = $('<div>').attr('id', 'rightClickPopup').css({left: x, top: y});
@@ -98,28 +129,33 @@ var AnimalDetails = function(id) {
 					document.oncontextmenu = function() {return true;};
 					$('#rightClickBack').remove();
 					var newQuantity = prompt(Strings.MODIFY_QUANTITY, $("#clientHorsesList #" + this.id + " [label=quantity]").text());
+					$("#" + id).removeClass('tr_selected');
 					if (newQuantity) {
+						var perfId = this.id;
 						$.post(Config.animalsApi, {
 							action:			'editPerformance',
 							animalId:		_this.id,
-							performanceId:	this.id,
+							performanceId:	perfId,
 							quantity:		newQuantity
 						}, function() {
-							ManageView.display();
-							History.add("animals", "edit_perf", 0, _this.data.name,  $("#clientHorsesList #" + this.id + " [label=name]").text(), true, true);
+							History.add("animals", "edit_perf", 0, _this.data.name,  $("#clientHorsesList #" + perfId + " [label=name]").text(), true, true, function() {
+								ManageView.display();
+							});
 						});
 					}
 				});
 				var button2 = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE).click(function() {
 					document.oncontextmenu = function() {return true;};
 					$('#rightClickBack').remove();
+					var perfId = this.id;
 					$.post(Config.animalsApi, {
 						action:			'deletePerformance',
 						animalId:		_this.id,
-						performanceId:	this.id
+						performanceId:	perfId
 					}, function() {
-						ManageView.display();
-						History.add("animals", "delete_perf", 0, _this.data.name,  $("#clientHorsesList #" + this.id + " [label=name]").text(), true, true);
+						History.add("animals", "delete_perf", 0, _this.data.name,  $("#clientHorsesList #" + perfId + " [label=name]").text(), true, true, function() {
+							ManageView.display();
+						});
 					});
 				});
 				$('body').append(background.append(popup.append(button1).append(button2)));
@@ -133,10 +169,11 @@ var AnimalDetails = function(id) {
 						action:			"addPerformance",
 						animalId:		_this.id,
 						performanceId:	ui.item.id,
-						quantity:		1
+						quantity:		ui.item.defaultQuantity
 					}, function() {
-						ManageView.display();
-						History.add("animals", "adde_perf", 0, _this.data.name,  ui.item.name, true, true);
+						History.add("animals", "add_perf", 0, _this.data.name,  ui.item.name, true, true, function() {
+							ManageView.display();
+						});
 					});
 					return false;
 				}
@@ -150,10 +187,11 @@ var AnimalDetails = function(id) {
 	this.manageButtonClick = function(button) {
 		if (button == "edit")
 			ManageView.push(new AnimalFormView(_this.data));
-		else if (button == "remove" && confirm(Strings.CONFIRM_DELETE + ' "' + _this.data.name + '" ?')) {
+		else if (button == "remove" && confirm(Strings.CONFIRM_DELETE.replace('$1', _this.data.name))) {
 			$.post(Config.animalsApi, {action:"delete", id:_this.data.id}, function() {
-				ManageView.pop();
-				History.add("animals", "remove", 0, _this.data.name, null, true, true);
+				History.add("animals", "delete", 0, _this.data.name, null, true, true, function() {
+					ManageView.pop();
+				});
 			});
 		}
 	};
@@ -239,9 +277,10 @@ var AnimalFormView = function(data) {
 		if (_this.editMode) params.id = _this.data.id;
 		$.post(Config.animalsApi, params, function(data) {
 			History.add("animals", params.action, 0,  params.name, null,  params.inFarriery,  params.inPension, function() {
-				ManageView.pop();
 				if (!_this.editMode) {
-					ManageView.push(new AnimalDetails(data.id));
+					ManageView.replace(new AnimalDetails(data.id));
+				} else {
+					ManageView.pop();
 				}
 			});
 		}, "json");
