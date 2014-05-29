@@ -170,19 +170,19 @@ CREATE INDEX "link_job_history_job" ON "link_job_history" ("job");
 
 
 
-DROP TABLE "owner_infos";
+DROP TABLE "company";
 
-CREATE TABLE "owner_infos" (
+CREATE TABLE "company" (
+  "name" varchar(256) NOT NULL,
   "address" varchar(512) NOT NULL,
   "zipcode" int(11) NOT NULL,
   "city" varchar(256) NOT NULL,
   "phoneFixe" varchar(16),
   "phoneMobile" varchar(16),
   "mail" varchar(256) NOT NULL,
-  "siret" varchar(256),
-  "companyName" varchar(256) NOT NULL
+  "siret" varchar(256)
 );
-INSERT INTO owner_infos VALUES("Adresse", 00000, "Ville", "0200000000", "0600000000", "mail@example.com", "SIRET", "Nom de l'entreprise");
+INSERT INTO company VALUES("Nom de l'entreprise", "Adresse", 00000, "Ville", "0200000000", "0600000000", "mail@example.com", "SIRET");
 
 
 

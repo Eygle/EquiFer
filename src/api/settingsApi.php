@@ -9,17 +9,17 @@ try {
 	if ($_SERVER['REQUEST_METHOD'] == "GET") {
 		Utils::checkGetArgs('action');
 		switch ($_GET['action']) {
-			case "getUser":
-				echo json_encode($db->getUser());
+			case "getCompany":
+				echo json_encode($db->getCompany());
 				break;
 		}
 	} else {
 		Utils::checkPostArgs('action');
 		switch ($_POST['action']) {
-			case "editUser":
-				Utils::checkPostArgs(array('address', 'zipcode', 'city', 'phoneFixe', 'phoneMobile', 'mail', 'companyName', 'siret'));
-				$id = $db->editUser($_POST['address'], $_POST['zipcode'],
-					$_POST['city'], $_POST['phoneFixe'], $_POST['phoneMobile'],	$_POST['mail'], $_POST['companyName'], $_POST['siret']);
+			case "editCompany":
+				Utils::checkPostArgs(array('name', 'address', 'zipcode', 'city', 'phoneFixe', 'phoneMobile', 'mail', 'siret'));
+				$id = $db->editCompany($_POST['name'], $_POST['address'], $_POST['zipcode'],
+					$_POST['city'], $_POST['phoneFixe'], $_POST['phoneMobile'],	$_POST['mail'], $_POST['siret']);
 				break;
 		}
 	}

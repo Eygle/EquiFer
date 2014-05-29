@@ -78,6 +78,12 @@ th {
 	font-weight: bold;
 }
 
+.extra-discount {
+	padding-left: 25px;
+	color: #333;
+	font-style: italic;
+}
+
 .center {
 	text-align: center;
 }

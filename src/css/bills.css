@@ -14,6 +14,9 @@ embed {
 .performance {
 	color: #999;
 	cursor: pointer;
+	position: relative;
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
 
 .animal {
@@ -21,6 +24,41 @@ embed {
 	cursor: pointer;
 }
 
-.selected {
-	color: rgb(70, 78, 90);
+#content .selected {
+	color: black;
+	font-weight: bold;
+	padding-right: 60px;
+}
+
+.extra {
+	position: absolute;
+	top: 0;
+	right: 5px;
+	width: 24px;
+	height: 24px;
+	background-image: url('../images/money_plus.png');
+	background-size: 24px 24px;
+}
+
+.discount {
+	position: absolute;
+	top: 0;
+	right: 29px;
+	width: 24px;
+	height: 24px;
+	background-image: url('../images/money_minus.png');
+	background-size: 24px 24px;
+}
+
+.extra-discount {
+	font-style: italic;
+	padding-left: 25px;
+	cursor: pointer;
+}
+
+.extra-discount:hover {
+	background-image: url('../images/delete-crux.png');
+	background-size: 16px 16px;
+	background-position: 0 50%;
+	background-repeat: no-repeat;
 }

@@ -109,7 +109,7 @@ var BillFormView = function(id) {
 				_this.data.client.animalsList[i].performancesSelected = 0;
 			}
 		
-			$.getJSON(Config.settingsApi, {action: 'getUser'}, function(data) {
+			$.getJSON(Config.settingsApi, {action: 'getCompany'}, function(data) {
 				_this.data.infos = data;
 				_this.billPDFManager = new BillPDFManager(_this.data);
 			});
@@ -125,7 +125,7 @@ var BillFormView = function(id) {
 			$performancesList = $('#formView #performancesList');
 			$performancesList.html("");
 			for (var i in animal.performancesList) {
-				$performancesList.append($('<div>')
+				var perf = $('<div>')
 					.attr({
 						class:				"performance" + (animal.performancesList[i].isSelected ? " selected" : ""),
 						animalIndex:		animalIndex,
@@ -134,8 +134,39 @@ var BillFormView = function(id) {
 					.click(function() {
 						_this.managePerformanceClick(animalIndex, $(this).attr('performanceIndex'));
 					})
-					.text(animal.performancesList[i].formattedDate + " - " + animal.performancesList[i].name + " (x" + animal.performancesList[i].quantity + ")")
-				);
+					.text(animal.performancesList[i].formattedDate + " - " + animal.performancesList[i].name + " (x" + animal.performancesList[i].quantity + ")");
+				if (animal.performancesList[i].isSelected) {
+					this.addDisountsAndExtraOnPerf(perf, animalIndex, $(perf).attr('performanceIndex'));
+				}
+
+				$performancesList.append(perf);
+
+				if (animal.performancesList[i].isSelected && animal.performancesList[i].extra) {
+					$performancesList.append($('<div>').attr({
+						'class':				'extra-discount',
+						'animalIndex' : 		animalIndex,
+						'performanceIndex' :	i
+						})
+						.text(Strings.EXTRA_LABEL.replace('$1', animal.performancesList[i].extra))
+						.click(function() {
+							_this.data.client.animalsList[$(this).attr('animalIndex')].performancesList[$(this).attr('performanceIndex')].extra = undefined;
+							$(this).remove();
+						})
+					);
+				} else if (animal.performancesList[i].isSelected && animal.performancesList[i].discount) {
+					$performancesList.append($('<div>').attr({
+						'class':				'extra-discount',
+						'animalIndex' : 		animalIndex,
+						'performanceIndex' :	i
+						})
+						.text(Strings.DISCOUNT_LABEL.replace('$1', animal.performancesList[i].discount))
+						.click(function() {
+							_this.data.client.animalsList[$(this).attr('animalIndex')].performancesList[$(this).attr('performanceIndex')].discount = undefined;
+							$(this).remove();
+							_this.billPDFManager.generate(_this.data);
+						})
+					);
+				}
 			}
 		} else {
 			$animalDiv.removeClass('selected');
@@ -143,24 +174,87 @@ var BillFormView = function(id) {
 		}
 	};
 
+	this.addDisountsAndExtraOnPerf = function(perf, animalIndex, performanceIndex) {
+		perf.append($('<div>').attr('class', 'extra').click(function(event) {
+			event.stopImmediatePropagation();
+			var total = prompt(Strings.EXTRA_TITLE).replace(",", ".");
+			total = Math.round(parseFloat(total) * 100) / 100;
+			if (isNaN(total)) return;
+			_this.data.client.animalsList[animalIndex].performancesList[performanceIndex].extra = total;
+			_this.data.client.animalsList[animalIndex].performancesList[performanceIndex].discount = undefined;
+			_this.cleanExtraDiscountsFromPerf(perf);
+			perf.after($('<div>').attr({
+				'class':				'extra-discount',
+				'animalIndex' : 		animalIndex,
+				'performanceIndex' :	performanceIndex
+				})
+				.text(Strings.EXTRA_LABEL.replace('$1', total))
+				.click(function() {
+					event.stopImmediatePropagation();
+					_this.data.client.animalsList[$(this).attr('animalIndex')].performancesList[$(this).attr('performanceIndex')].extra = undefined;
+					$(this).remove();
+				})
+			);
+			_this.billPDFManager.generate(_this.data);
+		})).append($('<div>').attr('class', 'discount').click(function(event) {
+			event.stopImmediatePropagation();
+			var total = prompt(Strings.DISCOUNT_TITLE).replace(",", ".");
+			total = Math.round(parseFloat(total) * 100) / 100;
+			if (isNaN(total)) return;
+			_this.data.client.animalsList[animalIndex].performancesList[performanceIndex].discount = total;
+			_this.data.client.animalsList[animalIndex].performancesList[performanceIndex].extra = undefined;
+			_this.cleanExtraDiscountsFromPerf(perf);
+			perf.after($('<div>').attr({
+				'class':				'extra-discount',
+				'animalIndex' : 		animalIndex,
+				'performanceIndex' :	performanceIndex
+				})
+				.text(Strings.DISCOUNT_LABEL.replace('$1', total))
+				.click(function() {
+					event.stopImmediatePropagation();
+					_this.data.client.animalsList[$(this).attr('animalIndex')].performancesList[$(this).attr('performanceIndex')].discount = undefined;
+					$(this).remove();
+					_this.billPDFManager.generate(_this.data);
+				})
+			);
+			_this.billPDFManager.generate(_this.data);
+		}));
+	};
+
 	this.managePerformanceClick = function(animalIndex, performanceIndex) {
 		var performance = _this.data.client.animalsList[animalIndex].performancesList[performanceIndex];
 		if (!performance.isSelected) {
 			$('#formView [animalIndex=' + animalIndex + ']').each(function() {
-				if ($(this).attr('performanceIndex') == performanceIndex)
+				if ($(this).attr('performanceIndex') == performanceIndex) {
 					$(this).addClass('selected');
+					_this.addDisountsAndExtraOnPerf($(this), animalIndex, performanceIndex);
+				}
 			});
 			performance.isSelected = true;
 			_this.data.client.animalsList[animalIndex].performancesSelected++;
 		} else {
 			$('#formView [animalIndex=' + animalIndex + ']').each(function() {
-				if ($(this).attr('performanceIndex') == performanceIndex)
+				if ($(this).attr('performanceIndex') == performanceIndex) {
 					$(this).removeClass('selected');
+					$(this).find(".extra,.discount").each(function() {
+						$(this).remove();
+					});
+					_this.cleanExtraDiscountsFromPerf($(this));
+				}
 			});
 			performance.isSelected = false;
 			_this.data.client.animalsList[animalIndex].performancesSelected--;
 		}
 		this.billPDFManager.generate(this.data);
+	};
+
+	this.cleanExtraDiscountsFromPerf = function(perf) {
+		var n = perf.next();
+		while (n && n.attr('class') == "extra-discount") {
+			tmp = n;
+			n = n.next();
+			tmp.remove();
+		}
 	};
 
 	this.manageButtonClick = function(button) {

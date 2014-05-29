@@ -9,7 +9,7 @@ var BillPDFManager = function(data) {
 
 	this.init = function(data) {
 		$('#hiddenBillHeader').load("pdf-generator/pdf_header.html", function() {
-			$('#hiddenBillHeader .company').text(data.infos.companyName);
+			$('#hiddenBillHeader .company').text(data.infos.name);
 			var infos = $('#hiddenBillHeader .infos');
 			infos.html($('<div>').text(data.infos.address + " - " + data.infos.zipcode + " " + data.infos.city));
 			infos.append($('<div>').text("N° Siret " + data.infos.siret));
@@ -40,18 +40,28 @@ var BillPDFManager = function(data) {
 					perf = horse.performancesList[perf];
 					if (!perf.isSelected) continue;
 					var date = $('<td>').attr({class: 'center'}).text(perf.formattedDate);
-					var desc = $('<td>').attr({class: 'back-highlight'}).text(perf.name);
+					var desc;
+					var realHT = parseFloat(new String("" + perf.priceHT).replace(',', '.')) * parseInt(perf.quantity);
+					var realTTC = parseFloat(new String("" + perf.priceTTC).replace(',', '.')) * parseInt(perf.quantity);
+					if (!perf.extra && !perf.discount) 
+						desc = $('<td>').attr({class: 'back-highlight'}).text(perf.name);
+					else if (perf.extra) {
+						desc = $('<td>').attr({class: 'back-highlight'}).html(perf.name + '<div class="extra-discount">' + Strings.EXTRA_LABEL.replace('$1', perf.extra) + '</div>');
+						realHT += perf.extra;
+						realTTC += perf.extra;
+					}
+					else {
+						desc = $('<td>').attr({class: 'back-highlight'}).html(perf.name + '<div class="extra-discount">' + Strings.DISCOUNT_LABEL.replace('$1', perf.discount) + '</div>');
+						realHT -= perf.discount;
+						realTTC -= perf.discount;
+					}
 					var unit = $('<td>').attr({class: 'center'}).text(perf.unit);
 					var quantity = $('<td>').attr({class: 'center back-highlight'}).text(perf.quantity);
 					var tva = $('<td>').attr({class: 'center'}).text(perf.tva);
-					// if ()	// TODO REMISE
-					// 	var desc = $('<td>').attr({class: 'center'}).text(perf.date);
-					// if ()	// TODO SUPPL
-					// 	var desc = $('<td>').attr({class: 'center'}).text(perf.date);
-					var unitHT = $('<td>').attr({class: 'right'}).text(parseInt(perf.quantity) > 1 ? perf.priceHT : "");
-					var ht = $('<td>').attr({class: 'right'}).text(new String("" + perf.priceHT).replace(',', '.') * parseInt(perf.quantity));
-					_this.totalHT += parseFloat(new String("" + perf.priceHT).replace(',', '.')) * parseInt(perf.quantity);
-					_this.totalTTC += parseFloat(new String("" + perf.priceTTC).replace(',', '.')) * parseInt(perf.quantity);
+					var unitHT = $('<td>').attr({class: 'right'}).text(parseInt(perf.quantity) > 1 || perf.extra || perf.discount ? perf.priceHT : "");
+					var ht = $('<td>').attr({class: 'right'}).text(realHT);
+					_this.totalHT += realHT;
+					_this.totalTTC += realTTC;
 					$table.append($('<tr>').append(date, desc, unit, quantity, tva, unitHT, ht));
 				}
 			}
@@ -99,10 +109,6 @@ var BillPDFManager = function(data) {
 		var unit = $('<th>').attr({class: 'center'}).text("Unité");
 		var quantity = $('<th>').attr({class: 'center back-highlight'}).text("Qte");
 		var tva = $('<th>').attr({class: 'center'}).html("TVA<br />%");
-		// if (data.)	// TODO REMISE
-		// 	var desc = $('<th>').attr({class: 'center'}).text("Remise");
-		// if (data.)	// TODO SUPPL
-		// 	var desc = $('<th>').attr({class: 'center'}).text("Suppl.");
 		var unitHT = $('<th>').attr({class: 'center'}).html("Unit.<br />HT");
 		var ht = $('<th>').attr({class: 'cener'}).html("Montant<br />HT");
 		table.append($('<tr>').append(date, desc, unit, quantity, tva, unitHT, ht));

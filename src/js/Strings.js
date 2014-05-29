@@ -88,14 +88,19 @@ var FR = function() {
 	this.BILLS_LABEL_TOTAL		= "Total TTC";
 	this.BILLS_LABEL_FILE		= "Fichier";
 
+	this.EXTRA_TITLE			= "Montant du supplément";
+	this.DISCOUNT_TITLE			= "Montant de la remise";
+	this.EXTRA_LABEL			= "Supplément: $1€";
+	this.DISCOUNT_LABEL			= "Remise: $1€";
+
 	// Settings
-	this.SETTINGS_USER_REQUIRE_NAME			= "Les nom et prénom sont nécessaires";
-	this.SETTINGS_USER_REQUIRE_ADDRESS		= "L'addresse est nécessaire";
-	this.SETTINGS_USER_REQUIRE_ZIPCODE		= "La code postal est nécessaire";
-	this.SETTINGS_USER_REQUIRE_MAIL			= "L'addresse mail est nécessaire";
-	this.SETTINGS_USER_MAIL_WRONG_FORMAT	= "Le format de l'adresse mail est invalide";
-	this.SETTINGS_USER_REQUIRE_PHONE		= "Il faut au moins un numéro de téléphone";
-	this.SETTINGS_USER_REQUIRE_COMPANY		= "Le nom de l'entreprise est nécessaire";
+	this.SETTINGS_COMPANY_REQUIRE_NAME			= "Les nom et prénom sont nécessaires";
+	this.SETTINGS_COMPANY_REQUIRE_ADDRESS		= "L'addresse est nécessaire";
+	this.SETTINGS_COMPANY_REQUIRE_ZIPCODE		= "La code postal est nécessaire";
+	this.SETTINGS_COMPANY_REQUIRE_MAIL			= "L'addresse mail est nécessaire";
+	this.SETTINGS_COMPANY_MAIL_WRONG_FORMAT	= "Le format de l'adresse mail est invalide";
+	this.SETTINGS_COMPANY_REQUIRE_PHONE		= "Il faut au moins un numéro de téléphone";
+	this.SETTINGS_COMPANY_REQUIRE_COMPANY		= "Le nom de l'entreprise est nécessaire";
 
 	// Autocompletes values
 	this.PERF_AUTOCOMPLETE_UNITY		= [
