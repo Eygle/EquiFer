@@ -93,6 +93,14 @@ var FR = function() {
 	this.EXTRA_LABEL			= "Supplément: $1€";
 	this.DISCOUNT_LABEL			= "Remise: $1€";
 
+	// Alerts
+	this.ALERTS_LABEL_FREQUENCY	= "Fréquence";
+	this.ALERTS_LABEL_FROM		= "A partir de";
+	this.ALERTS_LABEL_TITLE		= "Titre";
+	this.DAILY					= "Quotidienne";
+	this.WEEKLY					= "Hebdomadaire";
+	this.MONTHLY				= "Mensuelle";
+
 	// Settings
 	this.SETTINGS_COMPANY_REQUIRE_NAME			= "Les nom et prénom sont nécessaires";
 	this.SETTINGS_COMPANY_REQUIRE_ADDRESS		= "L'addresse est nécessaire";

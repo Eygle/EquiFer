@@ -143,6 +143,33 @@ CREATE INDEX "link_bills_clients_billId_clientId" ON "link_bills_clients" ("bill
 
 
 
+DROP TABLE "programmed_alerts";
+CREATE TABLE "programmed_alerts"(
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  "frequency" varchar(15) NOT NULL,
+  "from" int(2) NOT NULL,
+  "category" varchar(32) NOT NULL,
+  "objectId" int(11) NOT NULL,
+  "title" varchar(512) NOT NULL
+);
+CREATE INDEX "programmed_alerts_id" ON "programmed_alerts" ("id");
+CREATE INDEX "programmed_alerts_cat_objId" ON "programmed_alerts" ("category", "objectId");
+
+
+
+
+DROP TABLE "alerts";
+CREATE TABLE "alerts"(
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  "date" int(11) NOT NULL,
+  "category" varchar(32) NOT NULL,
+  "objectId" int(11) NOT NULL,
+  "title" varchar(512) NOT NULL
+);
+CREATE INDEX "alerts_id" ON "alerts" ("id");
+
+
+
 
 DROP TABLE "history";
 DROP TABLE "link_job_history";

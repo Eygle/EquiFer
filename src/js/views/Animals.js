@@ -181,6 +181,9 @@ var AnimalDetails = function(id) {
 				return $("<li>").data("ui-item.autocomplete", item).append(
 					'<a>' + item.name + '</a>').appendTo(ul);
 			};
+
+			//Alerts list
+			AlertsManager.createAlertsList('animals', _this.id, _this.data['name'], 'alertsList');
 		});
 	};
 

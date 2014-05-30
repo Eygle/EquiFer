@@ -1,7 +1,7 @@
 <?php
 
 require_once dirname(__FILE__).'/../db/DBPerformances.class.php';
-require_once dirname(__FILE__).'/Utils.class.php';
+require_once dirname(__FILE__).'/../Utils.class.php';
 
 $db = new DBPerformances();
 
