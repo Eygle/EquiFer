@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__).'/db-config.php';
+require_once dirname(__FILE__).'/../Utils.class.php';
 
 class DBAnimals extends SQLite3 {
 
@@ -48,7 +49,7 @@ class DBAnimals extends SQLite3 {
 		$res = $stmt->execute();
 		$ret = array();
 		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-			$row['formattedDate'] = date('d/m/Y', $row['date']);
+			$row['formattedDate'] = Utils::formatDate($row['date']);
 			$ret[] = $row;
 		}
 		return $ret;

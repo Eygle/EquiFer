@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__).'/db-config.php';
+require_once dirname(__FILE__).'/../Utils.class.php';
 
 class DBHistory extends SQLite3 {
 
@@ -28,7 +29,7 @@ class DBHistory extends SQLite3 {
 	}
 
 	private static function format($data) {
-		$data['date'] = date('d/m/Y', $data['date']);
+		$data['date'] = Utils::formatDate($data['date']);
 		return $data;
 	}
 

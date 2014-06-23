@@ -147,10 +147,10 @@ DROP TABLE "programmed_alerts";
 CREATE TABLE "programmed_alerts"(
   "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   "frequency" varchar(15) NOT NULL,
-  "from" int(2) NOT NULL,
+  "from" varchar(10) NOT NULL,
   "category" varchar(32) NOT NULL,
   "objectId" int(11) NOT NULL,
-  "title" varchar(512) NOT NULL
+  "title" varchar(256) NOT NULL
 );
 CREATE INDEX "programmed_alerts_id" ON "programmed_alerts" ("id");
 CREATE INDEX "programmed_alerts_cat_objId" ON "programmed_alerts" ("category", "objectId");
@@ -164,7 +164,7 @@ CREATE TABLE "alerts"(
   "date" int(11) NOT NULL,
   "category" varchar(32) NOT NULL,
   "objectId" int(11) NOT NULL,
-  "title" varchar(512) NOT NULL
+  "title" varchar(256) NOT NULL
 );
 CREATE INDEX "alerts_id" ON "alerts" ("id");
 
@@ -218,6 +218,7 @@ INSERT INTO company VALUES("Nom de l'entreprise", "Adresse", 00000, "Ville", "02
 DROP TABLE "commons_infos";
 
 CREATE TABLE "commons_infos" (
-  "billNumber" int(11) NOT NULL
+  "billNumber" int(11) NOT NULL,
+  "lastAlertsCheck" int(11) NOT NULL
 );
-INSERT INTO commons_infos VALUES(1);
+INSERT INTO commons_infos VALUES(1, 0);

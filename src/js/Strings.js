@@ -26,7 +26,7 @@ var FR = function() {
 	this.HISTORY_SENTENCE_PERF_ADD			= "La prestation $1 a été créée";
 	this.HISTORY_SENTENCE_EDIT				= "La fiche de $1 a été modifiée";
 	this.HISTORY_SENTENCE_PERF_EDIT			= "La prestation $1 a été modifiée";
-	this.HISTORY_SENTENCE_SETTINGS_OWNER	= "Les informations de la sociétée ont été modifiées";
+	this.HISTORY_SENTENCE_SETTINGS_OWNER	= "Les informations de la société ont été modifiées";
 	this.HISTORY_SENTENCE_DELETE			= "La fiche de $1 a été suprimée";
 	this.HISTORY_SENTENCE_PERF_DELETE		= "La prestation $1 a été suprimée";
 	this.HISTORY_SENTENCE_ADD_PERF			= "La prestation '$2' a été associée à $1";
@@ -34,6 +34,9 @@ var FR = function() {
 	this.HISTORY_SENTENCE_DELETE_PERF		= "La prestation '$2' a été dissocié de $1";
 	this.HISTORY_SENTENCE_ADD_ANIMAL		= "$2 a été associé à $1";
 	this.HISTORY_SENTENCE_DELETE_ANIMAL		= "$2 a été dissocié de $1";
+	this.HISTORY_SENTENCE_ADD_ALERT			= "L'alerte '$2' a été associée à $1";
+	this.HISTORY_SENTENCE_EDIT_ALERT		= "L'alerte '$2' a été modifiée pour $1";
+	this.HISTORY_SENTENCE_DELETE_ALERT		= "L'alerte '$2' a été dissociée de $1";
 
 	// Animals
 	this.ANIMALS_LABEL_NAME		= "Nom";
@@ -95,19 +98,24 @@ var FR = function() {
 
 	// Alerts
 	this.ALERTS_LABEL_FREQUENCY	= "Fréquence";
-	this.ALERTS_LABEL_FROM		= "A partir de";
+	this.ALERTS_LABEL_FROM		= "A partir du";
 	this.ALERTS_LABEL_TITLE		= "Titre";
+	this.ALERTS_LABEL_DATE		= "Date";
+	this.ALERTS_LABEL_CATEGORY	= "Catégorie";
+	this.ALERTS_LABEL_NAME		= "Nom";
+	this.ALERTS_LABEL_ADD		= "Ajouter une alerte";
 	this.DAILY					= "Quotidienne";
 	this.WEEKLY					= "Hebdomadaire";
 	this.MONTHLY				= "Mensuelle";
+	this.ALERTS_REQUIRE_TITLE	= "Un titre de moins de 255 caractères est nécessaire";
 
 	// Settings
 	this.SETTINGS_COMPANY_REQUIRE_NAME			= "Les nom et prénom sont nécessaires";
 	this.SETTINGS_COMPANY_REQUIRE_ADDRESS		= "L'addresse est nécessaire";
 	this.SETTINGS_COMPANY_REQUIRE_ZIPCODE		= "La code postal est nécessaire";
 	this.SETTINGS_COMPANY_REQUIRE_MAIL			= "L'addresse mail est nécessaire";
-	this.SETTINGS_COMPANY_MAIL_WRONG_FORMAT	= "Le format de l'adresse mail est invalide";
-	this.SETTINGS_COMPANY_REQUIRE_PHONE		= "Il faut au moins un numéro de téléphone";
+	this.SETTINGS_COMPANY_MAIL_WRONG_FORMAT		= "Le format de l'adresse mail est invalide";
+	this.SETTINGS_COMPANY_REQUIRE_PHONE			= "Il faut au moins un numéro de téléphone";
 	this.SETTINGS_COMPANY_REQUIRE_COMPANY		= "Le nom de l'entreprise est nécessaire";
 
 	// Autocompletes values

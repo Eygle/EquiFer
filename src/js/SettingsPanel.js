@@ -6,22 +6,15 @@ var SettingsPanel = function() {
 	var _this = this;
 
 	this.init = function() {
-		$('<div>').attr('id', 'panel-settings')
-		.click(this.destroy)
-		.load("includes/settings.html", function() {
-			$('#panel-settings, #panel-settings .close').click(_this.destroy);
-			$('.set-content').click(function() {return false;});
+		CustomPopupManager.display("includes/settings.html", function() {
 			_this.display($('.set-menu .selected').attr('label'));
 			$('.set-menu-item').click(function() {
 				$('.set-menu-item').removeClass('selected');
 				$(this).addClass('selected');
-				$('#panel-settings .view').hide();
+				$('#custom-popup-background .view').hide();
 				_this.display($(this).attr('label'));
 			});
-			_this.align();
-		}).appendTo('body');
-
-		$(window).resize(this.align);
+		});
 	};
 
 	this.display = function(label) {
@@ -121,20 +114,6 @@ var SettingsPanel = function() {
 				$(this).remove();
 			});
 		}, this.MESSAGE_APPEAR_DURATION);
-	};
-
-	this.align = function() {
-		var set = $('.set-content');
-		var content = $('#panel-settings');
-		set.css({
-			left: (content.width() - set.width()) / 2,
-			top: (content.height() - set.height()) /2
-		});
-	};
-
-	this.destroy = function() {
-		$('#panel-settings').remove();
-		$(window).off("resize", this.display);
 	};
 
 	this.init();

@@ -183,7 +183,7 @@ var AnimalDetails = function(id) {
 			};
 
 			//Alerts list
-			AlertsManager.createAlertsList('animals', _this.id, _this.data['name'], 'alertsList');
+			AlertsManager.createAlertsList('animals', _this.id, _this.data['name']);
 		});
 	};
 

@@ -16,6 +16,10 @@ try {
 				Utils::checkGetArgs('category', 'id');
 				echo json_encode($db->getProgrammedAlertsListFor($_GET['category'], $_GET['id']));
 				break;
+			case "getProgrammedAlert":
+				Utils::checkGetArgs('id');
+				echo json_encode($db->getProgrammedAlert($_GET['id']));
+				break;
 		}
 	} else {
 		Utils::checkPostArgs('action');
@@ -26,8 +30,8 @@ try {
 				echo json_encode(null);
 				break;
 			case "editProgrammedAlert":
-				Utils::checkPostArgs(array('id', 'frequency', 'from', 'category', 'objectId', 'title'));
-				$db->editProgrammedAlert($_POST['id'], $_POST['frequency'], $_POST['from'], $_POST['category'], $_POST['objectId'], $_POST['title']);
+				Utils::checkPostArgs(array('id', 'frequency', 'from', 'title'));
+				$db->editProgrammedAlert($_POST['id'], $_POST['frequency'], $_POST['from'], $_POST['title']);
 				echo json_encode(null);
 				break;
 			case "deleteAlert":

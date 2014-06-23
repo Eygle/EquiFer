@@ -41,6 +41,38 @@ var HomeView = function() {
 				});
 				$('body').append(background.append(popup.append(button)));
 			});
+			
+			$.getJSON(Config.alertsApi, {action:"getAlertsList"}, function(data) {
+				titles = [
+					{label:"date",		title:Strings.ALERTS_LABEL_DATE,		dataType:"string"},
+					{label:"category",	title:Strings.ALERTS_LABEL_CATEGORY,	dataType:"string"},
+					{label:"name",		title:Strings.ALERTS_LABEL_NAME,		dataType:"string"},
+					{label:"title",		title:Strings.ALERTS_LABEL_TITLE,		dataType:"string"},
+				];
+				new SortableList("alertsList", titles, _this.formatData(data), function(id) {
+					ManageView.push(new AnimalDetails(id));
+				}, function(x, y, id) {
+					var background = $('<div>').attr('id', "rightClickBack").click(function() {
+						$(this).remove();
+						$("#" + id).removeClass('tr_selected');
+						document.oncontextmenu = function() {return true;};
+					});
+					var popup = $('<div>').attr('id', 'rightClickPopup').css({left: x, top: y});
+					var button = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE).click(function() {
+						document.oncontextmenu = function() {return true;};
+						$('#rightClickBack').remove();
+						var name = $('#history #' + this.id + " [label=action]").text();
+						if (confirm(Strings.CONFIRM_DELETE.replace('$1', name))) {
+							$.post(Config.historyApi, {action:"delete", id:this.id}, function() {
+								ManageView.display();
+							});
+						} else {
+							$("#" + id).removeClass('tr_selected');
+						}
+					});
+					$('body').append(background.append(popup.append(button)));
+				});
+			});
 		});
 	};
 
@@ -72,6 +104,15 @@ var HomeView = function() {
 					case 'delete_animal':
 					data[i]['action'] = Strings.HISTORY_SENTENCE_DELETE_ANIMAL.replace('$1', data[i]['object']).replace('$2', data[i]['object2']);
 					break;
+					case 'add_alert':
+					data[i]['action'] = Strings.HISTORY_SENTENCE_ADD_ALERT.replace('$1', data[i]['object']).replace('$2', data[i]['object2']);
+					break;
+					case 'edit_alert':
+					data[i]['action'] = Strings.HISTORY_SENTENCE_EDIT_ALERT.replace('$1', data[i]['object']).replace('$2', data[i]['object2']);
+					break;
+					case 'delete_alert':
+					data[i]['action'] = Strings.HISTORY_SENTENCE_DELETE_ALERT.replace('$1', data[i]['object']).replace('$2', data[i]['object2']);
+					break;
 				}
 			}
 
@@ -101,7 +142,7 @@ var HomeView = function() {
 				break;
 				case 'settings':
 				data[i]['category'] = Strings.SETTINGS;
-				if (data[i]['action'] == 'edit_owner_infos')
+				if (data[i]['action'] == 'edit_company_infos')
 					data[i]['action'] = Strings.HISTORY_SENTENCE_SETTINGS_OWNER;
 				break;
 			}

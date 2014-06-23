@@ -157,8 +157,12 @@ var ClientDetails = function(id) {
 				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string"}
 			];
 			new SortableList("billsList", titles, _this.data.billsList, function(id) {
-				
 			});
+
+
+
+			//Alerts list
+			AlertsManager.createAlertsList('clients', _this.id, _this.data['firstName'] + " " + _this.data['lastName']);
 		});
 	};
 

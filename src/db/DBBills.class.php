@@ -3,6 +3,7 @@
 require_once dirname(__FILE__).'/db-config.php';
 require_once dirname(__FILE__).'/DBAnimals.class.php';
 require_once dirname(__FILE__).'/DBClients.class.php';
+require_once dirname(__FILE__).'/../Utils.class.php';
 
 class DBBills extends SQLite3 {
 
@@ -46,7 +47,7 @@ class DBBills extends SQLite3 {
 
 	public static function format($bill) {
 		$bill["number"] = explode(".", $bill['file'])[0];
-		$bill['date'] = date('d/m/Y', $bill['date']);
+		$bill['date'] = Utils::formatDate($bill['date']);
 		return $bill;
 	}
 

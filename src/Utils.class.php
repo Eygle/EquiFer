@@ -5,7 +5,7 @@ class Utils {
 	public static $SECONDS_IN_A_DAY = 86400;
 
 	public static function formatDate($time) {
-		$yest = time() - self::SECONDS_IN_A_DAY;
+		$yest = time() - self::$SECONDS_IN_A_DAY;
 		$timeD	= date('d', $time);
 		$timeM	= date('m', $time);
 		$timeY	= date('Y', $time);

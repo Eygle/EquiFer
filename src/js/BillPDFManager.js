@@ -66,9 +66,9 @@ var BillPDFManager = function(data) {
 				}
 			}
 
-			_this.totalHT = Math.round(_this.totalHT * 100) / 100;
-			_this.totalTTC = Math.round(_this.totalTTC * 100) / 100;
-			var tva = Math.round((_this.totalTTC - _this.totalHT) * 100) / 100;
+			_this.totalHT = Math.round(parseInt(_this.totalHT * 100)) / 100;
+			_this.totalTTC = Math.round(parseInt(_this.totalTTC * 100)) / 100;
+			var tva = Math.round((parseInt((_this.totalTTC - _this.totalHT) * 100))) / 100;
 
 			$('#totalHT').text(_this.totalHT + " €");
 			$('#totalTVA').text(tva + " €");
@@ -85,7 +85,7 @@ var BillPDFManager = function(data) {
 	this.fillClientInfos = function(data) {
 		var date = new Date();
 		var billNbr = this.formatNumber(data['billNumber'], 5);
-		this.billId = "FC" + this.formatNumber(date.getDate(), 2) + this.formatNumber(date.getMonth() + 1, 2) + date.getFullYear().toString().substr(2,2) + billNbr;
+		this.billId = "FC" + date.getFullYear() + this.formatNumber(date.getMonth() + 1, 2) + this.formatNumber(date.getDate(), 2) + billNbr;
 		$('#hiddenBill #billRef').text(this.billId);
 		$('#hiddenBill #date').text(date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear().toString().substr(2,2));
 		var maxDate = new Date(date.getFullYear(), date.getMonth() + 2, 0); // 30 days

@@ -13,7 +13,7 @@ class DBAlerts extends SQLite3 {
 		$this->close();
 	}
 
-	public function getAlertsList($job) {
+	public function getAlertsList() {
 		$this->updateAlerts();
 		$stmt = $this->prepare('SELECT * FROM alerts ORDER BY id DESC;');
 		$res = $stmt->execute();
@@ -25,45 +25,58 @@ class DBAlerts extends SQLite3 {
 	}
 
 	private function updateAlerts() {
-		$last = $this->getLastAlertDate();
+		$last = $this->getLastAlertsCheck();
 		$now = Utils::todayFirstHour();
-		if ($now - $last == 0) return;
+		if ($now - $last < 0) return;
 		$programmedAlerts = $this->getAllProgrammedAlerts();
-
 		while ($now - $last >= 0) {
 			foreach($programmedAlerts as $v) {
 				switch ($v['frequency']) {
 					case 'daily':
-						$this->addAlert($v['category'], $v['objectId'], $v['title'], $now);
+						$this->addAlert($v['category'], $v['objectId'], $v['title'], $last);
 					break;
 					case 'weekly':
-						if (date('w', $now) == $v['from'])
-							$this->addAlert($v['category'], $v['objectId'], $v['title'], $now);
+						if (date('w', $last) == $v['from'])
+							$this->addAlert($v['category'], $v['objectId'], $v['title'], $last);
 					break;
 					case 'monthly':
-						if (date('j', $now) == $v['from'])
-							$this->addAlert($v['category'], $v['objectId'], $v['title'], $now);
+						if (date('j', $last) == $v['from'])
+							$this->addAlert($v['category'], $v['objectId'], $v['title'], $last);
+					break;
+					case 'unique':
+						$date = explode('/', $v['from']);
+						$alertTime = mktime(0,0,0,$date[1],$date[0],$date[2]);
+						if (date('n') == date('n', $alertTime) && date('j') == date('j', $alertTime) && date('Y') == date('Y', $alertTime))
+							$this->addAlert($v['category'], $v['objectId'], $v['title'], $last);
 					break;
 				}
 			}
-			$now += Utils::$SECONDS_IN_A_DAY;
+			$last += Utils::$SECONDS_IN_A_DAY;
 		}
 	}
 
 	public function getAllProgrammedAlerts() {
 		$ret = array();
-		$stmt = $this->prepare('SELECT * FROM programmed_alerts;');
+		$stmt = $this->prepare('SELECT * FROM programmed_alerts ORDER BY id DESC;');
 		$res = $stmt->execute();
 		while ($row = $res->fetchArray(SQLITE3_ASSOC))
 			$ret[] = $row;
 		return $ret;
 	}
 
-	private function getLastAlertDate() {
-		$stmt = $this->prepare('SELECT MAX(date) AS date FROM alerts;');
+	private function getLastAlertsCheck() {
+		$stmt = $this->prepare('SELECT lastAlertsCheck AS date FROM commons_infos;');
 		$res = $stmt->execute();
 		$row = $res->fetchArray(SQLITE3_ASSOC);
-		return $row ? $row['date'] : Utils::todayFirstHour();
+		$today = Utils::todayFirstHour();
+		if ($row['date'] != $today) {
+			$stmt = $this->prepare('UPDATE commons_infos SET lastAlertsCheck = :now');
+			$stmt->bindValue(':now', $today);
+			$stmt->execute();
+		}
+		if (!$row['date'])
+			$row['date'] = $today;
+		return $row['date'] + Utils::$SECONDS_IN_A_DAY;
 	}
 
 	public function getProgrammedAlertsListFor($category, $id) {
@@ -77,6 +90,13 @@ class DBAlerts extends SQLite3 {
 			$ret[] = $row;
 		}
 		return $ret;
+	}
+
+	public function getProgrammedAlert($id) {
+		$stmt = $this->prepare('SELECT * FROM programmed_alerts WHERE id = :id;');
+		$stmt->bindValue(':id', $id);
+		$res = $stmt->execute();
+		return $res->fetchArray(SQLITE3_ASSOC);
 	}
 
 	public function addAlert($category, $objectId, $title, $date = null) {
@@ -100,35 +120,27 @@ class DBAlerts extends SQLite3 {
 		$stmt->execute();
 	}
 
-	public function editProgrammedAlert($id, $freq, $from, $category, $objectId, $title) {
+	public function editProgrammedAlert($id, $freq, $from, $title) {
 		$stmt = $this->prepare("UPDATE programmed_alerts
-			SET frequency = :frequency, `from` = :from, category = :category,
-			objectId = :objectId, title = :title
+			SET frequency = :frequency, `from` = :from, title = :title
 			WHERE id = :id;");
 		$stmt->bindValue('id', $id);
 		$stmt->bindValue(':frequency', $freq);
 		$stmt->bindValue(':from', $from);
-		$stmt->bindValue(':category', $category);
-		$stmt->bindValue(':objectId', $objectId);
 		$stmt->bindValue(':title', $title);
 		$stmt->execute();
-		$this->deleteLinksToJob($id);
 	}
 
 	public function deleteAlert($id) {
 		$stmt = $this->prepare('DELETE FROM alerts WHERE id = :id');
 		$stmt->bindValue('id', $id);
 		$stmt->execute();
-		$this->deleteLinksToJob($id);
-		$this->deleteLinksToHorses($id);
 	}
 
 	public function deleteProgrammedAlert($id) {
 		$stmt = $this->prepare('DELETE FROM programmed_alerts WHERE id = :id');
 		$stmt->bindValue('id', $id);
 		$stmt->execute();
-		$this->deleteLinksToJob($id);
-		$this->deleteLinksToHorses($id);
 	}
 
 	private function formatAlert($data) {
@@ -145,10 +157,10 @@ class DBAlerts extends SQLite3 {
 	}
 
 	private function getAnimalName($id) {
-		$stmt = $this->prepare('SELECT name FROM animals WHERE id = :id');
+		$stmt = $this->prepare('SELECT name FROM horses WHERE id = :id');
 		$stmt->bindValue('id', $id);
 		$res = $stmt->execute();
-		$ret = $stmt->fetchArray(SQLITE3_ASSOC);
+		$ret = $res->fetchArray(SQLITE3_ASSOC);
 		return $ret['name'];
 	}
 
@@ -156,7 +168,7 @@ class DBAlerts extends SQLite3 {
 		$stmt = $this->prepare('SELECT firstName, lastName FROM clients WHERE id = :id');
 		$stmt->bindValue('id', $id);
 		$res = $stmt->execute();
-		$ret = $stmt->fetchArray(SQLITE3_ASSOC);
+		$ret = $res->fetchArray(SQLITE3_ASSOC);
 		return $ret['firstName'].' '.$ret['lastName'];
 	}
 }
