@@ -63,10 +63,14 @@ var SortableList = function(tableId, titles, list, filterCallback, clickCallback
 		for (var i in this.list) {
 			var $tr = $('<tr>').attr('id', this.list[i].id);
 			for (var j in this.titles) {
-				var text = new String(this.list[i][this.titles[j].label]);
-				if (term)
-					text = text.replace(new RegExp(term, 'gi'), function (match) {return "<em>" + match + "</em>";});
-				$tr.append($('<td>').attr('label', this.titles[j].label).html(text));
+				if (this.titles[j].html) { // Elem is HTML
+					$tr.append($('<td>').attr('label', this.titles[j].label).html(this.list[i][this.titles[j].label]));
+				} else {
+					var text = new String(this.list[i][this.titles[j].label]);
+					if (this.titles[j].filter && term)
+						text = text.replace(new RegExp(term, 'gi'), function (match) {return "<em>" + match + "</em>";});
+					$tr.append($('<td>').attr('label', this.titles[j].label).html(text));
+				}
 			}
 			$tr.click(function() {
 				_this.clickCallback(this.id);
@@ -88,10 +92,17 @@ var SortableList = function(tableId, titles, list, filterCallback, clickCallback
 
 	var lastText = "";
 	this.displayFilterBox = function() {
+		var placeholder = "";
+		for (var i in this.titles) {
+			if (this.titles[i].filter)
+				placeholder += (placeholder.length ? "," : "") + " " + this.titles[i].title.toLowerCase();
+		}
+		placeholder = "Filtrer par" + placeholder.replace(/,([^,]*)$/,' ou$1');
+
 		$("#" + this.tableId).before($('<input>').attr({
 			type:			'text',
 			class:			'filterList',
-			placeholder:	'Filtrer'
+			placeholder:	placeholder
 		}).keyup(function(event) {
 			var text = $(this).val();
 			if (text == lastText) return;

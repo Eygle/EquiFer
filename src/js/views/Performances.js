@@ -15,13 +15,21 @@ var PerformancesView = function() {
 		$('#listView').show();
 		$.getJSON(Config.performancesApi, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
 			titles = [
-				{label:"name",				title:Strings.PERF_LABEL_NAME,		dataType:"string"},
-				{label:"formattedPriceTTC",	title:Strings.PERF_LABEL_PRICE_TTC,	dataType:"float"},
-				{label:"formattedPriceHT",	title:Strings.PERF_LABEL_PRICE_HT,	dataType:"float"},
-				{label:"formattedTVA",		title:Strings.PERF_LABEL_TVA,		dataType:"float"},
-				{label:"unit",				title:Strings.PERF_LABEL_UNIT,		dataType:"string"}
+				{label:"name",				title:Strings.PERF_LABEL_NAME,		dataType:"string",	filter:true},
+				{label:"formattedPriceTTC",	title:Strings.PERF_LABEL_PRICE_TTC,	dataType:"float",	filter:true},
+				{label:"formattedPriceHT",	title:Strings.PERF_LABEL_PRICE_HT,	dataType:"float",	filter:true},
+				{label:"formattedTVA",		title:Strings.PERF_LABEL_TVA,		dataType:"float",	filter:true},
+				{label:"unit",				title:Strings.PERF_LABEL_UNIT,		dataType:"string",	filter:true}
 			];
-			new SortableList("performancesList", titles, data, null, function(id) {
+			new SortableList("performancesList", titles, data, function(term, callback) {
+				$.getJSON(Config.performancesApi, {
+					action: 'filter',
+					term: 	term,
+					job: 	Config.job.toUpperCase()
+				}, function(data) {
+					callback(data);
+				});
+			}, function(id) {
 				ManageView.push(new PerformanceDetails(id));
 			}, function(x, y, id) {
 				var background = $('<div>').attr('id', "rightClickBack").click(function() {

@@ -26,6 +26,53 @@ class DBPerformances extends SQLite3 {
 		return $ret;
 	}
 
+	public function filter($job, $term) {
+		$stmt = $this->prepare('SELECT p.* FROM link_job_performances AS ljp
+			LEFT JOIN performances AS p ON ljp.performanceId = p.id
+			WHERE job = :job
+			AND (
+				name LIKE :term
+				OR priceHT LIKE :term
+				OR priceTTC LIKE :term
+				OR tva LIKE :term
+				OR unit LIKE :term
+				)
+			ORDER BY p.id DESC;');
+		$stmt->bindValue(':job', $job);
+		$stmt->bindValue(':term', $term.'%');
+		$res = $stmt->execute();
+		$ret = array();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$ret[] = self::formatInfos($row);
+		}
+		return $ret;
+	}
+
+	public function filterForAnimal($animalId, $term) {
+		$stmt = $this->prepare('SELECT p.*, quantity, date
+			FROM link_horses_performances AS lhp
+			LEFT JOIN performances AS p ON lhp.performanceId = p.id
+			WHERE horseId = :id
+			AND (
+				name LIKE :term
+				OR priceHT LIKE :term
+				OR priceTTC LIKE :term
+				OR tva LIKE :term
+				OR unit LIKE :term
+				OR quantity LIKE :term
+				)
+			ORDER BY date DESC;');
+		$stmt->bindValue('id', $animalId);
+		$stmt->bindValue(':term', $term.'%');
+		$res = $stmt->execute();
+		$ret = array();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$row['formattedDate'] = Utils::formatDate($row['date']);
+			$ret[] = $row;
+		}
+		return $ret;
+	}
+
 	public function getInfo($id) {
 		$stmt = $this->prepare('SELECT * FROM performances WHERE id = :id');
 		$stmt->bindValue(':id', $id);

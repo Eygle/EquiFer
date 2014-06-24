@@ -183,6 +183,10 @@ em {
 	padding-left: 5px;
 }
 
+.filterList {
+	width: 350px;
+}
+
 input[type="text"] {
 	padding-left: 3px;
 }

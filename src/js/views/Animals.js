@@ -15,14 +15,14 @@ var AnimalsView = function() {
 		$('#listView').show();
 		$.getJSON(Config.animalsApi, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
 			titles = [
-				{label:"name",		title:Strings.ANIMALS_LABEL_NAME,	dataType:"string"},
+				{label:"name",		title:Strings.ANIMALS_LABEL_NAME,	dataType:"string",	filter:true},
 				{label:"owners",	title:Strings.ANIMALS_LABEL_OWNERS,	dataType:"string"},
-				{label:"type",		title:Strings.ANIMALS_LABEL_TYPE,	dataType:"string"},
-				{label:"race",		title:Strings.ANIMALS_LABEL_RACE,	dataType:"string"},
+				{label:"type",		title:Strings.ANIMALS_LABEL_TYPE,	dataType:"string",	filter:true},
+				{label:"race",		title:Strings.ANIMALS_LABEL_RACE,	dataType:"string",	filter:true},
 				{label:"age",		title:Strings.ANIMALS_LABEL_AGE,	dataType:"string"},
-				{label:"size",		title:Strings.ANIMALS_LABEL_SIZE,	dataType:"int"},
-				{label:"colour",	title:Strings.ANIMALS_LABEL_COLOUR,	dataType:"string"},
-				{label:"puce",		title:Strings.ANIMALS_LABEL_PUCE,	dataType:"string"},
+				{label:"size",		title:Strings.ANIMALS_LABEL_SIZE,	dataType:"int",		filter:true},
+				{label:"colour",	title:Strings.ANIMALS_LABEL_COLOUR,	dataType:"string",	filter:true},
+				{label:"puce",		title:Strings.ANIMALS_LABEL_PUCE,	dataType:"string",	filter:true},
 
 			];
 			new SortableList("animalsList", titles, data, function(term, callback) {
@@ -116,15 +116,24 @@ var AnimalDetails = function(id) {
 			// Performances part
 			titles = [
 				{label:"formattedDate",	title:Strings.PERF_LABEL_DATE,			dataType:"string"},
-				{label:"name",			title:Strings.PERF_LABEL_NAME,			dataType:"string"},
-				{label:"priceHT",		title:Strings.PERF_LABEL_PRICE_HT,		dataType:"float"},
-				{label:"priceTTC",		title:Strings.PERF_LABEL_PRICE_TTC,		dataType:"float"},
-				{label:"tva",			title:Strings.PERF_LABEL_TVA,			dataType:"float"},
-				{label:"unit",			title:Strings.PERF_LABEL_UNIT,			dataType:"string"},
-				{label:"quantity",		title:Strings.PERF_LABEL_QUANTITY,		dataType:"int"}
+				{label:"name",			title:Strings.PERF_LABEL_NAME,			dataType:"string",	filter: true},
+				{label:"priceHT",		title:Strings.PERF_LABEL_PRICE_HT,		dataType:"float",	filter: true},
+				{label:"priceTTC",		title:Strings.PERF_LABEL_PRICE_TTC,		dataType:"float",	filter: true},
+				{label:"tva",			title:Strings.PERF_LABEL_TVA,			dataType:"float",	filter: true},
+				{label:"unit",			title:Strings.PERF_LABEL_UNIT,			dataType:"string",	filter: true},
+				{label:"quantity",		title:Strings.PERF_LABEL_QUANTITY,		dataType:"int",		filter: true}
 
 			];
-			new SortableList("clientHorsesList", titles, _this.data.performancesList, null, function(id) {
+			new SortableList("clientHorsesList", titles, _this.data.performancesList, function(term, callback) {
+				$.getJSON(Config.performancesApi, {
+					action: 'filterForAnimal',
+					id:		_this.id,
+					term: 	term,
+					job: 	Config.job.toUpperCase()
+				}, function(data) {
+					callback(data);
+				});
+			}, function(id) {
 				ManageView.push(new PerformanceDetails(id));
 			}, function(x, y, id) {
 				var background = $('<div>').attr('id', "rightClickBack").click(function() {

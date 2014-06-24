@@ -16,9 +16,17 @@ var HomeView = function() {
 			titles = [
 				{label:"date",		title:Strings.HISTORY_LABEL_DATE,		dataType:"string"},
 				{label:"category",	title:Strings.HISTORY_LABEL_CATEGORY,	dataType:"string"},
-				{label:"action",	title:Strings.HISTORY_LABEL_ACTION,		dataType:"string"},
+				{label:"action",	title:Strings.HISTORY_LABEL_ACTION,		dataType:"string",	filter: true},
 			];
-			new SortableList("history", titles, _this.formatData(data), null, function(id) {
+			new SortableList("history", titles, _this.formatData(data), function(term, callback) {
+				$.getJSON(Config.historyApi, {
+					action: 'filter',
+					term: 	term,
+					job: 	Config.job.toUpperCase()
+				}, function(data) {
+					callback(_this.formatData(data));
+				});
+			}, function(id) {
 				ManageView.push(new AnimalDetails(id));
 			}, function(x, y, id) {
 				var background = $('<div>').attr('id', "rightClickBack").click(function() {
@@ -47,9 +55,17 @@ var HomeView = function() {
 					{label:"date",		title:Strings.ALERTS_LABEL_DATE,		dataType:"string"},
 					{label:"category",	title:Strings.ALERTS_LABEL_CATEGORY,	dataType:"string"},
 					{label:"name",		title:Strings.ALERTS_LABEL_NAME,		dataType:"string"},
-					{label:"title",		title:Strings.ALERTS_LABEL_TITLE,		dataType:"string"},
+					{label:"title",		title:Strings.ALERTS_LABEL_TITLE,		dataType:"string",	filter:true},
 				];
-				new SortableList("alertsList", titles, _this.formatData(data), null, function(id) {
+				new SortableList("alertsList", titles, _this.formatData(data), function(term, callback) {
+				$.getJSON(Config.alertsApi, {
+					action: 'filterAlerts',
+					term: 	term,
+					job: 	Config.job.toUpperCase()
+				}, function(data) {
+					callback(_this.formatData(data));
+				});
+			}, function(id) {
 					ManageView.push(new AnimalDetails(id));
 				}, function(x, y, id) {
 					var background = $('<div>').attr('id', "rightClickBack").click(function() {

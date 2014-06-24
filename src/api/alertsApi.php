@@ -20,6 +20,14 @@ try {
 				Utils::checkGetArgs('id');
 				echo json_encode($db->getProgrammedAlert($_GET['id']));
 				break;
+			case "filterAlerts":
+				Utils::checkGetArgs(array('term'));
+				echo json_encode($db->filterAlerts($_GET['term']));
+				break;
+			case "filterProgrammedAlerts":
+				Utils::checkGetArgs(array('term'));
+				echo json_encode($db->filterProgrammedAlerts($_GET['term']));
+				break;
 		}
 	} else {
 		Utils::checkPostArgs('action');

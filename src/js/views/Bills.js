@@ -11,18 +11,28 @@ var BillsView = function() {
 	this.htmlPage 			= "bills.html";
 	this.tabLabel			= "bills";
 
+	var _this = this;
+
 	this.init = function() {
 		$('#listView').show();
 		$.getJSON(Config.billsApi, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
 			titles = [
 				{label:"date",		title:Strings.BILLS_LABEL_DATE,		dataType:"string"},
-				{label:"number",	title:Strings.BILLS_LABEL_NUMBER,	dataType:"string"},
-				{label:"client",	title:Strings.BILLS_LABEL_CLIENT,	dataType:"string"},
-				{label:"taxFree",	title:Strings.BILLS_LABEL_TAXFREE,	dataType:"float"},
-				{label:"total",		title:Strings.BILLS_LABEL_TOTAL,	dataType:"float"},
-				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string"}
+				{label:"number",	title:Strings.BILLS_LABEL_NUMBER,	dataType:"string",	filter: true},
+				{label:"client",	title:Strings.BILLS_LABEL_CLIENT,	dataType:"string",	filter: true},
+				{label:"taxFree",	title:Strings.BILLS_LABEL_TAXFREE,	dataType:"float",	filter: true},
+				{label:"total",		title:Strings.BILLS_LABEL_TOTAL,	dataType:"float",	filter: true},
+				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string",	filter: true,	html: true}
 			];
-			new SortableList("billsList", titles, data, null, function(id) {
+			new SortableList("billsList", titles, _this.formatData(data), function(term, callback) {
+				$.getJSON(Config.billsApi, {
+					action: 'filter',
+					term: 	term,
+					job: 	Config.job.toUpperCase()
+				}, function(data) {
+					callback(_this.formatData(data));
+				});
+			}, function(id) {
 				ManageView.push(new BillDetails(id));
 			});
 		});
@@ -31,6 +41,13 @@ var BillsView = function() {
 	this.manageButtonClick = function(button) {
 		if (button != "add") return;
 		ManageView.push(new BillsClientsList());
+	};
+
+	this.formatData = function(data) {
+		for (var i in data) {
+			data[i]['file'] = '<a href="savedBills/'+data[i]['file']+'" target="_blank" onclick="event.stopPropagation();"><img src="images/pdf_grey.png" onMouseOver="this.src=\'images/pdf.png\'" onMouseOut="this.src=\'images/pdf_grey.png\'"/></a>';
+		}
+		return data;
 	};
 };
 

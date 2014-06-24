@@ -21,6 +21,14 @@ try {
 				Utils::checkGetArgs(array('job', 'term'));
 				echo json_encode($db->search($_GET['job'], $_GET['term']));
 				break;
+			case "filter":
+				Utils::checkGetArgs(array('job', 'term'));
+				echo json_encode($db->filter($_GET['job'], $_GET['term']));
+				break;
+			case 'filterForAnimal':
+				Utils::checkGetArgs(array('id', 'term'));
+				echo json_encode($db->filterForAnimal($_GET['id'], $_GET['term']));
+				break;
 		}
 	} else {
 		Utils::checkPostArgs('action');

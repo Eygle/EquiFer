@@ -31,6 +31,48 @@ class DBBills extends SQLite3 {
 		return $ret;
 	}
 
+	public function filter($job, $term) {
+		$stmt = $this->prepare('SELECT b.*, c.firstName, c.lastName
+			FROM link_job_bills AS ljb
+			LEFT JOIN bills AS b ON ljb.billId = b.id
+			LEFT JOIN clients AS c ON b.clientId = c.id
+			WHERE job = :job
+			AND (
+				b.total LIKE :term
+				OR b.taxFree LIKE :term
+				OR b.file LIKE :term
+				OR c.firstName LIKE :term
+				OR c.lastName LIKE :term
+				)
+			ORDER BY b.id DESC;');
+		$stmt->bindValue(':job', $job);
+		$stmt->bindValue(':term', $term.'%');
+		$res = $stmt->execute();
+		$ret = array();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$ret[] = $this->formatInfos($row);
+		}
+		return $ret;
+	}
+
+	public function filterForClient($clientId, $term) {
+		$ret = array();
+		$stmt = $this->prepare('SELECT * FROM bills
+			WHERE clientId = :id
+			AND (
+				total LIKE :term
+				OR taxFree LIKE :term
+				OR file LIKE :term
+				)
+			');
+		$stmt->bindValue(':id', $clientId);
+		$stmt->bindValue(':term', $term.'%');
+		$res = $stmt->execute();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC))
+			$ret[] = $this->format($row);
+		return $ret;
+	}
+
 	private function getJobsLinks($id) {
 		$stmt = $this->prepare('SELECT * FROM link_job_bills WHERE billId = :id');
 		$stmt->bindValue(":id", $id);

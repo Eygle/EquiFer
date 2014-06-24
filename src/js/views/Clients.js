@@ -15,13 +15,13 @@ var ClientsView = function() {
 		$('#listView').show();
 		$.getJSON(Config.clientsApi, {action:"getList", job:Config.job.toUpperCase()}, function(data) {
 			titles = [
-				{label:"name",			title:Strings.CLIENTS_LABEL_NAME,			dataType:"string"},
+				{label:"name",			title:Strings.CLIENTS_LABEL_NAME,			dataType:"string",	filter:true},
 				{label:"animals",		title:Strings.CLIENTS_LABEL_ANIMALS,		dataType:"string"},
-				{label:"phoneMobile",	title:Strings.CLIENTS_LABEL_PHONE_MOBILE,	dataType:"int"},
-				{label:"phoneFixe",		title:Strings.CLIENTS_LABEL_PHONE_FIXE,		dataType:"int"},
-				{label:"address",		title:Strings.CLIENTS_LABEL_ADDRESS,		dataType:"string"},
-				{label:"zipcode",		title:Strings.CLIENTS_LABEL_ZIPCODE,		dataType:"int"},
-				{label:"city",			title:Strings.CLIENTS_LABEL_CITY,			dataType:"string"}
+				{label:"phoneMobile",	title:Strings.CLIENTS_LABEL_PHONE_MOBILE,	dataType:"int",		filter:true},
+				{label:"phoneFixe",		title:Strings.CLIENTS_LABEL_PHONE_FIXE,		dataType:"int",		filter:true},
+				{label:"address",		title:Strings.CLIENTS_LABEL_ADDRESS,		dataType:"string",	filter:true},
+				{label:"zipcode",		title:Strings.CLIENTS_LABEL_ZIPCODE,		dataType:"int",		filter:true},
+				{label:"city",			title:Strings.CLIENTS_LABEL_CITY,			dataType:"string",	filter:true}
 			];
 			new SortableList("clientsList", titles, data, function(term, callback) {
 				$.getJSON(Config.clientsApi, {
@@ -159,12 +159,20 @@ var ClientDetails = function(id) {
 			// Bills part
 			titles = [
 				{label:"date",		title:Strings.BILLS_LABEL_DATE,		dataType:"string"},
-				{label:"number",	title:Strings.BILLS_LABEL_NUMBER,	dataType:"string"},
-				{label:"taxFree",	title:Strings.BILLS_LABEL_TAXFREE,	dataType:"float"},
-				{label:"total",		title:Strings.BILLS_LABEL_TOTAL,	dataType:"float"},
-				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string"}
+				{label:"number",	title:Strings.BILLS_LABEL_NUMBER,	dataType:"string",	filter: true},
+				{label:"taxFree",	title:Strings.BILLS_LABEL_TAXFREE,	dataType:"float",	filter: true},
+				{label:"total",		title:Strings.BILLS_LABEL_TOTAL,	dataType:"float",	filter: true},
+				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string",	filter: true}
 			];
-			new SortableList("billsList", titles, _this.data.billsList, null, function(id) {
+			new SortableList("billsList", titles, _this.data.billsList, function(term, callback) {
+				$.getJSON(Config.billsApi, {
+					action: 'filterForClient',
+					term: 	term,
+					id:		_this.id
+				}, function(data) {
+					callback(data);
+				});
+			}, function(id) {
 			});
 
 

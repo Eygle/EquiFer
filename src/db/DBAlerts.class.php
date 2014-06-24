@@ -24,6 +24,20 @@ class DBAlerts extends SQLite3 {
 		return $ret;
 	}
 
+	public function filterAlerts($term) {
+		$this->updateAlerts();
+		$stmt = $this->prepare('SELECT * FROM alerts
+			WHERE title LIKE :term
+			ORDER BY id DESC;');
+		$stmt->bindValue(':term', $term.'%');
+		$res = $stmt->execute();
+		$ret = array();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$ret[] = $this->formatAlert($row);
+		}
+		return $ret;
+	}
+
 	private function updateAlerts() {
 		$last = $this->getLastAlertsCheck();
 		$now = Utils::todayFirstHour();
@@ -58,6 +72,18 @@ class DBAlerts extends SQLite3 {
 	public function getAllProgrammedAlerts() {
 		$ret = array();
 		$stmt = $this->prepare('SELECT * FROM programmed_alerts ORDER BY id DESC;');
+		$res = $stmt->execute();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC))
+			$ret[] = $row;
+		return $ret;
+	}
+
+	public function filterProgrammedAlerts($term) {
+		$ret = array();
+		$stmt = $this->prepare('SELECT * FROM programmed_alerts
+			WHERE title LIKE :term
+			ORDER BY id DESC;');
+		$stmt->bindValue(':term', $term.'%');
 		$res = $stmt->execute();
 		while ($row = $res->fetchArray(SQLITE3_ASSOC))
 			$ret[] = $row;

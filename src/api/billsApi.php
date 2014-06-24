@@ -17,6 +17,14 @@ try {
 				Utils::checkGetArgs('clientId', 'job');
 				echo json_encode($db->getClientInfos($_GET['clientId'], $_GET['job']));
 				break;
+			case "filter":
+				Utils::checkGetArgs(array('job', 'term'));
+				echo json_encode($db->filter($_GET['job'], $_GET['term']));
+				break;
+			case "filterForClient":
+				Utils::checkGetArgs(array('id', 'term'));
+				echo json_encode($db->filterForClient($_GET['id'], $_GET['term']));
+				break;
 		}
 	} else {
 		Utils::checkPostArgs('action');

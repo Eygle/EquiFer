@@ -28,6 +28,26 @@ class DBHistory extends SQLite3 {
 		return $ret;
 	}
 
+	public function filter($job, $term) {
+		$stmt = $this->prepare('SELECT h.*
+			FROM link_job_history AS ljh
+			LEFT JOIN history AS h ON ljh.historyId = h.id
+			WHERE job = :job
+			AND (
+				object LIKE :term
+				OR object2 LIKE :term
+				)
+			ORDER BY id DESC;');
+		$stmt->bindValue(':job', $job);
+		$stmt->bindValue(':term', $term.'%');
+		$res = $stmt->execute();
+		$ret = array();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$ret[] = self::format($row);
+		}
+		return $ret;
+	}
+
 	private static function format($data) {
 		$data['date'] = Utils::formatDate($data['date']);
 		return $data;
