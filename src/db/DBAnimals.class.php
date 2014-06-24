@@ -30,6 +30,29 @@ class DBAnimals extends SQLite3 {
 		return $ret;
 	}
 
+	public function filter($job, $term) {
+		$stmt = $this->prepare('SELECT h.*
+			FROM link_job_horses AS ljh
+			LEFT JOIN horses AS h ON ljh.horseId = h.id
+			WHERE job = :job
+			AND (h.name LIKE :term
+				OR h.type LIKE :term
+				OR h.race LIKE :term
+				OR h.colour LIKE :term
+				OR h.size LIKE :term
+				OR h.puce LIKE :term
+				)
+			ORDER BY h.id DESC');
+		$stmt->bindValue(':job', $job);
+		$stmt->bindValue(':term', $term.'%');
+		$res = $stmt->execute();
+		$ret = array();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$ret[] = self::format($row);
+		}
+		return $ret;
+	}
+
 	public function getInfo($id) {
 		$stmt = $this->prepare('SELECT * FROM horses WHERE id = :id');
 		$stmt->bindValue(':id', $id);

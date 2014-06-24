@@ -18,7 +18,7 @@ var HomeView = function() {
 				{label:"category",	title:Strings.HISTORY_LABEL_CATEGORY,	dataType:"string"},
 				{label:"action",	title:Strings.HISTORY_LABEL_ACTION,		dataType:"string"},
 			];
-			new SortableList("history", titles, _this.formatData(data), function(id) {
+			new SortableList("history", titles, _this.formatData(data), null, function(id) {
 				ManageView.push(new AnimalDetails(id));
 			}, function(x, y, id) {
 				var background = $('<div>').attr('id', "rightClickBack").click(function() {
@@ -49,7 +49,7 @@ var HomeView = function() {
 					{label:"name",		title:Strings.ALERTS_LABEL_NAME,		dataType:"string"},
 					{label:"title",		title:Strings.ALERTS_LABEL_TITLE,		dataType:"string"},
 				];
-				new SortableList("alertsList", titles, _this.formatData(data), function(id) {
+				new SortableList("alertsList", titles, _this.formatData(data), null, function(id) {
 					ManageView.push(new AnimalDetails(id));
 				}, function(x, y, id) {
 					var background = $('<div>').attr('id', "rightClickBack").click(function() {

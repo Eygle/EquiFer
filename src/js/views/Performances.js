@@ -21,7 +21,7 @@ var PerformancesView = function() {
 				{label:"formattedTVA",		title:Strings.PERF_LABEL_TVA,		dataType:"float"},
 				{label:"unit",				title:Strings.PERF_LABEL_UNIT,		dataType:"string"}
 			];
-			new SortableList("performancesList", titles, data, function(id) {
+			new SortableList("performancesList", titles, data, null, function(id) {
 				ManageView.push(new PerformanceDetails(id));
 			}, function(x, y, id) {
 				var background = $('<div>').attr('id', "rightClickBack").click(function() {

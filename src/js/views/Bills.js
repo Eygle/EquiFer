@@ -22,7 +22,7 @@ var BillsView = function() {
 				{label:"total",		title:Strings.BILLS_LABEL_TOTAL,	dataType:"float"},
 				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string"}
 			];
-			new SortableList("billsList", titles, data, function(id) {
+			new SortableList("billsList", titles, data, null, function(id) {
 				ManageView.push(new BillDetails(id));
 			});
 		});
@@ -59,7 +59,7 @@ var BillsClientsList = function() {
 				{label:"zipcode",		title:Strings.CLIENTS_LABEL_ZIPCODE,		dataType:"int"},
 				{label:"city",			title:Strings.CLIENTS_LABEL_CITY,			dataType:"string"}
 			];
-			new SortableList("clientsList", titles, data, function(id) {
+			new SortableList("clientsList", titles, data, null, function(id) {
 				ManageView.push(new BillFormView(id));
 			});
 		});

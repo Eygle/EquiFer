@@ -23,7 +23,15 @@ var ClientsView = function() {
 				{label:"zipcode",		title:Strings.CLIENTS_LABEL_ZIPCODE,		dataType:"int"},
 				{label:"city",			title:Strings.CLIENTS_LABEL_CITY,			dataType:"string"}
 			];
-			new SortableList("clientsList", titles, data, function(id) {
+			new SortableList("clientsList", titles, data, function(term, callback) {
+				$.getJSON(Config.clientsApi, {
+					action: 'filter',
+					term: 	term,
+					job: 	Config.job.toUpperCase()
+				}, function(data) {
+					callback(data);
+				});
+			}, function(id) {
 				ManageView.push(new ClientDetails(id));
 			}, function(x, y, id) {
 				var background = $('<div>').attr('id', "rightClickBack").click(function() {
@@ -102,7 +110,7 @@ var ClientDetails = function(id) {
 				{label:"age",		title:Strings.ANIMALS_LABEL_AGE,			dataType:"string"}
 
 			];
-			new SortableList("clientHorsesList", titles, _this.data.animalsList, function(id) {
+			new SortableList("clientHorsesList", titles, _this.data.animalsList, null, function(id) {
 				ManageView.push(new AnimalDetails(id));
 			}, function(x, y, id) {
 				var background = $('<div>').attr('id', "rightClickBack").click(function() {
@@ -156,7 +164,7 @@ var ClientDetails = function(id) {
 				{label:"total",		title:Strings.BILLS_LABEL_TOTAL,	dataType:"float"},
 				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string"}
 			];
-			new SortableList("billsList", titles, _this.data.billsList, function(id) {
+			new SortableList("billsList", titles, _this.data.billsList, null, function(id) {
 			});
 
 

@@ -29,6 +29,31 @@ class DBClients extends SQLite3 {
 		return $ret;
 	}
 
+	public function filter($job, $term) {
+		$stmt = $this->prepare('SELECT c.*
+			FROM link_job_clients AS ljc
+			LEFT JOIN clients AS c ON ljc.clientId = c.id
+			WHERE job = :job
+			AND (
+				c.firstName LIKE :term
+				OR c.lastName LIKE :term
+				OR c.phoneMobile LIKE :term
+				OR c.phoneFixe LIKE :term
+				OR c.address LIKE :term
+				OR c.zipcode LIKE :term
+				OR c.city LIKE :term
+				)
+			ORDER BY c.id DESC;');
+		$stmt->bindValue(':job', $job);
+		$stmt->bindValue(':term', $term.'%');
+		$res = $stmt->execute();
+		$ret = array();
+		while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+			$ret[] = $this->formatInfos($row);
+		}
+		return $ret;
+	}
+
 	public function getInfo($id) {
 		$stmt = $this->prepare('SELECT * FROM clients WHERE id = :id');
 		$stmt->bindValue(':id', $id);

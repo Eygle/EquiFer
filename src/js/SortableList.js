@@ -1,4 +1,5 @@
-var SortableList = function(tableId, titles, list, clickCallback, rightClickCallback) {
+var SortableList = function(tableId, titles, list, filterCallback, clickCallback, rightClickCallback) {
+	this.originalList = null;
 	this.list = null;
 	this.titles = null;
 	this.lastLabel = null;
@@ -6,12 +7,18 @@ var SortableList = function(tableId, titles, list, clickCallback, rightClickCall
 	this.clickCallback = clickCallback;
 	this.rightClickCallback = rightClickCallback;
 
+	this.filterCallback = filterCallback;
+	this.filterList = null;
+
 	var _this = this;
 
 	this.init = function(tableId, titles, list) {
+		this.originalList = list;
 		this.list = list;
 		this.titles = titles;
 		this.tableId = tableId;
+		if (this.filterCallback)
+			this.displayFilterBox();
 		this.display();
 	};
 
@@ -44,10 +51,22 @@ var SortableList = function(tableId, titles, list, clickCallback, rightClickCall
 		}
 		$table.append($('<thead>').append($tr));
 		$tbody = $('<tbody>');
+		this.updateListContent($tbody);
+		$table.append($tbody);
+		$('#' + tableId + " th").click(function() {
+			_this.sort($(this).attr('label'), $(this).attr('data-type'));
+		});
+	};
+
+	this.updateListContent = function(tbody, term) {
+		tbody.empty();
 		for (var i in this.list) {
 			var $tr = $('<tr>').attr('id', this.list[i].id);
 			for (var j in this.titles) {
-				$tr.append($('<td>').attr('label', this.titles[j].label).text(this.list[i][this.titles[j].label]));
+				var text = new String(this.list[i][this.titles[j].label]);
+				if (term)
+					text = text.replace(new RegExp(term, 'gi'), function (match) {return "<em>" + match + "</em>";});
+				$tr.append($('<td>').attr('label', this.titles[j].label).html(text));
 			}
 			$tr.click(function() {
 				_this.clickCallback(this.id);
@@ -63,12 +82,30 @@ var SortableList = function(tableId, titles, list, clickCallback, rightClickCall
 					return true;
 				});
 			}
-			$tbody.append($tr);
+			tbody.append($tr);
 		}
-		$table.append($tbody);
-		$('#' + tableId + " th").click(function() {
-			_this.sort($(this).attr('label'), $(this).attr('data-type'));
-		});
+	};
+
+	var lastText = "";
+	this.displayFilterBox = function() {
+		$("#" + this.tableId).before($('<input>').attr({
+			type:			'text',
+			class:			'filterList',
+			placeholder:	'Filtrer'
+		}).keyup(function(event) {
+			var text = $(this).val();
+			if (text == lastText) return;
+			lastText = text;
+			if (!text.length) {
+				_this.list = _this.originalList;
+				_this.updateListContent($("#" + _this.tableId + " tbody"));
+			} else {
+				_this.filterCallback(text, function(data) {
+					_this.list = data;
+					_this.updateListContent($("#" + _this.tableId + " tbody"), text);
+				});
+			}
+		}));
 	};
 
 	this.init(tableId, titles, list);

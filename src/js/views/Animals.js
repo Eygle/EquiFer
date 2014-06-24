@@ -25,7 +25,15 @@ var AnimalsView = function() {
 				{label:"puce",		title:Strings.ANIMALS_LABEL_PUCE,	dataType:"string"},
 
 			];
-			new SortableList("animalsList", titles, data, function(id) {
+			new SortableList("animalsList", titles, data, function(term, callback) {
+				$.getJSON(Config.animalsApi, {
+					action: 'filter',
+					term: 	term,
+					job: 	Config.job.toUpperCase()
+				}, function(data) {
+					callback(data);
+				});
+			}, function(id) {
 				ManageView.push(new AnimalDetails(id));
 			}, function(x, y, id) {
 				var background = $('<div>').attr('id', "rightClickBack").click(function() {
@@ -116,7 +124,7 @@ var AnimalDetails = function(id) {
 				{label:"quantity",		title:Strings.PERF_LABEL_QUANTITY,		dataType:"int"}
 
 			];
-			new SortableList("clientHorsesList", titles, _this.data.performancesList, function(id) {
+			new SortableList("clientHorsesList", titles, _this.data.performancesList, null, function(id) {
 				ManageView.push(new PerformanceDetails(id));
 			}, function(x, y, id) {
 				var background = $('<div>').attr('id', "rightClickBack").click(function() {

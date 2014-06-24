@@ -136,7 +136,7 @@ AlertsManager.createAlertsList = function(cat, id, name) {
 			{label:"from",		title:Strings.ALERTS_LABEL_FROM,		dataType:"string"},
 			{label:"title",		title:Strings.ALERTS_LABEL_TITLE,		dataType:"string"},
 		];
-		new SortableList('alertsList', titles, AlertsManager.formatData(data), function(id) {
+		new SortableList('alertsList', titles, AlertsManager.formatData(data), null, function(id) {
 			//TODO ??? Edit ?
 		}, function(x, y, id) {
 			var background = $('<div>').attr('id', "rightClickBack").click(function() {
