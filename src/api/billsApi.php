@@ -43,13 +43,19 @@ try {
 			case "editPDF":
 				Utils::checkPostArgs(array('header', 'content'));
 				$fd = fopen(dirname(__FILE__)."/../pdf-generator/pdf_header_generated.html", 'w');
-				//fwrite($fd, '<link rel="stylesheet" href="pdf-bill.css" />');
 				fwrite($fd, $_POST['header']);
 				fclose($fd);
 				$fd = fopen(dirname(__FILE__)."/../pdf-generator/pdf_generated.html", 'w');
-				//fwrite($fd, '<link rel="stylesheet" href="pdf-bill.css" />');
 				fwrite($fd, $_POST['content']);
 				fclose($fd);
+				echo json_encode(null);
+				break;
+			case "save":
+				Utils::checkPostArgs(array('file', 'path'));
+				$_GET['file'] = $_POST['path'].'/'.$_POST['file'].'.pdf';
+				$_GET['title'] = $_POST['file'];
+				include(dirname(__FILE__)."/../pdf-generator/generatePDF.php");
+				return json_encode(null);
 				break;
 		}
 	}

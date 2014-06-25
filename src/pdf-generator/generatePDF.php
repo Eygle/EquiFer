@@ -18,15 +18,18 @@ if (isset($_GET['title']) && !empty($_GET['title'])) {
 	$mpdf->setTitle($_GET['title']);
 }
 
-$mpdf->setHTMLHeader(file_get_contents('pdf_header_generated.html'), 'EO');
+$stylesheet = file_get_contents(dirname(__FILE__).'/pdf-bill.css');
+$mpdf->WriteHTML($stylesheet,1);
+
+$mpdf->setHTMLHeader(file_get_contents(dirname(__FILE__).'/pdf_header_generated.html'), 'EO');
 $mpdf->SetHTMLFooter('<div style="width:100%;text-align:center;">Page {PAGENO} sur {nb}</div>', 'EO');
-
-// send the captured HTML from the output buffer to the mPDF class for processing
-$mpdf->WriteHTML(file_get_contents("pdf_generated.html"));
+$mpdf->WriteHTML(file_get_contents(dirname(__FILE__).'/pdf_generated.html'));
 
 
-
-$mpdf->Output();
+if (isset($_GET['file']) && !empty($_GET['file'])) {
+	$mpdf->Output(dirname(__FILE__)."/../".$_GET['file'], 'F');
+} else
+	$mpdf->Output();
 
 exit;
 

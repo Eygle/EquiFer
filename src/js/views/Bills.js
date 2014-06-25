@@ -45,7 +45,7 @@ var BillsView = function() {
 
 	this.formatData = function(data) {
 		for (var i in data) {
-			data[i]['file'] = '<a href="savedBills/'+data[i]['file']+'" target="_blank" onclick="event.stopPropagation();"><img src="images/pdf_grey.png" onMouseOver="this.src=\'images/pdf.png\'" onMouseOut="this.src=\'images/pdf_grey.png\'"/></a>';
+			data[i]['file'] = '<a href="' + Config.savedPDFPath + "/" + data[i]['file'] + '" target="_blank" onclick="event.stopPropagation();"><img src="images/pdf_grey.png" onMouseOver="this.src=\'images/pdf.png\'" onMouseOut="this.src=\'images/pdf_grey.png\'"/></a>';
 		}
 		return data;
 	};
@@ -194,8 +194,7 @@ var BillFormView = function(id) {
 	this.addDisountsAndExtraOnPerf = function(perf, animalIndex, performanceIndex) {
 		perf.append($('<div>').attr('class', 'extra').click(function(event) {
 			event.stopImmediatePropagation();
-			var total = prompt(Strings.EXTRA_TITLE).replace(",", ".");
-			total = Math.round(parseFloat(total) * 100) / 100;
+			var total = _this.billPDFManager.formatPriceToInt(prompt(Strings.EXTRA_TITLE));
 			if (isNaN(total)) return;
 			_this.data.client.animalsList[animalIndex].performancesList[performanceIndex].extra = total;
 			_this.data.client.animalsList[animalIndex].performancesList[performanceIndex].discount = undefined;
@@ -205,18 +204,18 @@ var BillFormView = function(id) {
 				'animalIndex' : 		animalIndex,
 				'performanceIndex' :	performanceIndex
 				})
-				.text(Strings.EXTRA_LABEL.replace('$1', total))
+				.text(Strings.EXTRA_LABEL.replace('$1', _this.billPDFManager.formatPriceToShow(total)))
 				.click(function() {
 					event.stopImmediatePropagation();
 					_this.data.client.animalsList[$(this).attr('animalIndex')].performancesList[$(this).attr('performanceIndex')].extra = undefined;
 					$(this).remove();
+					_this.billPDFManager.generate(_this.data);
 				})
 			);
 			_this.billPDFManager.generate(_this.data);
 		})).append($('<div>').attr('class', 'discount').click(function(event) {
 			event.stopImmediatePropagation();
-			var total = prompt(Strings.DISCOUNT_TITLE).replace(",", ".");
-			total = Math.round(parseFloat(total) * 100) / 100;
+			var total = _this.billPDFManager.formatPriceToInt(prompt(Strings.DISCOUNT_TITLE));
 			if (isNaN(total)) return;
 			_this.data.client.animalsList[animalIndex].performancesList[performanceIndex].discount = total;
 			_this.data.client.animalsList[animalIndex].performancesList[performanceIndex].extra = undefined;
@@ -226,7 +225,7 @@ var BillFormView = function(id) {
 				'animalIndex' : 		animalIndex,
 				'performanceIndex' :	performanceIndex
 				})
-				.text(Strings.DISCOUNT_LABEL.replace('$1', total))
+				.text(Strings.DISCOUNT_LABEL.replace('$1', _this.billPDFManager.formatPriceToShow(total)))
 				.click(function() {
 					event.stopImmediatePropagation();
 					_this.data.client.animalsList[$(this).attr('animalIndex')].performancesList[$(this).attr('performanceIndex')].discount = undefined;
@@ -287,16 +286,18 @@ var BillFormView = function(id) {
 				inFarriery:	Config.job.toUpperCase() == "FARRIERY",
 		};
 
-		$.post(Config.billsApi, params, function(data) {
-			History.add("bills", params.action, 0,  _this.billPDFManager.billId, null,  params.inFarriery,  params.inPension, function() {
-				ManageView.replace(new BillsSaveView());
-			});
-		}, "json");
+		_this.billPDFManager.save(function() {
+			$.post(Config.billsApi, params, function(data) {
+				History.add("bills", params.action, 0,  _this.billPDFManager.billId, null,  params.inFarriery,  params.inPension, function() {
+					ManageView.replace(new BillsSaveView(_this.billPDFManager));
+				});
+			}, "json");
+		});
 	};
 };
 
 // Save View
-var BillsSaveView = function() {
+var BillsSaveView = function(billPDFManager) {
 	// Buttons management
 	this.showReturnButton	= true;
 	this.showSaveButton		= false;
@@ -307,7 +308,12 @@ var BillsSaveView = function() {
 	this.htmlPage 			= "bills.html";
 	this.tabLabel			= "bills";
 
+	this.billPDFManager = billPDFManager;
+
+	console.log();
+
 	this.init = function() {
+		$('#saveView embed').attr('src', Config.savedPDFPath + "/" + this.billPDFManager.billId + ".pdf");
 		$('#saveView').show();
 	};
 }

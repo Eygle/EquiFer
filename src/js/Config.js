@@ -14,4 +14,5 @@ var Config = {
 
 	// Could be customize
 	TVA:			"19,6",
+	savedPDFPath:	"savedPDF",
 };
