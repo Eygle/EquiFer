@@ -82,7 +82,7 @@ class DBClients extends SQLite3 {
 
 	private function getBillsListForClient($clientId) {
 		$ret = array();
-		$stmt = $this->prepare('SELECT * FROM bills WHERE clientId = :id');
+		$stmt = $this->prepare('SELECT * FROM bills WHERE clientId = :id ORDER BY id DESC');
 		$stmt->bindValue(':id', $clientId);
 		$res = $stmt->execute();
 		while ($row = $res->fetchArray(SQLITE3_ASSOC))

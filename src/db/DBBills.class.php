@@ -90,13 +90,15 @@ class DBBills extends SQLite3 {
 	public static function format($bill) {
 		$bill["number"] = explode(".", $bill['file'])[0];
 		$bill['date'] = Utils::formatDate($bill['date']);
+		$bill['originalId'] = $bill['id'];
+		$bill['id'] = $bill['number'];
 		return $bill;
 	}
 
 	private function formatInfos($bill) {
 		$bill = self::format($bill);
 		$bill['client'] = $bill['firstName']." ".$bill['lastName'];
-		$bill = array_merge($bill, $this->getJobsLinks($bill['id']));
+		$bill = array_merge($bill, $this->getJobsLinks($bill['originalId']));
 		return $bill;
 	}
 

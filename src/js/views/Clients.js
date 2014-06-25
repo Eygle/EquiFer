@@ -162,24 +162,31 @@ var ClientDetails = function(id) {
 				{label:"number",	title:Strings.BILLS_LABEL_NUMBER,	dataType:"string",	filter: true},
 				{label:"taxFree",	title:Strings.BILLS_LABEL_TAXFREE,	dataType:"float",	filter: true},
 				{label:"total",		title:Strings.BILLS_LABEL_TOTAL,	dataType:"float",	filter: true},
-				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string",	filter: true}
+				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string",	html: true}
 			];
-			new SortableList("billsList", titles, _this.data.billsList, function(term, callback) {
+			new SortableList("billsList", titles, _this.formatBillData(_this.data.billsList), function(term, callback) {
 				$.getJSON(Config.billsApi, {
 					action: 'filterForClient',
 					term: 	term,
 					id:		_this.id
 				}, function(data) {
-					callback(data);
+					callback(_this.formatBillData(data));
 				});
 			}, function(id) {
+				ManageView.push(new BillDetails(id));
 			});
-
-
 
 			//Alerts list
 			AlertsManager.createAlertsList('clients', _this.id, _this.data['firstName'] + " " + _this.data['lastName']);
 		});
+
+		this.formatBillData = function(data) {
+			console.log("Oo");
+			for (var i in data) {
+				data[i]['file'] = '<img src="images/pdf.png"/>';
+			}
+			return data;
+		};
 	};
 
 	this.manageButtonClick = function(button) {

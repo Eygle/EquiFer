@@ -22,7 +22,7 @@ var BillsView = function() {
 				{label:"client",	title:Strings.BILLS_LABEL_CLIENT,	dataType:"string",	filter: true},
 				{label:"taxFree",	title:Strings.BILLS_LABEL_TAXFREE,	dataType:"float",	filter: true},
 				{label:"total",		title:Strings.BILLS_LABEL_TOTAL,	dataType:"float",	filter: true},
-				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string",	filter: true,	html: true}
+				{label:"file",		title:Strings.BILLS_LABEL_FILE,		dataType:"string",	html: true}
 			];
 			new SortableList("billsList", titles, _this.formatData(data), function(term, callback) {
 				$.getJSON(Config.billsApi, {
@@ -45,7 +45,7 @@ var BillsView = function() {
 
 	this.formatData = function(data) {
 		for (var i in data) {
-			data[i]['file'] = '<a href="' + Config.savedPDFPath + "/" + data[i]['file'] + '" target="_blank" onclick="event.stopPropagation();"><img src="images/pdf_grey.png" onMouseOver="this.src=\'images/pdf.png\'" onMouseOut="this.src=\'images/pdf_grey.png\'"/></a>';
+			data[i]['file'] = '<img src="images/pdf.png"/>';
 		}
 		return data;
 	};
@@ -279,8 +279,8 @@ var BillFormView = function(id) {
 		var params = {
 				action:		"add",
 				clientId:	this.id,
-				totalTTC:	this.billPDFManager.totalTTC,
-				totalHT:	this.billPDFManager.totalHT,
+				totalTTC:	this.billPDFManager.formatPriceToShow(this.billPDFManager.totalTTC),
+				totalHT:	this.billPDFManager.formatPriceToShow(this.billPDFManager.totalHT),
 				file: 		this.billPDFManager.billId + ".pdf",
 				inPension: 	Config.job.toUpperCase() == "PENSION",
 				inFarriery:	Config.job.toUpperCase() == "FARRIERY",
@@ -289,7 +289,7 @@ var BillFormView = function(id) {
 		_this.billPDFManager.save(function() {
 			$.post(Config.billsApi, params, function(data) {
 				History.add("bills", params.action, 0,  _this.billPDFManager.billId, null,  params.inFarriery,  params.inPension, function() {
-					ManageView.replace(new BillsSaveView(_this.billPDFManager));
+					ManageView.replace(new BillDetails(_this.billPDFManager.billId));
 				});
 			}, "json");
 		});
@@ -297,7 +297,7 @@ var BillFormView = function(id) {
 };
 
 // Save View
-var BillsSaveView = function(billPDFManager) {
+var BillDetails = function(id) {
 	// Buttons management
 	this.showReturnButton	= true;
 	this.showSaveButton		= false;
@@ -308,12 +308,10 @@ var BillsSaveView = function(billPDFManager) {
 	this.htmlPage 			= "bills.html";
 	this.tabLabel			= "bills";
 
-	this.billPDFManager = billPDFManager;
-
-	console.log();
+	this.id = id;
 
 	this.init = function() {
-		$('#saveView embed').attr('src', Config.savedPDFPath + "/" + this.billPDFManager.billId + ".pdf");
+		$('#saveView embed').attr('src', Config.savedPDFPath + "/" + id + ".pdf");
 		$('#saveView').show();
 	};
 }
