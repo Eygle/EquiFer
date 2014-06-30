@@ -32,91 +32,112 @@ AlertsManager.formatData = function(data) {
 	return data;
 };
 
-AlertsManager.checkParams = function(params) {
-	if (!params.title || params.title.length > 255) {
-		alert(Strings.ALERTS_REQUIRE_TITLE);
-		return false;
-	}
-	return true;
-};
+// AlertsManager.checkParams = function(params) {
+// 	if (!params.title || params.title.length > 255) {
+// 		alert(Strings.ALERTS_REQUIRE_TITLE);
+// 		return false;
+// 	}
+// 	return true;
+// };
 
 AlertsManager.displayAlertFormView = function(cat, id, name, data) {
 	CustomPopupManager.display("includes/alert-form.html", function() {
-		$('#frequency').change(function(event) {
-			switch($(this).val()) {
-				case 'daily':
-					$('#date').attr('type', 'hidden');
-					$('.ui-datepicker-trigger').hide();
-					$('#from').hide();
-					$('label [for=from]').hide();
-					break;
-				case 'weekly':
-					$('#date').attr('type', 'hidden');
-					$('.ui-datepicker-trigger').hide();
-					$('#from').show().html('<option value="1">Lundi</option><option value="2">Mardi</option><option value="3">Mercredi</option><option value="4">Jeudi</option><option value="5">Vendredi</option><option value="6">Samedi</option><option value="0">Dimanche</option>');
-					$('label [for=from]').text("A partir du").show();
-					break;
-				case 'monthly':
-					$('#date').attr('type', 'hidden');
-					$('.ui-datepicker-trigger').hide();
-					var from = $('#from');
-					from.show().html("");
-					for (var i = 1; i <= 31; i++) {
-						from.append($('<option>').attr('value', i).text(i));
-					}
-					break;
-				case 'unique':
-					$('label [for="from"]').text("Le");
-					$('#from').hide();
-					$('.ui-datepicker-trigger').show();
-					$('#date').attr('type', 'text');
-					break;
+		FrequencyFormManager.init("#custom-popup-background", function(params) {
+			params.id = data ? data['id'] : undefined;
+			params.action = data ? 'editProgrammedAlert' : 'addProgrammedAlert';
+			params.title = $("#custom-popup-background #title").val();
+			params.category = cat;
+			params.objectId = id;
+			if (!params.title || params.title.length > 255) {
+				alert(Strings.ALERTS_REQUIRE_TITLE);
+				return false;
 			}
-		});
-		$('.set-data button').click(function() {
-			var freq = $('#frequency').val();
-			var params = {
-				action:		data ? 'editProgrammedAlert' : 'addProgrammedAlert',
-				id:			data ? data['id'] : undefined,
-				title:		$('#title').val(),
-				frequency:	freq,
-				from:		freq == "unique" ? $("#date").val() : $('#from').val(),
-				category:	cat,
-				objectId:	id,
-			};
-			if (!AlertsManager.checkParams(params));
 			$.post(Config.alertsApi, params, function() {
 				History.add(cat, data ? "edit_alert" : "add_alert", 0, name, params.title, true, true, function() {
 					CustomPopupManager.destroy();
 					ManageView.display();
 				});
 			});
-		});
-
-		$('#date').datepicker({
-			dateFormat: 'dd/mm/yy',
-			changeMonth: true,
-			changeYear: true,
-			showButtonPanel: true,
-			showOn: "button",
-			buttonImage: "images/calendar.png",
-			buttonImageOnly: true
-		});
-		$('.ui-datepicker-trigger').hide();
-
+		}, true);
 		if (data) {
-			$('#frequency').val(data['frequency']).trigger('change');
-			if (data['frequency'] == 'unique') {
-				$('#from').hide();
-				$('#date').val(data['from']).show();
-				$('.ui-datepicker-trigger').show();
-			} else {
-				$('#from').val(data['from']).show();
-				$('.ui-datepicker-trigger').hide();
-				$('#date').hide();
-			}
-			$('#title').val(data['title']);
+			$('#custom-popup-background #title').val(data['title']);
+			FrequencyFormManager.initValuesFromData("#custom-popup-background", data);
 		}
+		// $('#frequency').change(function(event) {
+		// 	switch($(this).val()) {
+		// 		case 'daily':
+		// 			$('#date').attr('type', 'hidden');
+		// 			$('.ui-datepicker-trigger').hide();
+		// 			$('#from').hide();
+		// 			$('label [for=from]').hide();
+		// 			break;
+		// 		case 'weekly':
+		// 			$('#date').attr('type', 'hidden');
+		// 			$('.ui-datepicker-trigger').hide();
+		// 			$('#from').show().html('<option value="1">Lundi</option><option value="2">Mardi</option><option value="3">Mercredi</option><option value="4">Jeudi</option><option value="5">Vendredi</option><option value="6">Samedi</option><option value="0">Dimanche</option>');
+		// 			$('label [for=from]').text("A partir du").show();
+		// 			break;
+		// 		case 'monthly':
+		// 			$('#date').attr('type', 'hidden');
+		// 			$('.ui-datepicker-trigger').hide();
+		// 			var from = $('#from');
+		// 			from.show().html("");
+		// 			for (var i = 1; i <= 31; i++) {
+		// 				from.append($('<option>').attr('value', i).text(i));
+		// 			}
+		// 			break;
+		// 		case 'unique':
+		// 			$('label [for="from"]').text("Le");
+		// 			$('#from').hide();
+		// 			$('.ui-datepicker-trigger').show();
+		// 			$('#date').attr('type', 'text');
+		// 			break;
+		// 	}
+		// });
+		// $('.set-data button').click(function() {
+		// 	var freq = $('#frequency').val();
+		// 	var params = {
+		// 		action:		data ? 'editProgrammedAlert' : 'addProgrammedAlert',
+		// 		id:			data ? data['id'] : undefined,
+		// 		title:		$('#title').val(),
+		// 		frequency:	freq,
+		// 		from:		freq == "unique" ? $("#date").val() : $('#from').val(),
+		// 		category:	cat,
+		// 		objectId:	id,
+		// 	};
+		// 	if (!AlertsManager.checkParams(params));
+		// 	$.post(Config.alertsApi, params, function() {
+		// 		History.add(cat, data ? "edit_alert" : "add_alert", 0, name, params.title, true, true, function() {
+		// 			CustomPopupManager.destroy();
+		// 			ManageView.display();
+		// 		});
+		// 	});
+		// });
+
+		// $('#date').datepicker({
+		// 	dateFormat: 'dd/mm/yy',
+		// 	changeMonth: true,
+		// 	changeYear: true,
+		// 	showButtonPanel: true,
+		// 	showOn: "button",
+		// 	buttonImage: "images/calendar.png",
+		// 	buttonImageOnly: true
+		// });
+		// $('.ui-datepicker-trigger').hide();
+
+		// if (data) {
+		// 	$('#frequency').val(data['frequency']).trigger('change');
+		// 	if (data['frequency'] == 'unique') {
+		// 		$('#from').hide();
+		// 		$('#date').val(data['from']).show();
+		// 		$('.ui-datepicker-trigger').show();
+		// 	} else {
+		// 		$('#from').val(data['from']).show();
+		// 		$('.ui-datepicker-trigger').hide();
+		// 		$('#date').hide();
+		// 	}
+		// 	$('#title').val(data['title']);
+		// }
 	});
 };
 

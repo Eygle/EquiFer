@@ -178,6 +178,9 @@ class DBAlerts extends SQLite3 {
 			case 'clients':
 				$data['name'] = $this->getClientName($data['objectId']);
 			break;
+			case 'stocks':
+				$data['name'] = $this->getStockName($data['objectId']);
+			break;
 		}
 		return $data;
 	}
@@ -196,6 +199,14 @@ class DBAlerts extends SQLite3 {
 		$res = $stmt->execute();
 		$ret = $res->fetchArray(SQLITE3_ASSOC);
 		return $ret['firstName'].' '.$ret['lastName'];
+	}
+
+	private function getStockName($id) {
+		$stmt = $this->prepare('SELECT name FROM stocks WHERE id = :id');
+		$stmt->bindValue('id', $id);
+		$res = $stmt->execute();
+		$ret = $res->fetchArray(SQLITE3_ASSOC);
+		return $ret['name'];
 	}
 }
 ?> 

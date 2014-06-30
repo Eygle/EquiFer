@@ -37,8 +37,11 @@ try {
 				echo json_encode(array("id"=>$id));
 				break;
 			case "delete":
-				Utils::checkPostArgs('id');
+				Utils::checkPostArgs('id', 'deleteFile');
 				$db->delete($_POST['id']);
+				if ($_POST['deleteFile'] == "true" && isset($_POST['file'])) {
+					@unlink(dirname(__FILE__)."/../".$_POST['file']);
+				}
 				break;
 			case "editPDF":
 				Utils::checkPostArgs(array('header', 'content'));

@@ -14,7 +14,8 @@
 		<link rel="stylesheet" href="css/alerts.css" />
 		<!-- <link rel="stylesheet" href="css/performances.css" /> -->
 		<link rel="stylesheet" href="css/settings.css" />
-		<link rel="stylesheet" href="libs/jquery-ui-1.10.4/css/ui-lightness/jquery-ui-1.10.4.min.css" />
+		<link rel="stylesheet" href="libs/jquery-ui-1.10.4/css/smoothness/jquery-ui-1.10.4.custom.min.css" />
+		<!-- <link rel="stylesheet" href="bootstrap/css/bootstrap.css" /> -->
 		<!-- <link rel="stylesheet" href="libs/jquery-ui-1.8/jquery-ui-1.8.23.custom.css" /> -->
 		
 		<script src="libs/jquery-2.1.1.min.js"></script>
@@ -38,7 +39,7 @@
 				<div class="job-selection-text">Pension</div>
 			</div>
 		</div>
-		<div id="corps">
+		<div id="corps" class="noscroll">
 			<div id="header">
 				<div id="switchJob" class="button"></div>
 				<div class="separator"></div>
@@ -53,13 +54,14 @@
 				<div id="jobLabel"></div>
 			</div>
 			<div id="tabulations">
-				<div id="tabs"></div>
+				<div id="my-tabs"></div>
 				<div id="content"></div>
 			</div>
 		</div>
 	</body>
 
 	<script src="js/HistoryManager.js"></script>
+	<script src="js/FrequencyFormManager.js"></script>
 	<script src="js/AlertsManager.js"></script>
 	<script src="js/views/HomeView.js"></script>
 	<script src="js/views/Animals.js"></script>
@@ -67,6 +69,7 @@
 	<script src="js/views/Performances.js"></script>
 	<script src="js/BillPDFManager.js"></script>
 	<script src="js/views/Bills.js"></script>
+	<script src="js/views/Stocks.js"></script>
 	<script src="js/Tabs.js"></script>
 	<script src="js/SettingsPanel.js"></script>
 	<script src="js/init.js"></script>

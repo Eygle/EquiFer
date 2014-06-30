@@ -14,16 +14,25 @@ var SettingsPanel = function() {
 				$('#custom-popup-background .view').hide();
 				_this.display($(this).attr('label'));
 			});
+			_this.initCompany();
+			_this.initSecurity();
 		});
 	};
 
 	this.display = function(label) {
 		switch (label) {
 			case "company":
-				_this.initCompany();
+				_this.displayCompany();
+			break;
+			case "security":
+				_this.displaySecurity();
 			break;
 		}
 	};
+
+	/*
+	* 	Company
+	*/
 
 	this.initCompany = function() {
 		$('#settings-company button').click(function() {
@@ -46,7 +55,9 @@ var SettingsPanel = function() {
 				});
 			});
 		});
+	};
 
+	this.displayCompany = function() {
 		$.getJSON(Config.settingsApi, {action: 'getCompany'}, function(data) {
 			$('#settings-company').show();
 			$("#settings-company #address").val(data.address);
@@ -102,6 +113,45 @@ var SettingsPanel = function() {
 			return false;
 		}
 		return true;
+	};
+
+
+	/*
+	*	Security
+	*/
+
+	this.initSecurity = function() {
+		$('#settings-security #activate').change(function(event) {
+			if (this.checked)
+				$('#settings-security #save_active').show();
+			else {
+				$('#settings-security #frequency').val("weekly").trigger('change');
+				$('#settings-security #save_active').hide();
+			}
+		});
+
+		FrequencyFormManager.init("#settings-security", function(params) {
+			params.action = 'editSecurity';
+			params.active = $("#settings-security #activate").is(":checked") ? 1 : 0;
+
+			$.post(Config.settingsApi, params, function() {
+				History.add("settings", "edit_security", 0,  "", null,  true, true, function() {
+					_this.displayMessage(true, Strings.MESSAGE_SAVE_SUCESS);
+				});
+			});
+		}, false, false);
+	};
+
+	this.displaySecurity = function() {
+		$.getJSON(Config.settingsApi, {action: 'getSecurity'}, function(data) {
+			$('#settings-security').show();
+			$('#settings-security #activate').prop("checked", data.active);
+			if (data.active)
+				$('#settings-security #save_active').show();
+			else
+				$('#settings-security #save_active').hide();
+			FrequencyFormManager.initValuesFromData("#settings-security", data);
+		});
 	};
 
 	this.displayMessage = function(success, message) {

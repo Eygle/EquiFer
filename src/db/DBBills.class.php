@@ -116,16 +116,32 @@ class DBBills extends SQLite3 {
 		return $this->lastInsertRowID();
 	}
 
-	public function delete($id) {
+	private function getIdByNumber($number) {
+		$stmt = $this->prepare('SELECT id FROM bills WHERE file LIKE :nbr');
+		$stmt->bindValue(':nbr', $number.".pdf");
+		$res = $stmt->execute();
+		$res = $res->fetchArray(SQLITE3_ASSOC);
+		return $res && is_array($res) ? $res['id'] : false;
+	}
+
+	public function delete($number) {
+		$id = $this->getIdByNumber($number);
+		if (!$id) return;
 		$stmt = $this->prepare('DELETE FROM bills WHERE id = :id');
 		$stmt->bindValue('id', $id);
 		$stmt->execute();
 		$this->deleteLinksToJob($id);
-		$this->deleteLinksToHorses($id);
+		$this->deleteLinksToClients($id);
 	}
 
 	private function deleteLinksToJob($id) {
 		$stmt = $this->prepare('DELETE FROM link_job_bills WHERE billId = :billId;');
+		$stmt->bindValue(':billId', $id);
+		$stmt->execute();
+	}
+
+	private function deleteLinksToClients($id) {
+		$stmt = $this->prepare('DELETE FROM link_bills_clients WHERE billId = :billId;');
 		$stmt->bindValue(':billId', $id);
 		$stmt->execute();
 	}

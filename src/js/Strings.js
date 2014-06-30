@@ -21,22 +21,29 @@ var FR = function() {
 	this.HISTORY_LABEL_CATEGORY	= "Categorie";
 	this.HISTORY_LABEL_ACTION	= "Action";
 
-	this.HISTORY_SENTENCE_ADD				= "La fiche de $1 a été créée";
-	this.HISTORY_SENTENCE_BILL_ADD			= "La facture $1 a été générée";
-	this.HISTORY_SENTENCE_PERF_ADD			= "La prestation $1 a été créée";
-	this.HISTORY_SENTENCE_EDIT				= "La fiche de $1 a été modifiée";
-	this.HISTORY_SENTENCE_PERF_EDIT			= "La prestation $1 a été modifiée";
-	this.HISTORY_SENTENCE_SETTINGS_OWNER	= "Les informations de la société ont été modifiées";
-	this.HISTORY_SENTENCE_DELETE			= "La fiche de $1 a été suprimée";
-	this.HISTORY_SENTENCE_PERF_DELETE		= "La prestation $1 a été suprimée";
-	this.HISTORY_SENTENCE_ADD_PERF			= "La prestation '$2' a été associée à $1";
-	this.HISTORY_SENTENCE_EDIT_PERF			= "La quantité de la prestation '$2' a été modifiée pour $1";
-	this.HISTORY_SENTENCE_DELETE_PERF		= "La prestation '$2' a été dissocié de $1";
-	this.HISTORY_SENTENCE_ADD_ANIMAL		= "$2 a été associé à $1";
-	this.HISTORY_SENTENCE_DELETE_ANIMAL		= "$2 a été dissocié de $1";
-	this.HISTORY_SENTENCE_ADD_ALERT			= "L'alerte '$2' a été associée à $1";
-	this.HISTORY_SENTENCE_EDIT_ALERT		= "L'alerte '$2' a été modifiée pour $1";
-	this.HISTORY_SENTENCE_DELETE_ALERT		= "L'alerte '$2' a été dissociée de $1";
+	this.HISTORY_SENTENCE_ADD						= "La fiche de $1 a été créée";
+	this.HISTORY_SENTENCE_BILL_ADD					= "La facture $1 a été générée";
+	this.HISTORY_SENTENCE_BILL_DELETE				= "La facture $1 a été suprimée";
+	this.HISTORY_SENTENCE_PERF_ADD					= "La prestation $1 a été créée";
+	this.HISTORY_SENTENCE_EDIT						= "La fiche de $1 a été modifiée";
+	this.HISTORY_SENTENCE_PERF_EDIT					= "La prestation $1 a été modifiée";
+	this.HISTORY_SENTENCE_SETTINGS_OWNER			= "Les informations de la société ont été modifiées";
+	this.HISTORY_SENTENCE_SETTINGS_SECURITY			= "La sauvegarde automatique des données à été modifiée";
+	this.HISTORY_SENTENCE_SETTINGS_SECURITY_SAVE	= "La base de donnée à été sauvegardée";
+	this.HISTORY_SENTENCE_DELETE					= "La fiche de $1 a été suprimée";
+	this.HISTORY_SENTENCE_PERF_DELETE				= "La prestation $1 a été suprimée";
+	this.HISTORY_SENTENCE_ADD_PERF					= "La prestation '$2' a été associée à $1";
+	this.HISTORY_SENTENCE_EDIT_PERF					= "La quantité de la prestation '$2' a été modifiée pour $1";
+	this.HISTORY_SENTENCE_DELETE_PERF				= "La prestation '$2' a été dissocié de $1";
+	this.HISTORY_SENTENCE_ADD_ANIMAL				= "$2 a été associé à $1";
+	this.HISTORY_SENTENCE_DELETE_ANIMAL				= "$2 a été dissocié de $1";
+	this.HISTORY_SENTENCE_ADD_ALERT					= "L'alerte '$2' a été associée à $1";
+	this.HISTORY_SENTENCE_EDIT_ALERT				= "L'alerte '$2' a été modifiée pour $1";
+	this.HISTORY_SENTENCE_DELETE_ALERT				= "L'alerte '$2' a été dissociée de $1";
+	this.HISTORY_SENTENCE_STOCK_ADD					= "Le stock $1 a été créé";
+	this.HISTORY_SENTENCE_STOCK_EDIT				= "Le stock $1 a été modifié";
+	this.HISTORY_SENTENCE_STOCK_DELETE				= "Le stock $1 a été supprimé";
+	this.HISTORY_SENTENCE_STOCK_QUANTITY			= "La quantité du stock $1 a été modifiée";
 
 	// Animals
 	this.ANIMALS_LABEL_NAME		= "Nom";
@@ -96,6 +103,22 @@ var FR = function() {
 	this.EXTRA_LABEL			= "Supplément: $1€";
 	this.DISCOUNT_LABEL			= "Remise: $1€";
 
+	this.CONFIRM_DELETE_BILL		= "Voulez vous vraiment supprimer la facture $1 ?";
+	this.CONFIRM_DELETE_BILL_FILE	= "Voulez-vous également supprimer le ficher relatif à la facture ?";
+
+	// Stoks
+	this.STOCKS_LABEL_NAME				= "Nom";
+	this.STOCKS_LABEL_QUANTITY			= "Quantité";
+	this.STOCKS_LABEL_QUANTITY_ALERT	= "Alerte à partir de";
+	this.STOCKS_LABEL_ACTION			= "Actions";
+
+	this.STOCKS_REQUIRE_NAME			= "Le nom du stock est nécessaire";
+	this.STOCKS_REQUIRE_QUANTITY		= "La quantité est nécessaire";
+	this.STOCKS_WRONG_QUANTITY			= "La quantité doit être un nombre";
+	this.STOCKS_WRONG_QUANTITY_ALERT	= "L'alerte de quantité doit être un nombre";
+
+	this.STOCKS_SENTENCE_ALERT			= "La quantité est trop faible";
+
 	// Alerts
 	this.ALERTS_LABEL_FREQUENCY	= "Fréquence";
 	this.ALERTS_LABEL_FROM		= "A partir du";
@@ -108,6 +131,7 @@ var FR = function() {
 	this.WEEKLY					= "Hebdomadaire";
 	this.MONTHLY				= "Mensuelle";
 	this.ALERTS_REQUIRE_TITLE	= "Un titre de moins de 255 caractères est nécessaire";
+	this.ALERTS_REQUIRE_DATE	= "La date est vide ou le format est incorrect (jj/mm/aaaa)"
 
 	// Settings
 	this.SETTINGS_COMPANY_REQUIRE_NAME			= "Les nom et prénom sont nécessaires";

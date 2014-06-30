@@ -143,6 +143,30 @@ CREATE INDEX "link_bills_clients_billId_clientId" ON "link_bills_clients" ("bill
 
 
 
+
+DROP TABLE "stocks";
+DROP TABLE "link_job_stocks";
+
+CREATE TABLE "stocks" (
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  "name" varchar(256),
+  "quantity" int(11) NOT NULL,
+  "quantityAlert" int(11) NOT NULL
+);
+CREATE INDEX "stocks_id" ON "stocks" ("id");
+
+CREATE TABLE "link_job_stocks" (
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  "job" varchar(8) NOT NULL,
+  "stockId" int(11) NOT NULL  
+);
+CREATE INDEX "link_job_stocks_id" ON "link_job_stocks" ("id");
+CREATE INDEX "link_job_stocks_billId" ON "link_job_stocks" ("stockId");
+CREATE INDEX "link_job_stocks_job" ON "link_job_stocks" ("job");
+
+
+
+
 DROP TABLE "programmed_alerts";
 CREATE TABLE "programmed_alerts"(
   "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -219,6 +243,10 @@ DROP TABLE "commons_infos";
 
 CREATE TABLE "commons_infos" (
   "billNumber" int(11) NOT NULL,
-  "lastAlertsCheck" int(11) NOT NULL
+  "lastAlertsCheck" int(11) NOT NULL,
+  "autoSaveActive" int(1) NOT NULL,
+  "autoSaveFrequency" varchar(15) NULL,
+  "autoSaveFrom" varchar(10) NULL,
+  "lastAutoSaveCheck" int(11) NOT NULL
 );
-INSERT INTO commons_infos VALUES(1, 0);
+INSERT INTO commons_infos VALUES(1, 0, 0, NULL, NULL, 0);

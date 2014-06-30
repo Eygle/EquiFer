@@ -2,7 +2,6 @@
 	<div class="close">X</div>
 	<div class="set-menu">
 		<div class="set-menu-item selected" label="company">Informations personnelles</div>
-		<div class="set-menu-item" label="stocks">Stocks</div>
 		<div class="set-menu-item" label="security">Sécurité</div>
 	</div><div class="set-data">
 		<div id="settings-company" class="view">
@@ -15,6 +14,28 @@
 			<div class="two-cols"><label for="phoneMobile">Portable</label></div><div class="two-cols"><input type="text" name="phoneMobile" id="phoneMobile" /></div>
 			<div class="two-cols"><label for="mail">Mail</label></div><div class="two-cols"><input type="text" name="mail" id="mail" /></div>
 			<div class="two-cols"><label for="siret">N° SIRET</label></div><div class="two-cols"><input type="text" name="siret" id="siret" /></div>
+			<div class="one-col bottom center"><button>Enregistrer</button></div>
+		</div>
+
+		<div id="settings-security" class="view">
+			<h3>Sauvegarde automatique de la base de données</h3>
+			<div class="two-cols"><label for="activate">Active</label></div><div class="two-cols"><input type="checkbox" name="activate" id="activate" /></div>
+			<div id="save_active">
+				<div class="two-cols"><label for="frequency">Fréquence</label></div><div class="two-cols"><select name="frequency" id="frequency">
+					<option value="daily">Quotidienne</option>
+					<option value="weekly" selected="">Hebdomadaire</option>
+					<option value="monthly">Mensuelle</option>
+				</select></div>
+				<div class="two-cols"><label for="from">A partir du</label></div><div class="two-cols"><select name="from" id="from">
+					<option value="1">Lundi</option>
+					<option value="2">Mardi</option>
+					<option value="3">Mercredi</option>
+					<option value="4">Jeudi</option>
+					<option value="5">Vendredi</option>
+					<option value="6">Samedi</option>
+					<option value="0">Dimanche</option>
+				</select></div>
+			</div>
 			<div class="one-col bottom center"><button>Enregistrer</button></div>
 		</div>
 	</div>

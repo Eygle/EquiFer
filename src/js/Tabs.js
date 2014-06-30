@@ -5,21 +5,38 @@ var Tabs = function() {
 		{id:"animals",		label:Strings.TAB_ANIMALS},
 		{id:"performances",	label:Strings.TAB_PERF},
 		{id:"bills",		label:Strings.TAB_BILLS},
-		//{id:"stocks",		label:Strings.TAB_STOCKS},
+		{id:"stocks",		label:Strings.TAB_STOCKS},
 	];
+
+	this.currentTab = "home";
 
 	var _this = this;
 
 	this.init = function() {
-		var $tabs = $("#tabs");
+		var $tabs = $("#my-tabs");
+		$tabs.empty();
 		for (var i in this.tabs) {
+			if (this.tabs[i].id == "stocks" && Config.job.toUpperCase() == "PENSION") continue;
 			$tabs.append($('<div>').attr({id:this.tabs[i].id, class:"tab"}).text(this.tabs[i].label).click(function() {
 				_this.selectTab(this.id);
 			}));
 		}
 	};
 
+	this.update = function() {
+		if (Config.job.toUpperCase() == "PENSION")
+			$("#my-tabs #stocks").remove();
+		else
+			$("#my-tabs").append($('<div>').attr({id:"stocks", class:"tab"}).text(Strings.TAB_STOCKS).click(function() {
+				_this.selectTab("stocks");
+			}));;
+		var $tabs = $("#my-tabs");
+		if (this.currentTab == "stocks" && Config.job.toUpperCase() == "PENSION")
+			this.selectTab("home");
+	};
+
 	this.selectTab = function(id) {
+		this.currentTab = id;
 		switch(id) {
 			case "home":
 				ManageView.setAsRoot(new HomeView());

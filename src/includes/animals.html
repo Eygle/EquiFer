@@ -9,17 +9,15 @@
 		<h2>Informations du cheval</h2>
 		<div class="two-cols"><label for="name" class="needed">Nom</label></div><div class="two-cols"><input type="text" name="name" id="name" /></div>
 		<div class="two-cols"><label for="gender" class="needed">Sexe</label></div><div class="two-cols">
-			<select name="gender" id="gender" data-highlight="false">
-				<option value="male">Mâle</option>
-				<option value="female">Femelle</option>
-			</select>
+			<input type="radio" name="gender" id="gender_male" value="male" checked="checked"><label for="gender_male">Mâle</label>
+			<input type="radio" name="gender" id="gender_female" value="female"><label for="gender_female">Femelle</label>
 		</div>
 		<div class="two-cols"><label for="type" class="needed">Type</label></div><div class="two-cols"><input type="text" name="type" id="type" /></div>
 		<div class="two-cols"><label for="race" class="needed">Race</label></div><div class="two-cols"><input type="text" name="race" id="race" /></div>
 		<div class="two-cols"><label for="colour">Robe</label></div><div class="two-cols"><input type="text" name="colour" id="colour" /></div>
 		<div class="two-cols"><label for="headMark">Marque en Tête</label></div><div class="two-cols"><input type="text" name="headMark" id="headMark" /></div>
 		<div class="two-cols"><label for="footMark">Balezane</label></div><div class="two-cols"><input type="text" name="footMark" id="footMark" /></div>
-		<div class="two-cols"><label for="size">Taille (cm)</label></div><div class="two-cols"><input type="number" name="size" id="size" /></div>
+		<div class="two-cols"><label for="size">Taille (cm)</label></div><div class="two-cols"><input type="text" name="size" id="size" /></div>
 		<div class="two-cols"><label for="puce">N° de puce</label></div><div class="two-cols"><input type="text" name="puce" id="puce" /></div>
 		<div class="two-cols"><label for="birthdate" class="needed">Date de naissance</label></div><div class="two-cols"><input type="text" name="birthdate" id="birthdate" /></div>
 		<div class="two-cols"><label for="isAlive">Vivant ?</label></div><div class="two-cols center"><input type="checkbox" name="isAlive" id="isAlive" /></div>

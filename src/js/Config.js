@@ -8,6 +8,7 @@ var Config = {
 	citiesApi:			"api/citiesApi.php",
 	performancesApi:	"api/performancesApi.php",
 	billsApi:			"api/billsApi.php",
+	stocksApi:			"api/stocksApi.php",
 	alertsApi:			"api/alertsApi.php",
 	settingsApi:		"api/settingsApi.php",
 	historyApi:			"api/historyApi.php",

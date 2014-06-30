@@ -18,7 +18,8 @@ class DBHistory extends SQLite3 {
 			FROM link_job_history AS ljh
 			LEFT JOIN history AS h ON ljh.historyId = h.id
 			WHERE job = :job
-			ORDER BY id DESC;');
+			ORDER BY id DESC
+			LIMIT 150');
 		$stmt->bindValue(':job', $job);
 		$res = $stmt->execute();
 		$ret = array();

@@ -14,7 +14,7 @@ CustomPopupManager.display = function(html, callback) {
 		.click(CustomPopupManager.destroy)
 		.load(html, function() {
 			$('#custom-popup-background, #custom-popup-background .close').click(CustomPopupManager.destroy);
-			$('.set-content').click(function() {return false;});
+			$('.set-content').click(function() {event.stopPropagation();});
 			callback();
 			CustomPopupManager.align();
 	}).appendTo('body');

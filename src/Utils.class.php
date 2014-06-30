@@ -10,7 +10,7 @@ class Utils {
 		$timeM	= date('m', $time);
 		$timeY	= date('Y', $time);
 		if (date('d') == $timeD && date('m') == $timeM && date('Y') == $timeY)
-			return "Ajourd'hui";
+			return "Aujourd'hui";
 		else if (date('d', $yest) == $timeD && date('m', $yest) == $timeM && date('Y', $yest) == $timeY)
 			return 'Hier';
 		else

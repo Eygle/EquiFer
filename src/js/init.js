@@ -1,8 +1,11 @@
+var tabs = null;
+
 function switchJob() {
 	Config.job = Config.job == "farriery" ? "pension" : "farriery";
 	$('#switchJob').css('background-image', 'url("images/' + (Config.job == "farriery" ? "farrieryIcon" : "pensionIcon2") + '.png")');
 	ManageView.display();
 	$('#jobLabel').text(Config.job == "farriery" ? "Maréchalerie" : "Pension");
+	tabs.update();
 }
 
 function initShortcuts() {
@@ -37,7 +40,7 @@ function initShortcuts() {
 function initProgram() {
 	$("#jobSelection").hide();
 	$("#corps").show();
-	new Tabs();
+	tabs = new Tabs();
 	initShortcuts();
 	$('#settings').click(function() {new SettingsPanel();});
 	ManageView.init();
@@ -45,6 +48,7 @@ function initProgram() {
 }
 
 $(document).ready(function() {
+	$.post(Config.settingsApi, {action: 'checkAutoSave'});
 	$("#farriery").click(function() {
 		Config.job = "farriery";
 		$('#switchJob').css('background-image', 'url("images/farrieryIcon.png")');

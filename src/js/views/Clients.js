@@ -174,6 +174,34 @@ var ClientDetails = function(id) {
 				});
 			}, function(id) {
 				ManageView.push(new BillDetails(id));
+			}, function(x, y, id) {
+				var background = $('<div>').attr('id', "rightClickBack").click(function() {
+					$(this).remove();
+					$("#" + id).removeClass('tr_selected');
+					document.oncontextmenu = function() {return true;};
+				});
+				var popup = $('<div>').attr('id', 'rightClickPopup').css({left: x, top: y});
+				var button = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE).click(function() {
+					document.oncontextmenu = function() {return true;};
+					$('#rightClickBack').remove();
+					var name = $('#billsList #' + this.id + " [label=number]").text();
+					if (confirm(Strings.CONFIRM_DELETE_BILL.replace('$1', name))) {
+						var deleteFile = confirm(Strings.CONFIRM_DELETE_BILL_FILE);
+						$.post(Config.billsApi, {
+							action:		"delete",
+							deleteFile:	deleteFile,
+							file:		Config.savedPDFPath + "/" + this.id + ".pdf",
+							id:			this.id
+						}, function() {
+							History.add("bills", "delete", 0, name, null, true, true, function() {
+								ManageView.display();
+							});
+						});
+					} else {
+						$("#" + id).removeClass('tr_selected');
+					}
+				});
+				$('body').append(background.append(popup.append(button)));
 			});
 
 			//Alerts list
@@ -183,6 +211,8 @@ var ClientDetails = function(id) {
 		this.formatBillData = function(data) {
 			console.log("Oo");
 			for (var i in data) {
+				data[i]['taxFree'] = data[i]['taxFree'] + ' €';
+				data[i]['total'] = data[i]['total'] + ' €';
 				data[i]['file'] = '<img src="images/pdf.png"/>';
 			}
 			return data;

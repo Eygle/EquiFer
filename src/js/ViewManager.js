@@ -40,7 +40,7 @@ var ViewManager = function() {
 		this.current.showReturnButton ? $("#retSep").show() : $("#retSep").hide();
 
 		$("#content").load("includes/" + this.current.htmlPage, function() {
-			$('#tabs div').each(function() {$(this).removeClass("selected")});
+			$('#my-tabs div').each(function() {$(this).removeClass("selected")});
 			$("#" + _this.current.tabLabel).addClass("selected");
 			_this.current.init();
 		});

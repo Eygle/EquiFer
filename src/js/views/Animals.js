@@ -254,7 +254,10 @@ var AnimalFormView = function(data) {
 		$('#formView').show();
 		this.applyDatePicker();
 		$('#formView #name').val(this.data.name);
-		$('#formView #gender [value=' + this.data.gender + ']').prop('selected', true);
+		if (this.data.gender == "male")
+			$('#formView #gender_male').prop('checked', true);
+		else
+			$('#formView #gender_female').prop('checked', true);
 		$("#formView #type").autocomplete({source: Strings.ANIMALS_AUTOCOMPLETE_TYPE}).val(this.data.type);
 		$("#formView #race").autocomplete({source: Strings.ANIMALS_AUTOCOMPLETE_RACE}).val(this.data.race);
 		$("#formView #colour").autocomplete({source: Strings.ANIMALS_AUTOCOMPLETE_COLOUR}).val(this.data.colour);
@@ -275,7 +278,7 @@ var AnimalFormView = function(data) {
 		var params = {
 				action:		_this.editMode ? "edit" : "add", 
 				name:		$('#formView #name').val(),
-				gender:		$('#formView #gender').val(),
+				gender:		$('#formView #gender_male').is(':checked') ? "male" : "female",
 				type:		$('#formView #type').val(),
 				race:		$('#formView #race').val(),
 				colour:		$('#formView #colour').val(),
