@@ -1,21 +1,3 @@
-.message {
-	color: white;
-	padding: 5px;
-	border: 1px solid #aaa;
-	position: absolute;
-	top: 10px;
-	left: 10px;
-	border-radius: 5px;
-}
-
-.error {
-	background-color: #e74c3c;
-}
-
-.success {
-	background-color: #2ecc71;
-}
-
 .set-menu, .set-data {
 	display: inline-block;
 	vertical-align: top;

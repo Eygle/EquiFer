@@ -58,7 +58,8 @@ var FR = function() {
 	this.ANIMALS_REQUIRE_NAME		= "Le nom de l'animal est nécessaire";
 	this.ANIMALS_REQUIRE_TYPE		= "Le type de l'animal est nécessaire";
 	this.ANIMALS_REQUIRE_RACE		= "La race de l'animal est nécessaire";
-	this.ANIMALS_WRONG_DATE_FORMAT	= "La date de naissance de l'animal est vide ou mal formattée";
+	this.ANIMALS_REQUIRE_DATE		= "La date de naissance de l'animal est nécessaire"
+	this.ANIMALS_WRONG_DATE_FORMAT	= "La date de naissance de l'animal est mal formattée";
 	this.ANIMALS_REQUIRE_JOB		= "L'animal doit au moins apartenir à l'une des catégories suivantes:\nMaréchalerie ou Pension";
 
 	// Clients
@@ -73,6 +74,7 @@ var FR = function() {
 	this.CLIENTS_REQUIRE_NAME		= "Les nom et prénom du client sont nécessaires";
 	this.CLIENTS_REQUIRE_ADDRESS	= "L'addresse du client est nécessaire";
 	this.CLIENTS_REQUIRE_ZIPCODE	= "La code postal du client est nécessaire";
+	this.CLIENTS_REQUIRE_CITY		= "La ville est nécessaire";
 	this.CLIENTS_REQUIRE_JOB		= "Le client doit au moins apartenir à l'une des catégories suivantes:\nMaréchalerie ou Pension";
 
 	// Performances
@@ -84,11 +86,14 @@ var FR = function() {
 	this.PERF_LABEL_UNIT		= "Unité";
 	this.PERF_LABEL_QUANTITY	= "Quantité";
 
-	this.PERF_REQUIRE_NAME		= "Le nom de la prestation est nécessaire";
-	this.PERF_REQUIRE_PRICE		= "Les prix de la prestation (TTC et HT) sont nécessaire";
-	this.PERF_REQUIRE_TVA		= "La TVA de la prestation est nécessaire";
-	this.PERF_REQUIRE_UNIT		= "L'unité est nécessaire";
-	this.PERF_REQUIRE_JOB		= "La prestation doit au moins apartenir à l'une des catégories suivantes:\nMaréchalerie ou Pension";
+	this.PERF_REQUIRE_NAME					= "Le nom de la prestation est nécessaire";
+	this.PERF_REQUIRE_PRICE					= "Les prix de la prestation (TTC et HT) sont nécessaire";
+	this.PERF_PRICE_WRONG_FORMAT			= "Les prix de la prestation (TTC et HT) doivent être des nombres";
+	this.PERF_REQUIRE_TVA					= "La TVA de la prestation est nécessaire";
+	this.PERF_TVA_WRONG_FORMAT				= "La TVA doit être un nombre";
+	this.PERF_REQUIRE_UNIT					= "L'unité est nécessaire";
+	this.PERF_DEFAULT_QUANTITY_WRONG_FORMAT	= "La quantité par défault doit être un nombre";
+	this.PERF_REQUIRE_JOB					= "La prestation doit au moins apartenir à l'une des catégories suivantes:\nMaréchalerie ou Pension";
 
 	// Bills
 	this.BILLS_LABEL_NUMBER		= "N° de facture";
@@ -136,7 +141,8 @@ var FR = function() {
 	// Settings
 	this.SETTINGS_COMPANY_REQUIRE_NAME			= "Les nom et prénom sont nécessaires";
 	this.SETTINGS_COMPANY_REQUIRE_ADDRESS		= "L'addresse est nécessaire";
-	this.SETTINGS_COMPANY_REQUIRE_ZIPCODE		= "La code postal est nécessaire";
+	this.SETTINGS_COMPANY_REQUIRE_ZIPCODE		= "Le code postal est nécessaire";
+	this.SETTINGS_COMPANY_REQUIRE_CITY			= "La ville est nécessaire";
 	this.SETTINGS_COMPANY_REQUIRE_MAIL			= "L'addresse mail est nécessaire";
 	this.SETTINGS_COMPANY_MAIL_WRONG_FORMAT		= "Le format de l'adresse mail est invalide";
 	this.SETTINGS_COMPANY_REQUIRE_PHONE			= "Il faut au moins un numéro de téléphone";

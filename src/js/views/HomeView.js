@@ -27,7 +27,12 @@ var HomeView = function() {
 					callback(_this.formatData(data));
 				});
 			}, function(id) {
-				ManageView.push(new AnimalDetails(id));
+				var name = $('#history #' + id + " [label=action]").text();
+				if (confirm(Strings.CONFIRM_DELETE.replace('$1', name))) {
+					$.post(Config.historyApi, {action:"delete", id:id}, function() {
+						ManageView.display();
+					});
+				}
 			}, function(x, y, id) {
 				var background = $('<div>').attr('id', "rightClickBack").click(function() {
 					$(this).remove();

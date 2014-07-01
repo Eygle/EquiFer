@@ -176,7 +176,21 @@ var PerformanceFormView = function(data) {
 				inFarriery:			$('#formView #inFarriery').is(':checked'),
 				inPension:			$('#formView #inPension').is(':checked'),
 		};
-		if (!this.checkForm(params)) return;
+		
+		if (!CheckForms.check("#formView", params, [
+				{item:'name',				id:"name",				error:Strings.PERF_REQUIRE_NAME},
+				{items:[
+					{item:'priceHT',		id:"priceHT",},
+					{item:'priceTTC',		id:"priceTTC",}
+					],	error:Strings.PERF_REQUIRE_PRICE,	format:"float",	formatError:Strings.PERF_PRICE_WRONG_FORMAT},
+				{item:'tva',				id:"tva",				error:Strings.PERF_REQUIRE_TVA,	format:"float",	formatError:Strings.PERF_TVA_WRONG_FORMAT},
+				{item:'unit',				id:"unit",				error:Strings.PERF_REQUIRE_UNIT},
+				{item:'defaultQuantity',	id:'defaultQuantity',	facultative:true,	format:"integer",	formatError:Strings.PERF_DEFAULT_QUANTITY_WRONG_FORMAT},
+				{items:[
+					{item:'inFarriery',	id:"inFarriery"},
+					{item:'inPension',	id:"inPension"}
+					],	error:Strings.PERF_REQUIRE_JOB},
+			])) return;
 
 		if (_this.editMode) params.id = _this.data.id;
 		$.post(Config.performancesApi, params, function(data) {
@@ -202,25 +216,5 @@ var PerformanceFormView = function(data) {
 			var tvaVal = parseFloat(tva.val().replace(',', '.'));
 			ttc.val(Math.round((htVal * ((1000 + (tvaVal * 10)) / 1000)) * 100) / 100);
 		}
-	};
-
-	this.checkForm = function(data) {
-		if (!data.name) {
-			alert(Strings.PERF_REQUIRE_NAME);
-			return false;
-		} else if (!data.priceHT || !data.priceTTC) {
-			alert(Strings.PERF_REQUIRE_PRICE);
-			return false;
-		} else if (!data.tva) {
-			alert(Strings.PERF_REQUIRE_TVA);
-			return false;
-		} else if (!data.unit) {
-			alert(Strings.PERF_REQUIRE_UNIT);
-			return false;
-		} else if (!data.inFarriery && !data.inPension) {
-			alert(Strings.PERF_REQUIRE_JOB);
-			return false;
-		}
-		return true;
 	};
 };

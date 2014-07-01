@@ -75,11 +75,11 @@ AlertsManager.createAlertsList = function(cat, id, name) {
 		];
 		new SortableList('alertsList', titles, AlertsManager.formatData(data), null, function(id) {
 			$.getJSON(Config.alertsApi, {
-					action:	'getProgrammedAlert',
-					id: 	id
-				}, function(data) {
-					AlertsManager.displayAlertFormView(cat, id, name, data);
-				});
+				action:	'getProgrammedAlert',
+				id: 	id
+			}, function(data) {
+				AlertsManager.displayAlertFormView(cat, id, name, data);
+			});
 		}, function(x, y, id) {
 			var background = $('<div>').attr('id', "rightClickBack").click(function() {
 				$(this).remove();

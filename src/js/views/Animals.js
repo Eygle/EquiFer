@@ -293,7 +293,17 @@ var AnimalFormView = function(data) {
 				desc:		$('#formView #desc').val()
 		};
 
-		if (!this.checkForm(params)) return;
+		if (!CheckForms.check("#formView", params, [
+				{item:'name',		id:"name",	error:Strings.ANIMALS_REQUIRE_NAME},
+				{item:'type',		id:"type",	error:Strings.ANIMALS_REQUIRE_TYPE},
+				{item:'race',		id:"race",	error:Strings.ANIMALS_REQUIRE_RACE},
+				{item:'birthdate',	id:"birthdate",	error:Strings.ANIMALS_REQUIRE_DATE,	format:'birthdate',	formatError:Strings.ANIMALS_WRONG_DATE_FORMAT},
+				{items:[
+					{item:'inFarriery',	id:"inFarriery"},
+					{item:'inPension',	id:"inPension"}
+					],	error:Strings.ANIMALS_REQUIRE_JOB},
+			])) return;
+
 		params.birthdate = _this.formatDate(params.birthdate);
 		if (params.size) params.size = parseInt(params.size);
 
@@ -307,36 +317,6 @@ var AnimalFormView = function(data) {
 				}
 			});
 		}, "json");
-	};
-
-	this.checkForm = function(data) {
-		if (!data.name) {
-			alert(Strings.ANIMALS_REQUIRE_NAME);
-			return false;
-		} else if (!data.type) {
-			alert(Strings.ANIMALS_REQUIRE_TYPE);
-			return false;
-		} else if (!data.race) {
-			alert(Strings.ANIMALS_REQUIRE_RACE);
-			return false;
-		} else if (!this.checkBirthdate(data.birthdate)) {
-			alert(Strings.ANIMALS_WRONG_DATE_FORMAT);
-			return false;
-		} else if (!data.inFarriery && !data.inPension) {
-			alert(Strings.ANIMALS_REQUIRE_JOB);
-			return false;
-		}
-		return true;
-	};
-
-	this.checkBirthdate = function(date) {
-		regex = new RegExp(/[0-9]{2}\/[0-9]{4}/);
-		if (!regex.test(date))
-			return false;
-		var month = parseInt(date.split('/')[0]);
-		if (month < 1 || month > 12)
-			return false;
-		return true;
 	};
 
 	this.applyDatePicker = function() {

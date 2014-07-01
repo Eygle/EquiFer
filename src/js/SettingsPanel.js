@@ -1,7 +1,6 @@
 var SettingsPanel = function() {
 
-	this.timeout = null;
-	this.MESSAGE_APPEAR_DURATION = 3000;
+	//this.messageManager = new MessageManager();
 
 	var _this = this;
 
@@ -48,10 +47,22 @@ var SettingsPanel = function() {
 				siret:			$('#settings-company #siret').val()
 			};
 
-			if (!_this.checkCompanyInfos(params)) return;
+			if (!CheckForms.check("#settings-company", params, [
+					{item:'address',		id:"address",		error:Strings.SETTINGS_COMPANY_REQUIRE_ADDRESS},
+					{item:'zipcode',		id:"zipcode",		error:Strings.SETTINGS_COMPANY_REQUIRE_ZIPCODE},
+					{item:'city',			id:"city",			error:Strings.SETTINGS_COMPANY_REQUIRE_CITY},
+					{items:[
+						{item:'phoneFixe',		id:"phoneFixe"},
+						{item:'phoneMobile',	id:"phoneMobile"}
+						],	error:Strings.SETTINGS_COMPANY_REQUIRE_PHONE},
+					{item:'mail',			id:"mail",			error:Strings.SETTINGS_COMPANY_REQUIRE_MAIL,	format:"mail",	formatError:Strings.SETTINGS_COMPANY_MAIL_WRONG_FORMAT},
+					{item:'name',			id:"name",			error:Strings.SETTINGS_COMPANY_REQUIRE_COMPANY}
+				])) return;
+
 			$.post(Config.settingsApi, params, function() {
 				History.add("settings", "edit_company_infos", 0,  "", null,  true, true, function() {
-					_this.displayMessage(true, Strings.MESSAGE_SAVE_SUCESS);
+					CheckForms.displayMessage(".set-content", true, Strings.MESSAGE_SAVE_SUCESS);
+					$('.message').css('left', ($(".set-content").width() - $('.alert').width()) / 2);
 				});
 			});
 		});
@@ -91,30 +102,6 @@ var SettingsPanel = function() {
 		});
 	};
 
-	this.checkCompanyInfos = function(data) {
-		var mailRegexp = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-		if (!data.address) {
-			this.displayMessage(false, Strings.SETTINGS_COMPANY_REQUIRE_ADDRESS);
-			return false;
-		} else if (!data.zipcode) {
-			this.displayMessage(false, Strings.SETTINGS_COMPANY_REQUIRE_ZIPCODE);
-			return false;
-		} else if(!data.mail) {
-			this.displayMessage(false, Strings.SETTINGS_COMPANY_REQUIRE_MAIL);
-			return false;
-		} else if (!mailRegexp.test(data.mail)) {
-			this.displayMessage(false, Strings.SETTINGS_COMPANY_MAIL_WRONG_FORMAT);
-			return false;
-		} else if (!data.phoneFixe && !data.phoneMobile) {
-			this.displayMessage(false, Strings.SETTINGS_COMPANY_REQUIRE_PHONE);
-			return false;
-		} else if (!data.name) {
-			this.displayMessage(false, Strings.SETTINGS_COMPANY_REQUIRE_COMPANY);
-			return false;
-		}
-		return true;
-	};
-
 
 	/*
 	*	Security
@@ -136,7 +123,7 @@ var SettingsPanel = function() {
 
 			$.post(Config.settingsApi, params, function() {
 				History.add("settings", "edit_security", 0,  "", null,  true, true, function() {
-					_this.displayMessage(true, Strings.MESSAGE_SAVE_SUCESS);
+					CheckForms.displayMessage(".set-content", true, Strings.MESSAGE_SAVE_SUCESS);
 				});
 			});
 		}, false, false);
@@ -152,18 +139,6 @@ var SettingsPanel = function() {
 				$('#settings-security #save_active').hide();
 			FrequencyFormManager.initValuesFromData("#settings-security", data);
 		});
-	};
-
-	this.displayMessage = function(success, message) {
-		clearTimeout(this.timeout);
-		$('.set-content .message').remove();
-		$('<div>').attr('class', 'message ' + (success ? "success" : "error")).text(message).appendTo('.set-content');
-		$('.message').css('left', ($(".set-content").width() - $('.message').width()) / 2);
-		this.timeout = setTimeout(function() {
-			$('.set-content .message').fadeOut(700, function() {
-				$(this).remove();
-			});
-		}, this.MESSAGE_APPEAR_DURATION);
 	};
 
 	this.init();

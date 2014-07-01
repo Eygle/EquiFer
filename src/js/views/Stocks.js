@@ -203,7 +203,11 @@ var StockFormView = function(data) {
 
 		if (params.quantityAlert == "") params.quantityAlert = -1;
 
-		if (!this.checkForm(params)) return;
+		if (!CheckForms.check("#formView", params, [
+				{item:'name',			id:"name",	error:Strings.STOCKS_REQUIRE_NAME},
+				{item:'quantity',		id:"quantity",	error:Strings.STOCKS_REQUIRE_QUANTITY,	format:"integer",	formatError:Strings.STOCKS_WRONG_QUANTITY_ALERT},
+				{item:'quantityAlert',	id:"quantityAlert",	faculative:true,	format:"integer",	formatError:Strings.STOCKS_WRONG_QUANTITY_ALERT},
+			])) return;
 
 		if (_this.editMode) params.id = _this.data.id;
 		$.post(Config.stocksApi, params, function(data) {
@@ -215,25 +219,5 @@ var StockFormView = function(data) {
 				}
 			});
 		}, "json");
-	};
-
-	this.checkForm = function(data) {
-		if (!data.name) {
-			alert(Strings.STOCKS_REQUIRE_NAME);
-			return false;
-		} else if (!data.quantity) {
-			alert(Strings.STOCKS_REQUIRE_QUANTITY);
-			return false;
-		} else if (isNaN(parseInt(data.quantity))) {
-			alert(Strings.STOCKS_WRONG_QUANTITY);
-			return false;
-		} else if (data.quantityAlert != -1 && isNaN(parseInt(data.quantityAlert))) {
-			alert(Strings.STOCKS_WRONG_QUANTITY_ALERT);
-			return false;
-		} else if (!data.inFarriery && !data.inPension) {
-			alert(Strings.STOCKS_REQUIRE_JOB);
-			return false;
-		}
-		return true;
 	};
 };

@@ -311,7 +311,19 @@ var ClientFormView = function(data) {
 				inPension:		$('#formView #inPension').is(':checked'),
 		};
 
-		if (!this.checkForm(params)) return;
+		if (!CheckForms.check("#formView", params, [
+				{items:[
+					{item:'firstName',	id:"firstName"},
+					{item:'lastName',	id:"lastName"}
+					],	error:Strings.CLIENTS_REQUIRE_NAME},
+				{item:'address',		id:"address",	error:Strings.CLIENTS_REQUIRE_ADDRESS},
+				{item:'zipcode',		id:"zipcode",	error:Strings.CLIENTS_REQUIRE_ZIPCODE},
+				{item:'city',			id:"city",		error:Strings.CLIENTS_REQUIRE_CITY},
+				{items:[
+					{item:'inFarriery',	id:"inFarriery"},
+					{item:'inPension',	id:"inPension"}
+					],	error:Strings.CLIENTS_REQUIRE_JOB},
+			])) return;
 
 		if (_this.editMode) params.id = _this.data.id;
 		$.post(Config.clientsApi, params, function(data) {
@@ -322,22 +334,5 @@ var ClientFormView = function(data) {
 					ManageView.pop();
 			});
 		}, "json");
-	};
-
-	this.checkForm = function(data) {
-		if (!data.firstName || !data.lastName) {
-			alert(Strings.CLIENTS_REQUIRE_NAME);
-			return false;
-		} else if (!data.address) {
-			alert(Strings.CLIENTS_REQUIRE_ADDRESS);
-			return false;
-		} else if (!data.zipcode) {
-			alert(Strings.CLIENTS_REQUIRE_ZIPCODE);
-			return false;
-		} else if (!data.inFarriery && !data.inPension) {
-			alert(Strings.CLIENTS_REQUIRE_JOB);
-			return false;
-		}
-		return true;
 	};
 };
