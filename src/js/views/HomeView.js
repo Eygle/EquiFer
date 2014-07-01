@@ -77,9 +77,9 @@ var HomeView = function() {
 					var button = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE).click(function() {
 						document.oncontextmenu = function() {return true;};
 						$('#rightClickBack').remove();
-						var name = $('#history #' + this.id + " [label=action]").text();
+						var name = $('#alertsList #' + this.id + " [label=action]").text();
 						if (confirm(Strings.CONFIRM_DELETE.replace('$1', name))) {
-							$.post(Config.historyApi, {action:"delete", id:this.id}, function() {
+							$.post(Config.alertsApi, {action:"deleteAlert", id:this.id}, function() {
 								ManageView.display();
 							});
 						} else {

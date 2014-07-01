@@ -209,7 +209,6 @@ var ClientDetails = function(id) {
 		});
 
 		this.formatBillData = function(data) {
-			console.log("Oo");
 			for (var i in data) {
 				data[i]['taxFree'] = data[i]['taxFree'] + ' €';
 				data[i]['total'] = data[i]['total'] + ' €';

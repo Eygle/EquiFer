@@ -39,7 +39,8 @@ var BillPDFManager = function(data) {
 				for (var perf in horse.performancesList) {
 					perf = horse.performancesList[perf];
 					if (!perf.isSelected) continue;
-					var date = $('<td>').attr({class: 'center'}).text(perf.formattedDate);
+					var perfDate = new Date(parseInt(perf.date) * 1000);
+					var date = $('<td>').attr({class: 'center'}).text(_this.formatNumber(perfDate.getDate(), 2) + '/' + _this.formatNumber((perfDate.getMonth() + 1), 2) + '/' + perfDate.getFullYear().toString());
 					var desc;
 					var realHT = _this.formatPriceToInt(perf.priceHT) * parseInt(perf.quantity);
 					var realTTC = _this.formatPriceToInt(perf.priceTTC) * parseInt(perf.quantity);
@@ -104,10 +105,10 @@ var BillPDFManager = function(data) {
 		var billNbr = this.formatNumber(data['billNumber'], 5);
 		this.billId = "FC" + date.getFullYear() + this.formatNumber(date.getMonth() + 1, 2) + this.formatNumber(date.getDate(), 2) + billNbr;
 		$('#hiddenBill #billRef').text(this.billId);
-		$('#hiddenBill #date').text(date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear().toString().substr(2,2));
+		$('#hiddenBill #date').text(this.formatNumber(date.getDate(), 2) + '/' + this.formatNumber((date.getMonth() + 1), 2) + '/' + date.getFullYear().toString().substr(2,2));
 		var maxDate = new Date(date.getFullYear(), date.getMonth() + 2, 0); // 30 days
-		$('#hiddenBill #dateEnd').text(maxDate.getDate() + '/' + (maxDate.getMonth() + 1) + '/' + maxDate.getFullYear().toString().substr(2,2));
-		$('#hiddenBill #dateEndFull').text(maxDate.getDate() + ' ' + this.getFrenchMonth(maxDate.getMonth()) + ' ' + maxDate.getFullYear());
+		$('#hiddenBill #dateEnd').text(this.formatNumber(maxDate.getDate(), 2) + '/' + this.formatNumber((maxDate.getMonth() + 1), 2) + '/' + maxDate.getFullYear().toString().substr(2,2));
+		$('#hiddenBill #dateEndFull').text(this.formatNumber(maxDate.getDate(), 2) + ' ' + this.formatNumber(this.getFrenchMonth(maxDate.getMonth()), 2) + ' ' + maxDate.getFullYear());
 		$('#hiddenBill #clientName').text(data.client.firstName + ' ' + data.client.lastName);
 		$('#hiddenBill #clientAddress').text(data.client.address);
 		$('#hiddenBill #clientAdressEnd').text(data.client.zipcode + ' ' + data.client.city);
