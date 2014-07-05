@@ -2,6 +2,7 @@
 
 require_once dirname(__FILE__).'/../db/DBSettings.class.php';
 require_once dirname(__FILE__).'/../Utils.class.php';
+require_once dirname(__FILE__).'/../conf.php';
 
 $db = new DBSettings();
 

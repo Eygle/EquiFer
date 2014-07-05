@@ -2,6 +2,7 @@
 
 include(dirname(__FILE__)."/../libs/mpdf/mpdf.php");
 require_once dirname(__FILE__).'/../Utils.class.php';
+require_once dirname(__FILE__).'/../conf.php';
 
 $mpdf = new mPDF('',	// mode - default ''
 	'',	// format - A4, for example, default ''
