@@ -56,7 +56,8 @@ try {
 				break;
 			case "save":
 				Utils::checkPostArgs(array('file', 'path'));
-				$_GET['file'] = $_POST['path'].'/'.$_POST['file'].'.pdf';
+				//$_GET['file'] = $_POST['path'].'/'.$_POST['file'].'.pdf';
+				$_GET['file'] = $_POST['file'].'.pdf';
 				$_GET['title'] = $_POST['file'];
 				include(Utils::formatPath(dirname(__FILE__)."/../pdf-generator/generatePDF.php"));
 				return json_encode(null);
