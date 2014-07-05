@@ -39,7 +39,7 @@ try {
 				if ($db->checkSecurityAutoSave()) {
 					$name = date('Y')."-".date('m')."-".date('d')."-save-database";
 					echo "Save with name $name!";
-					copy(dirname(__FILE__)."/../db/database.sqlite", dirname(__FILE__)."/../saveDB/$name.sqlite");
+					copy(Utils::formatPath(dirname(__FILE__)."/../db/database.sqlite"), Utils::formatPath(dirname(__FILE__)."/../saveDB/$name.sqlite"));
 				}
 			break;
 		}

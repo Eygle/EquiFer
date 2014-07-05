@@ -40,15 +40,15 @@ try {
 				Utils::checkPostArgs('id', 'deleteFile');
 				$db->delete($_POST['id']);
 				if ($_POST['deleteFile'] == "true" && isset($_POST['file'])) {
-					@unlink(dirname(__FILE__)."/../".$_POST['file']);
+					@unlink(Utils::formatPath(dirname(__FILE__)."/../".$_POST['file']));
 				}
 				break;
 			case "editPDF":
 				Utils::checkPostArgs(array('header', 'content'));
-				$fd = fopen(dirname(__FILE__)."/../pdf-generator/pdf_header_generated.html", 'w');
+				$fd = fopen(Utils::formatPath(dirname(__FILE__)."/../pdf-generator/pdf_header_generated.html"), 'w');
 				fwrite($fd, $_POST['header']);
 				fclose($fd);
-				$fd = fopen(dirname(__FILE__)."/../pdf-generator/pdf_generated.html", 'w');
+				$fd = fopen(Utils::formatPath(dirname(__FILE__)."/../pdf-generator/pdf_generated.html"), 'w');
 				fwrite($fd, $_POST['content']);
 				fclose($fd);
 				echo json_encode(null);
@@ -57,7 +57,7 @@ try {
 				Utils::checkPostArgs(array('file', 'path'));
 				$_GET['file'] = $_POST['path'].'/'.$_POST['file'].'.pdf';
 				$_GET['title'] = $_POST['file'];
-				include(dirname(__FILE__)."/../pdf-generator/generatePDF.php");
+				include(Utils::formatPath(dirname(__FILE__)."/../pdf-generator/generatePDF.php"));
 				return json_encode(null);
 				break;
 		}

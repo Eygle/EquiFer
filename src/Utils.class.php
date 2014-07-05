@@ -36,6 +36,13 @@ class Utils {
 				throw new Exception("$v don't exist");
 		}
 	}
+
+	public static function formatPath($path) {
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			return str_replace("/", "\\", $path);
+		}
+		return $path;
+	}
 }
 
 ?>

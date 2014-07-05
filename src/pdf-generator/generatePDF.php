@@ -1,6 +1,7 @@
 <?php
 
 include(dirname(__FILE__)."/../libs/mpdf/mpdf.php");
+require_once dirname(__FILE__).'/../Utils.class.php';
 
 $mpdf = new mPDF('',	// mode - default ''
 	'',	// format - A4, for example, default ''
@@ -18,16 +19,16 @@ if (isset($_GET['title']) && !empty($_GET['title'])) {
 	$mpdf->setTitle($_GET['title']);
 }
 
-$stylesheet = file_get_contents(dirname(__FILE__).'/pdf-bill.css');
+$stylesheet = file_get_contents(Utils::formatPath(dirname(__FILE__).'/pdf-bill.css'));
 $mpdf->WriteHTML($stylesheet,1);
 
-$mpdf->setHTMLHeader(file_get_contents(dirname(__FILE__).'/pdf_header_generated.html'), 'EO');
+$mpdf->setHTMLHeader(file_get_contents(Utils::formatPath(dirname(__FILE__).'/pdf_header_generated.html')), 'EO');
 $mpdf->SetHTMLFooter('<div style="width:100%;text-align:center;">Page {PAGENO} sur {nb}</div>', 'EO');
-$mpdf->WriteHTML(file_get_contents(dirname(__FILE__).'/pdf_generated.html'));
+$mpdf->WriteHTML(file_get_contents(Utils::formatPath(dirname(__FILE__).'/pdf_generated.html')));
 
 
 if (isset($_GET['file']) && !empty($_GET['file'])) {
-	$mpdf->Output(dirname(__FILE__)."/../".$_GET['file'], 'F');
+	$mpdf->Output(Utils::formatPath(dirname(__FILE__)."/../".$_GET['file']), 'F');
 } else
 	$mpdf->Output();
 
