@@ -28,7 +28,7 @@ $mpdf->WriteHTML(file_get_contents(Utils::formatPath(dirname(__FILE__).'/pdf_gen
 
 
 if (isset($_GET['file']) && !empty($_GET['file'])) {
-	$mpdf->Output(Utils::formatPath(dirname(__FILE__)."/../".$_GET['file']), 'F');
+	$mpdf->Output(Utils::formatPath(SAVED_PDF_PATH."/".$_GET['file']), 'F');
 } else
 	$mpdf->Output();
 

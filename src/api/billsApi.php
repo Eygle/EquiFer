@@ -40,7 +40,7 @@ try {
 				Utils::checkPostArgs('id', 'deleteFile');
 				$db->delete($_POST['id']);
 				if ($_POST['deleteFile'] == "true" && isset($_POST['file'])) {
-					@unlink(Utils::formatPath(dirname(__FILE__)."/../".$_POST['file']));
+					@unlink(Utils::formatPath(SAVED_PDF_PATH."/".$_POST['file']));
 				}
 				break;
 			case "editPDF":
