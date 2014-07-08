@@ -26,16 +26,20 @@ try {
 		Utils::checkPostArgs('action');
 		switch ($_POST['action']) {
 			case "add":
-				Utils::checkPostArgs(array('name', 'quantity', 'quantityAlert', 'inFarriery'));
-				$id = $db->add($_POST['name'],	$_POST['quantity'], $_POST['quantityAlert']);
+				Utils::checkPostArgs(array('name', 'quantity', 'quantityAlert', 'unity', 'inFarriery'));
+				$id = $db->add($_POST['name'],	$_POST['quantity'], $_POST['quantityAlert'], $_POST['unity']);
 				if ($_POST['inFarriery'] == "true") $db->linkToJob("FARRIERY", $id);
 				echo json_encode(array("id"=>$id));
 				break;
 			case "edit":
-				Utils::checkPostArgs(array('id', 'name', 'quantity', 'quantityAlert', 'inFarriery'));
-				$db->edit($_POST['id'], $_POST['name'],	$_POST['quantity'], $_POST['quantityAlert']);
+				Utils::checkPostArgs(array('id', 'name', 'quantity', 'quantityAlert', 'unity', 'inFarriery'));
+				$db->edit($_POST['id'], $_POST['name'],	$_POST['quantity'], $_POST['quantityAlert'], $_POST['unity']);
 				if ($_POST['inFarriery'] == "true") $db->linkToJob("FARRIERY", $_POST['id']);
 				echo json_encode(null);
+				break;
+			case "editQuantity":
+				Utils::checkPostArgs(array('id', 'quantity'));
+				$db->editQuantity($_POST['id'], $_POST['quantity']);
 				break;
 			case "addQuantity":
 				Utils::checkPostArgs('id');

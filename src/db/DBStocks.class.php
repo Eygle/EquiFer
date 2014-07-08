@@ -36,6 +36,7 @@ class DBAnimals extends SQLite3 {
 			AND (s.name LIKE :term
 				OR s.quantity LIKE :term 
 				OR s.quantityAlert LIKE :term
+				OR s.unity LIKE :term
 				)
 			ORDER BY s.id DESC');
 		$stmt->bindValue(':job', $job);
@@ -69,28 +70,37 @@ class DBAnimals extends SQLite3 {
 		return $ret;
 	}
 
-	public function add($name, $quantity, $quantityAlert) {
-		$stmt = $this->prepare("INSERT INTO stocks(name, quantity, quantityAlert)
-			VALUES(:name, :quantity, :quantityAlert);");
+	public function add($name, $quantity, $quantityAlert, $unity) {
+		$stmt = $this->prepare("INSERT INTO stocks(name, quantity, quantityAlert, unity)
+			VALUES(:name, :quantity, :quantityAlert, :unity);");
 		$stmt->bindValue(':name', $name);
 		$stmt->bindValue(':quantity', $quantity);
 		$stmt->bindValue(':quantityAlert', $quantityAlert);
+		$stmt->bindValue(':unity', $unity);
 		$stmt->execute();
 
 		return $this->lastInsertRowID();
 	}
 
-	public function edit($id, $name, $quantity, $quantityAlert) {
+	public function edit($id, $name, $quantity, $quantityAlert, $unity) {
 		$stmt = $this->prepare("UPDATE stocks
-			SET name = :name, quantity = :quantity, quantityAlert = :quantityAlert
+			SET name = :name, quantity = :quantity, quantityAlert = :quantityAlert, unity = :unity
 			WHERE id = :id;");
 		$stmt->bindValue('id', $id);
 		$stmt->bindValue(':name', $name);
 		$stmt->bindValue(':quantity', $quantity);
 		$stmt->bindValue(':quantityAlert', $quantityAlert);
+		$stmt->bindValue(':unity', $unity);
 		$stmt->execute();
 		$this->deleteLinksToJob($id);
 		$this->checkForAlert($id);
+	}
+
+	public function editQuantity($id, $quantity) {
+		$stmt = $this->prepare('UPDATE stocks SET quantity = :quantity WHERE id = :id');
+		$stmt->bindValue(':id', $id);
+		$stmt->bindValue(':quantity', $quantity);
+		$stmt->execute();
 	}
 
 	public function addQuantity($id) {

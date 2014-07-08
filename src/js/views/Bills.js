@@ -50,7 +50,7 @@ var BillsView = function() {
 						$.post(Config.billsApi, {
 							action:		"delete",
 							deleteFile:	deleteFile,
-							file:		Config.savedPDFPath + "/" + this.id + ".pdf",
+							file:		this.id + ".pdf",
 							id:			this.id
 						}, function() {
 							History.add("bills", "delete", 0, name, null, true, true, function() {
@@ -355,7 +355,7 @@ var BillDetails = function(id) {
 			$.post(Config.billsApi, {
 				action:		"delete",
 				deleteFile:	deleteFile,
-				file:		Config.savedPDFPath + "/" + this.id + ".pdf",
+				file:		this.id + ".pdf",
 				id:			this.id
 			}, function() {
 				History.add("bills", "delete", 0, _this.id, null, true, true, function() {

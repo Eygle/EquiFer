@@ -20,6 +20,7 @@ var StocksView = function() {
 				{label:"name",			title:Strings.STOCKS_LABEL_NAME,			dataType:"string",	filter:true},
 				{label:"quantity",		title:Strings.STOCKS_LABEL_QUANTITY,		dataType:"int",		filter:true},
 				{label:"quantityAlert",	title:Strings.STOCKS_LABEL_QUANTITY_ALERT,	dataType:"int",		filter:true},
+				{label:"unity",			title:Strings.STOCKS_LABEL_UNITY,			dataType:"string",	filter:true},
 				{label:"action",		title:Strings.STOCKS_LABEL_ACTION,			dataType:"string",	html:true}
 
 			];
@@ -40,7 +41,26 @@ var StocksView = function() {
 					document.oncontextmenu = function() {return true;};
 				});
 				var popup = $('<div>').attr('id', 'rightClickPopup').css({left: x, top: y});
-				var button1 = $('<div>').attr({class:'rightClickButton edit-icon', id: id}).text(Strings.EDIT).click(function() {
+				var button1 = $('<div>').attr({class:'rightClickButton quantity-icon', id: id}).text(Strings.MODIFY_QUANTITY).click(function() {
+					document.oncontextmenu = function() {return true;};
+					$('#rightClickBack').remove();
+					var newQuantity = prompt(Strings.MODIFY_QUANTITY, $("#stocksList #" + this.id + " [label=quantity]").text());
+					$("#" + id).removeClass('tr_selected');
+					if (newQuantity) {
+						var id = this.id;
+						var name = $('#stocksList #' + this.id + " [label=name]").text();
+						$.post(Config.stocksApi, {
+							action:			'editQuantity',
+							id:				id,
+							quantity:		newQuantity
+						}, function() {
+							History.add("stocks", "edit_quantity", 0,  name, null,  true,  false, function() {
+								ManageView.display();
+							});
+						});
+					}
+				});
+				var button2 = $('<div>').attr({class:'rightClickButton edit-icon', id: id}).text(Strings.EDIT).click(function() {
 					document.oncontextmenu = function() {return true;};
 					$('#rightClickBack').remove();
 					$("#" + id).removeClass('tr_selected');
@@ -48,7 +68,7 @@ var StocksView = function() {
 						ManageView.push(new StockFormView(data));
 					});
 				});
-				var button2 = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE).click(function() {
+				var button3 = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE).click(function() {
 					document.oncontextmenu = function() {return true;};
 					$('#rightClickBack').remove();
 					var name = $('#stocksList #' + this.id + " [label=name]").text();
@@ -62,7 +82,7 @@ var StocksView = function() {
 						$("#" + id).removeClass('tr_selected');
 					}
 				});
-				$('body').append(background.append(popup.append(button1).append(button2)));
+				$('body').append(background.append(popup.append(button1).append(button2).append(button3)));
 			});
 		});
 
@@ -144,6 +164,7 @@ var StockDetails = function(id) {
 			$('#detailView #name').text(_this.data.name);
 			$("#detailView #quantity").text(_this.data.quantity);
 			$("#detailView #quantityAlert").text(_this.data.quantityAlert == -1 ? "" : _this.data.quantityAlert);
+			$("#detailView #unity").text(_this.data.unity);
 		});
 	};
 
@@ -187,7 +208,8 @@ var StockFormView = function(data) {
 		$('#formView').show();
 		$('#formView #name').val(this.data.name);
 		$("#formView #quantity").val(this.data.quantity);
-		$("#formView #quantityAlert").val(this.data.quantityAlert == -1 ? "" : this.data.quantityAlert );
+		$("#formView #quantityAlert").val(this.data.quantityAlert == -1 ? "" : this.data.quantityAlert);
+		$("#formView #unity").autocomplete({source: Strings.PERF_AUTOCOMPLETE_UNITY}).val(this.data.unity);
 	};
 
 	this.manageButtonClick = function(button) {
@@ -198,6 +220,7 @@ var StockFormView = function(data) {
 				name:			$('#formView #name').val(),
 				quantity:		$('#formView #quantity').val(),
 				quantityAlert:	$('#formView #quantityAlert').val(),
+				unity:			$('#formView #unity').val(),
 				inFarriery:		true
 		};
 
@@ -207,6 +230,7 @@ var StockFormView = function(data) {
 				{item:'name',			id:"name",	error:Strings.STOCKS_REQUIRE_NAME},
 				{item:'quantity',		id:"quantity",	error:Strings.STOCKS_REQUIRE_QUANTITY,	format:"integer",	formatError:Strings.STOCKS_WRONG_QUANTITY_ALERT},
 				{item:'quantityAlert',	id:"quantityAlert",	faculative:true,	format:"integer",	formatError:Strings.STOCKS_WRONG_QUANTITY_ALERT},
+				{item:'unity',			id:"unity",	error:Strings.STOCKS_REQUIRE_UNITY},
 			])) return;
 
 		if (_this.editMode) params.id = _this.data.id;

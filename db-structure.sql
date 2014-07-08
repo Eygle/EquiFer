@@ -151,7 +151,8 @@ CREATE TABLE "stocks" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   "name" varchar(256),
   "quantity" int(11) NOT NULL,
-  "quantityAlert" int(11) NOT NULL
+  "quantityAlert" int(11) NOT NULL,
+  "unity" varchar(30)
 );
 CREATE INDEX "stocks_id" ON "stocks" ("id");
 

@@ -116,11 +116,13 @@ var FR = function() {
 	this.STOCKS_LABEL_QUANTITY			= "Quantité";
 	this.STOCKS_LABEL_QUANTITY_ALERT	= "Alerte à partir de";
 	this.STOCKS_LABEL_ACTION			= "Actions";
+	this.STOCKS_LABEL_UNITY				= "Unité";
 
 	this.STOCKS_REQUIRE_NAME			= "Le nom du stock est nécessaire";
 	this.STOCKS_REQUIRE_QUANTITY		= "La quantité est nécessaire";
 	this.STOCKS_WRONG_QUANTITY			= "La quantité doit être un nombre";
 	this.STOCKS_WRONG_QUANTITY_ALERT	= "L'alerte de quantité doit être un nombre";
+	this.STOCKS_REQUIRE_UNITY			= "L'unité est nécessaire'";
 
 	this.STOCKS_SENTENCE_ALERT			= "La quantité est trop faible";
 
