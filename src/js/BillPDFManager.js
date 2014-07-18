@@ -13,7 +13,23 @@ var BillPDFManager = function(data) {
 			var infos = $('#hiddenBillHeader .infos');
 			infos.html($('<div>').text(data.infos.address + " - " + data.infos.zipcode + " " + data.infos.city));
 			infos.append($('<div>').text("N° Siret " + data.infos.siret));
-			infos.append($('<div>').html("Tél: " + data.infos.phoneFixe + " - Mobile: " + data.infos.phoneMobile + " - email: <span class=\"mail\">" + data.infos.mail + "</span>"));
+
+			/* Manage Phone if exists*/
+			var phones = "";
+			if (data.infos.phoneFixe && data.infos.phoneFixe.length) {
+				phones = "Tél: " + data.infos.phoneFixe;
+			}
+			if (data.infos.phoneMobile && data.infos.phoneMobile.length) {
+				if (phones.length)
+					phones += " - Mobile: ";
+				else
+					phones += " Tél: ";
+				phones += data.infos.phoneMobile;
+			}
+			if (phones.length)
+				phones += " - ";
+
+			infos.append($('<div>').html(phones + "email: <span class=\"mail\">" + data.infos.mail + "</span>"));
 			$('#hiddenBill').load("pdf-generator/pdf.php", function() {
 				_this.fillClientInfos(data);
 				_this.generateTableHeader($('#hiddenBill .bill'));

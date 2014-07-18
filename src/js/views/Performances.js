@@ -136,7 +136,7 @@ var PerformanceFormView = function(data) {
 								priceTTC:			null,
 								tva:				null,
 								unit:				null,
-								defaultQuantity:	null,
+								defaultQuantity:	1,
 								inFarriery:			Config.job == "farriery",
 								inPension:			Config.job == "pension"
 							};
@@ -185,7 +185,7 @@ var PerformanceFormView = function(data) {
 					],	error:Strings.PERF_REQUIRE_PRICE,	format:"float",	formatError:Strings.PERF_PRICE_WRONG_FORMAT},
 				{item:'tva',				id:"tva",				error:Strings.PERF_REQUIRE_TVA,	format:"float",	formatError:Strings.PERF_TVA_WRONG_FORMAT},
 				{item:'unit',				id:"unit",				error:Strings.PERF_REQUIRE_UNIT},
-				{item:'defaultQuantity',	id:'defaultQuantity',	facultative:true,	format:"integer",	formatError:Strings.PERF_DEFAULT_QUANTITY_WRONG_FORMAT},
+				{item:'defaultQuantity',	id:'defaultQuantity',	error:Strings.PERF_REQUIRE_DEFAULT_QUANTITY,	format:"integer",	formatError:Strings.PERF_DEFAULT_QUANTITY_WRONG_FORMAT},
 				{items:[
 					{item:'inFarriery',	id:"inFarriery"},
 					{item:'inPension',	id:"inPension"}

@@ -267,6 +267,7 @@ var ClientFormView = function(data) {
 		$("#formView #address").val(this.data.address);
 		$("#formView #zipcode").val(this.data.zipcode).autocomplete({
 			source : Config.citiesApi,
+			minLength: 3,
 			select : function(event, ui) {
 				$("#formView #zipcode").val(ui.item.zipcode);
 				$("#formView #city").val(ui.item.city);

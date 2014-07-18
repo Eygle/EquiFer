@@ -92,6 +92,7 @@ var FR = function() {
 	this.PERF_REQUIRE_TVA					= "La TVA de la prestation est nécessaire";
 	this.PERF_TVA_WRONG_FORMAT				= "La TVA doit être un nombre";
 	this.PERF_REQUIRE_UNIT					= "L'unité est nécessaire";
+	this.PERF_REQUIRE_DEFAULT_QUANTITY		= "La quantité par défault est nécessaire";
 	this.PERF_DEFAULT_QUANTITY_WRONG_FORMAT	= "La quantité par défault doit être un nombre";
 	this.PERF_REQUIRE_JOB					= "La prestation doit au moins apartenir à l'une des catégories suivantes:\nMaréchalerie ou Pension";
 

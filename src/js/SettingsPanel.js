@@ -74,6 +74,7 @@ var SettingsPanel = function() {
 			$("#settings-company #address").val(data.address);
 			$("#settings-company #zipcode").val(data.zipcode).autocomplete({
 				source : Config.citiesApi,
+				minLength: 3,
 				select : function(event, ui) {
 					$("#settings-company #zipcode").val(ui.item.zipcode);
 					$("#settings-company #city").val(ui.item.city);
