@@ -14,6 +14,7 @@ var FR = function() {
 	this.REMOVE						= "Supprimer";
 	this.EDIT						= "Modifier";
 	this.MODIFY_QUANTITY			= "Modifier la quantité";
+	this.MODIFY_DATE				= "Modifier la date";
 	this.SETTINGS					= "Paramètres";
 
 	// Home

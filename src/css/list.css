@@ -76,6 +76,10 @@ td:first-child {
 	background-image: url('../images/quantity.png');
 }
 
+.date-icon {
+	background-image: url('../images/calendar.png');
+}
+
 .rightClickButton:hover {
 	background-color: #eee;
 }

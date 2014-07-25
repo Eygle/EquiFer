@@ -124,7 +124,7 @@ var AnimalDetails = function(id) {
 				{label:"quantity",		title:Strings.PERF_LABEL_QUANTITY,		dataType:"int",		filter: true}
 
 			];
-			new SortableList("clientHorsesList", titles, _this.data.performancesList, function(term, callback) {
+			new SortableList("performancesList", titles, _this.data.performancesList, function(term, callback) {
 				$.getJSON(Config.performancesApi, {
 					action: 'filterForAnimal',
 					id:		_this.id,
@@ -145,7 +145,7 @@ var AnimalDetails = function(id) {
 				var button1 = $('<div>').attr({class:'rightClickButton quantity-icon', id: id}).text(Strings.MODIFY_QUANTITY).click(function() {
 					document.oncontextmenu = function() {return true;};
 					$('#rightClickBack').remove();
-					var newQuantity = prompt(Strings.MODIFY_QUANTITY, $("#clientHorsesList #" + this.id + " [label=quantity]").text());
+					var newQuantity = prompt(Strings.MODIFY_QUANTITY, $("#performancesList #" + this.id + " [label=quantity]").text());
 					$("#" + id).removeClass('tr_selected');
 					if (newQuantity) {
 						var perfId = this.id;
@@ -155,13 +155,59 @@ var AnimalDetails = function(id) {
 							performanceId:	perfId,
 							quantity:		newQuantity
 						}, function() {
-							History.add("animals", "edit_perf", 0, _this.data.name,  $("#clientHorsesList #" + perfId + " [label=name]").text(), true, true, function() {
+							History.add("animals", "edit_perf", 0, _this.data.name,  $("#performancesList #" + perfId + " [label=name]").text(), true, true, function() {
 								ManageView.display();
 							});
 						});
 					}
 				});
-				var button2 = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE).click(function() {
+				var button2 = $('<div>').attr({class:'rightClickButton date-icon', id: id}).text(Strings.MODIFY_DATE).click(function() {
+					document.oncontextmenu = function() {return true;};
+					$('#rightClickBack').remove();
+					var date = $("#performancesList #" + this.id + " [label=formattedDate]").text();
+					var perfId = this.id;
+
+					if (date == "Aujourd'hui") {
+						var now = new Date();
+						var d = now.getDate();
+						var m = now.getMonth();
+						date = (d < 10 ? "0" + d : d) + "/" + (m < 10 ? "0" + m : m)  + "/" + now.getFullYear();
+					} else if (date == "Hier") {
+						var yesterday = new Date(new Date().setDate(new Date().getDate()-1));
+						var d = yesterday.getDate();
+						var m = yesterday.getMonth();
+						date = (d < 10 ? "0" + d : d) + "/" + (m < 10 ? "0" + m : m) + "/" + yesterday.getFullYear();
+					}
+
+					CustomPopupManager.display("includes/change-date-form.html", function() {
+						$('#custom-popup-background #date')
+							.val(date)
+							.datepicker({
+								dateFormat: 'dd/mm/yy',
+								changeMonth: true,
+								changeYear: true,
+								showButtonPanel: true,
+								showOn: "button",
+								buttonImage: "images/calendar.png",
+								buttonImageOnly: true
+							});
+						$('#custom-popup-background .btn').click(function() {
+							// TODO check date format !
+							$.post(Config.animalsApi, {
+								action:			'editPerformanceDate',
+								animalId:		_this.id,
+								performanceId:	perfId,
+								date:			$('#custom-popup-background #date').text();
+							}, function() {
+								History.add("animals", "edit_perf_date", 0, _this.data.name,  $("#performancesList #" + perfId + " [label=name]").text(), true, true, function() {
+									// TODO remove popup
+									ManageView.display();
+								});
+							});
+						});
+					});
+				});
+				var button3 = $('<div>').attr({class:'rightClickButton delete-icon', id: id}).text(Strings.REMOVE).click(function() {
 					document.oncontextmenu = function() {return true;};
 					$('#rightClickBack').remove();
 					var perfId = this.id;
@@ -170,12 +216,12 @@ var AnimalDetails = function(id) {
 						animalId:		_this.id,
 						performanceId:	perfId
 					}, function() {
-						History.add("animals", "delete_perf", 0, _this.data.name,  $("#clientHorsesList #" + perfId + " [label=name]").text(), true, true, function() {
+						History.add("animals", "delete_perf", 0, _this.data.name,  $("#performancesList #" + perfId + " [label=name]").text(), true, true, function() {
 							ManageView.display();
 						});
 					});
 				});
-				$('body').append(background.append(popup.append(button1).append(button2)));
+				$('body').append(background.append(popup.append(button1).append(button2).append(button3)));
 			});
 
 			// Search performance to add
