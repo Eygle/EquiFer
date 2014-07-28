@@ -119,6 +119,9 @@ var HomeView = function() {
 					case 'delete_perf':
 						data[i]['action'] = Strings.HISTORY_SENTENCE_DELETE_PERF.replace('$1', data[i]['object']).replace('$2', data[i]['object2']);
 						break;
+					case 'edit_perf_date':
+						data[i]['action'] = Strings.HISTORY_SENTENCE_EDIT_PERF_DATE.replace('$1', data[i]['object']).replace('$2', data[i]['object2']);
+						break;
 					case 'add_animal':
 						data[i]['action'] = Strings.HISTORY_SENTENCE_ADD_ANIMAL.replace('$1', data[i]['object']).replace('$2', data[i]['object2']);
 						break;

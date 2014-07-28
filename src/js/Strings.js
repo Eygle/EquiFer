@@ -35,6 +35,7 @@ var FR = function() {
 	this.HISTORY_SENTENCE_PERF_DELETE				= "La prestation $1 a été suprimée";
 	this.HISTORY_SENTENCE_ADD_PERF					= "La prestation '$2' a été associée à $1";
 	this.HISTORY_SENTENCE_EDIT_PERF					= "La quantité de la prestation '$2' a été modifiée pour $1";
+	this.HISTORY_SENTENCE_EDIT_PERF_DATE			= "La date de la prestation '$2' a été modifiée pour $1";
 	this.HISTORY_SENTENCE_DELETE_PERF				= "La prestation '$2' a été dissocié de $1";
 	this.HISTORY_SENTENCE_ADD_ANIMAL				= "$2 a été associé à $1";
 	this.HISTORY_SENTENCE_DELETE_ANIMAL				= "$2 a été dissocié de $1";
