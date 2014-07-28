@@ -150,10 +150,9 @@ var AnimalDetails = function(id) {
 					if (newQuantity) {
 						var perfId = this.id;
 						$.post(Config.animalsApi, {
-							action:			'editPerformance',
-							animalId:		_this.id,
-							performanceId:	perfId,
-							quantity:		newQuantity
+							action:				'editPerformance',
+							performanceLinkId:	perfId,
+							quantity:			newQuantity
 						}, function() {
 							History.add("animals", "edit_perf", 0, _this.data.name,  $("#performancesList #" + perfId + " [label=name]").text(), true, true, function() {
 								ManageView.display();
@@ -180,6 +179,7 @@ var AnimalDetails = function(id) {
 					}
 
 					CustomPopupManager.display("includes/change-date-form.html", function() {
+						$("#" + id).removeClass('tr_selected');
 						$('#custom-popup-background #date')
 							.val(date)
 							.datepicker({
@@ -193,14 +193,16 @@ var AnimalDetails = function(id) {
 							});
 						$('#custom-popup-background .btn').click(function() {
 							// TODO check date format !
+							var date = $('#custom-popup-background #date').val().split("/");
+							console.log(date);
+							date = new Date(parseInt(date[2]), parseInt(date[1]) - 1, parseInt(date[0]), 0, 0, 0, 0).getTime() / 1000;
 							$.post(Config.animalsApi, {
-								action:			'editPerformanceDate',
-								animalId:		_this.id,
-								performanceId:	perfId,
-								date:			$('#custom-popup-background #date').text();
+								action:				'editPerformanceDate',
+								performanceLinkId:	perfId,
+								date:				date
 							}, function() {
 								History.add("animals", "edit_perf_date", 0, _this.data.name,  $("#performancesList #" + perfId + " [label=name]").text(), true, true, function() {
-									// TODO remove popup
+									CustomPopupManager.destroy();
 									ManageView.display();
 								});
 							});
@@ -212,9 +214,8 @@ var AnimalDetails = function(id) {
 					$('#rightClickBack').remove();
 					var perfId = this.id;
 					$.post(Config.animalsApi, {
-						action:			'deletePerformance',
-						animalId:		_this.id,
-						performanceId:	perfId
+						action:				'deletePerformance',
+						performanceLinkId:	perfId
 					}, function() {
 						History.add("animals", "delete_perf", 0, _this.data.name,  $("#performancesList #" + perfId + " [label=name]").text(), true, true, function() {
 							ManageView.display();

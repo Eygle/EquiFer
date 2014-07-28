@@ -57,12 +57,16 @@ try {
 				$db->addPerformance($_POST['animalId'], $_POST['performanceId'], $_POST['quantity']);
 				break;
 			case "editPerformance":
-				Utils::checkPostArgs(array('animalId', 'performanceId', 'quantity'));
-				$db->editPerformanceQuantity($_POST['animalId'], $_POST['performanceId'], $_POST['quantity']);
+				Utils::checkPostArgs(array('performanceLinkId', 'quantity'));
+				$db->editPerformanceQuantity($_POST['performanceLinkId'], $_POST['quantity']);
 				break;
 			case "deletePerformance":
-				Utils::checkPostArgs(array('animalId', 'performanceId'));
-				$db->deletePerformance($_POST['animalId'], $_POST['performanceId']);
+				Utils::checkPostArgs(array('performanceLinkId'));
+				$db->deletePerformance($_POST['performanceLinkId']);
+				break;
+			case "editPerformanceDate":
+				Utils::checkPostArgs(array('performanceLinkId', 'date'));
+				$db->editPerformanceDate($_POST['performanceLinkId'], $_POST['date']);
 				break;
 		}
 	}

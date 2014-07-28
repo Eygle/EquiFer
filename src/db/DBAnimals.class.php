@@ -63,7 +63,7 @@ class DBAnimals extends SQLite3 {
 	}
 
 	public function getPerformancesList($id) {
-		$stmt = $this->prepare('SELECT p.*, quantity, date
+		$stmt = $this->prepare('SELECT p.*, quantity, date, lhp.id AS id
 			FROM link_horses_performances AS lhp
 			LEFT JOIN performances AS p ON lhp.performanceId = p.id
 			WHERE horseId = :id
@@ -225,20 +225,27 @@ class DBAnimals extends SQLite3 {
 		$stmt->execute();
 	}
 
-	public function editPerformanceQuantity($horseId, $performanceId, $quantity) {
+	public function editPerformanceQuantity($performanceId, $quantity) {
 		$stmt = $this->prepare('UPDATE link_horses_performances
 			SET quantity = :quantity
-			WHERE horseId = :horseId AND performanceId = :performanceId;');
-		$stmt->bindValue(':horseId', $horseId);
-		$stmt->bindValue(':performanceId', $performanceId);
+			WHERE id = :id;');
+		$stmt->bindValue(':id', $performanceId);
 		$stmt->bindValue(':quantity', $quantity);
 		$stmt->execute();
 	}
 
-	public function deletePerformance($horseId, $performanceId) {
-		$stmt = $this->prepare('DELETE FROM link_horses_performances WHERE horseId = :horseId AND performanceId = :performanceId;');
-		$stmt->bindValue(':horseId', $horseId);
-		$stmt->bindValue(':performanceId', $performanceId);
+	public function deletePerformance($performanceId) {
+		$stmt = $this->prepare('DELETE FROM link_horses_performances WHERE id = :id;');
+		$stmt->bindValue(':id', $performanceId);
+		$stmt->execute();
+	}
+
+	public function editPerformanceDate($performanceId, $date) {
+		$stmt = $this->prepare('UPDATE link_horses_performances
+			SET date = :date
+			WHERE id = :id;');
+		$stmt->bindValue(':id', $performanceId);
+		$stmt->bindValue(':date', $date);
 		$stmt->execute();
 	}
 }
