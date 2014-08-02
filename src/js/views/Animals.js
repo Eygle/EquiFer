@@ -195,7 +195,7 @@ var AnimalDetails = function(id) {
 							// TODO check date format !
 							var date = $('#custom-popup-background #date').val().split("/");
 							console.log(date);
-							date = new Date(parseInt(date[2]), parseInt(date[1]) - 1, parseInt(date[0]), 0, 0, 0, 0).getTime() / 1000;
+							date = new Date(parseInt(date[2]), parseInt(date[1]) - 1, parseInt(date[0]), 12, 0, 0, 0).getTime() / 1000;
 							$.post(Config.animalsApi, {
 								action:				'editPerformanceDate',
 								performanceLinkId:	perfId,

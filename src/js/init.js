@@ -30,7 +30,7 @@ function initShortcuts() {
 					$('#returnButton').trigger('click');
 			break;
 			case 46:	// Delete
-				if ($('#removeButton').is(':visible'))
+				if ($('#removeButton').is(':visible') && !$('#custom-popup-background').is(':visible'))
 					$('#removeButton').trigger('click');
 			break;
 		}
