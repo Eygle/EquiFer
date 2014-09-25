@@ -44,7 +44,9 @@ var SettingsPanel = function() {
 				phoneMobile:	$('#settings-company #phoneMobile').val(),
 				mail:			$('#settings-company #mail').val(),
 				name:			$('#settings-company #name').val(),
-				siret:			$('#settings-company #siret').val()
+				siret:			$('#settings-company #siret').val(),
+				capital:		$('#settings-company #capital').val(),
+				tvaIntracom:	$('#settings-company #tvaIntracom').val()
 			};
 
 			if (!CheckForms.check("#settings-company", params, [
@@ -99,6 +101,8 @@ var SettingsPanel = function() {
 			$("#settings-company #phoneMobile").val(data.phoneMobile);
 			$('#settings-company #mail').val(data.mail);
 			$('#settings-company #siret').val(data.siret);
+			$('#settings-company #capital').val(data.capital);
+			$('#settings-company #tvaIntracom').val(data.tvaIntracom);
 			$('#settings-company #name').val(data.name);
 		});
 	};

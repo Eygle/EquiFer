@@ -33,11 +33,12 @@ class DBSettings extends SQLite3 {
 		return $ret;
 	}
 
-	public function editCompany($name, $address, $zipcode, $city, $phoneFixe, $phoneMobile, $mail, $siret) {
+	public function editCompany($name, $address, $zipcode, $city, $phoneFixe, $phoneMobile, $mail, $siret, $capital, $tvaIntracom) {
 		$stmt = $this->prepare("UPDATE company
 			SET name = :name, address = :address,
 			zipcode = :zipcode, city = :city, phoneFixe = :phoneFixe,
-			phoneMobile = :phoneMobile, mail = :mail, siret = :siret;");
+			phoneMobile = :phoneMobile, mail = :mail, siret = :siret,
+			capital = :capital, tvaIntracom = :tvaIntracom;");
 		$stmt->bindValue(':name', $name);
 		$stmt->bindValue(':address', $address);
 		$stmt->bindValue(':zipcode', $zipcode);
@@ -46,6 +47,8 @@ class DBSettings extends SQLite3 {
 		$stmt->bindValue(':phoneMobile', $phoneMobile);
 		$stmt->bindValue(':mail', $mail);
 		$stmt->bindValue(':siret', $siret);
+		$stmt->bindValue(':capital', $capital);
+		$stmt->bindValue(':tvaIntracom', $tvaIntracom);
 		$stmt->execute();
 	}
 

@@ -12,7 +12,9 @@ var BillPDFManager = function(data) {
 			$('#hiddenBillHeader .company').text(data.infos.name);
 			var infos = $('#hiddenBillHeader .infos');
 			infos.html($('<div>').text(data.infos.address + " - " + data.infos.zipcode + " " + data.infos.city));
-			infos.append($('<div>').text("N° Siret " + data.infos.siret));
+			infos.append($('<div>').text("N° Siret " + data.infos.siret + " - Capital social " + data.infos.capital + " - N° TVA intracom " + data.infos.tvaIntracom));
+			// infos.append($('<div>').text("Capital social " + data.infos.capital));
+			// infos.append($('<div>').text("N° TVA intracom " + data.infos.tvaIntracom));
 
 			/* Manage Phone if exists*/
 			var phones = "";

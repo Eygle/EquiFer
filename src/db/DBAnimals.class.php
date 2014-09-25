@@ -131,17 +131,23 @@ class DBAnimals extends SQLite3 {
 	}
 
 	public static function formatInfos($horse) {
-		$birth = explode('-', $horse['birthdate']);
-		$age = time() - mktime(0,0,0,intval($birth[1]), 1, intval($birth[0]));
-		if ($age < 31536000) // Less than a year
-			$age = floor($age / 2592000)." mois";
-		else {
-			$years = floor($age / 31536000);
-			$age = $years .($years > 1 ? " ans" : " an");
+		if (!$horse['birthdate']) {
+			$horse['age'] = "";
+			$horse['birthdate'] = "Non renseignée";
+			$horse['humanBirthdate'] = "Non renseignée";
+		} else {
+			$birth = explode('-', $horse['birthdate']);
+			$age = time() - mktime(0,0,0,intval($birth[1]), 1, intval($birth[0]));
+			if ($age < 31536000) // Less than a year
+				$age = floor($age / 2592000)." mois";
+			else {
+				$years = floor($age / 31536000);
+				$age = $years .($years > 1 ? " ans" : " an");
+			}
+			$horse['age'] = $age;
+			$horse['birthdate'] = $birth[1]."/".$birth[0];
+			$horse['humanBirthdate'] = self::$frenchMonths[intval($birth[1])]." ".$birth[0];
 		}
-		$horse['age'] = $age;
-		$horse['birthdate'] = $birth[1]."/".$birth[0];
-		$horse['humanBirthdate'] = self::$frenchMonths[intval($birth[1])]." ".$birth[0];
 		$horse['isAlive'] = $horse['isAlive'] == "true";
 		return $horse;
 	}

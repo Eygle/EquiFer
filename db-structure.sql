@@ -232,9 +232,11 @@ CREATE TABLE "company" (
   "phoneFixe" varchar(16),
   "phoneMobile" varchar(16),
   "mail" varchar(256) NOT NULL,
-  "siret" varchar(256)
+  "siret" varchar(256),
+  "capital" varchar(32),
+  "tvaIntracom" varchar(32)
 );
-INSERT INTO company VALUES("Nom de l'entreprise", "Adresse", 00000, "Ville", "0200000000", "0600000000", "mail@example.com", "SIRET");
+INSERT INTO company VALUES("Nom de l'entreprise", "Adresse", 00000, "Ville", "0200000000", "0600000000", "mail@example.com", "SIRET", "50007", "FR8280341435");
 
 
 

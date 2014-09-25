@@ -21,9 +21,9 @@ try {
 		Utils::checkPostArgs('action');
 		switch ($_POST['action']) {
 			case "editCompany":
-				Utils::checkPostArgs(array('name', 'address', 'zipcode', 'city', 'phoneFixe', 'phoneMobile', 'mail', 'siret'));
+				Utils::checkPostArgs(array('name', 'address', 'zipcode', 'city', 'phoneFixe', 'phoneMobile', 'mail', 'siret', 'capital', 'tvaIntracom'));
 				$db->editCompany($_POST['name'], $_POST['address'], $_POST['zipcode'],
-					$_POST['city'], $_POST['phoneFixe'], $_POST['phoneMobile'],	$_POST['mail'], $_POST['siret']);
+					$_POST['city'], $_POST['phoneFixe'], $_POST['phoneMobile'],	$_POST['mail'], $_POST['siret'], $_POST['capital'], $_POST['tvaIntracom']);
 				break;
 			case "editSecurity":
 				Utils::checkPostArgs('active');

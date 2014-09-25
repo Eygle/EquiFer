@@ -103,9 +103,9 @@ var AnimalDetails = function(id) {
 			$("#detailView #colour").text(_this.data.colour);
 			$("#detailView #headMark").text(_this.data.headMark);
 			$("#detailView #footMark").text(_this.data.footMark);
-			$('#detailView #size').text(_this.data.size + " cm");
+			if (_this.data.size) $('#detailView #size').text(_this.data.size + " cm");
 			$('#detailView #puce').text(_this.data.puce);
-			$('#detailView #birthdate').text(_this.data.humanBirthdate + " (" + _this.data.age + ")");
+			$('#detailView #birthdate').text(_this.data.humanBirthdate + (_this.data.age ? " (" + _this.data.age + ")" : ""));
 			$('#detailView #desc').text(_this.data.desc);
 
 			// Icons
@@ -312,7 +312,7 @@ var AnimalFormView = function(data) {
 		$("#formView #footMark").autocomplete({source: Strings.ANIMALS_AUTOCOMPLETE_FOOT_MARK}).val(this.data.footMark);
 		$('#formView #size').val(this.data.size);
 		$('#formView #puce').val(this.data.puce);
-		$('#formView #birthdate').val(this.data.birthdate);
+		if (this.data.birthdate != "Non renseignée") $('#formView #birthdate').val(this.data.birthdate);
 		$('#formView #isAlive').prop("checked", this.data.isAlive);
 		$('#formView #inFarriery').prop("checked", this.data.inFarriery);
 		$('#formView #inPension').prop("checked", this.data.inPension);
@@ -343,15 +343,15 @@ var AnimalFormView = function(data) {
 		if (!CheckForms.check("#formView", params, [
 				{item:'name',		id:"name",	error:Strings.ANIMALS_REQUIRE_NAME},
 				{item:'type',		id:"type",	error:Strings.ANIMALS_REQUIRE_TYPE},
-				{item:'race',		id:"race",	error:Strings.ANIMALS_REQUIRE_RACE},
-				{item:'birthdate',	id:"birthdate",	error:Strings.ANIMALS_REQUIRE_DATE,	format:'birthdate',	formatError:Strings.ANIMALS_WRONG_DATE_FORMAT},
+				// {item:'race',		id:"race",	error:Strings.ANIMALS_REQUIRE_RACE},
+				{item:'birthdate',	id:"birthdate",	facultative:true,	formatError:Strings.ANIMALS_WRONG_DATE_FORMAT},
 				{items:[
 					{item:'inFarriery',	id:"inFarriery"},
 					{item:'inPension',	id:"inPension"}
 					],	error:Strings.ANIMALS_REQUIRE_JOB},
 			])) return;
 
-		params.birthdate = _this.formatDate(params.birthdate);
+		if (params.birthdate) params.birthdate = _this.formatDate(params.birthdate);
 		if (params.size) params.size = parseInt(params.size);
 
 		if (_this.editMode) params.id = _this.data.id;
